@@ -1,0 +1,60 @@
+@use 'sass:math';
+
+@function u($units) {
+    @return math.div($units, 1080) * 100vmin;
+}
+
+@mixin grid-borders($columns, $border) {
+    > *:not(:nth-child(#{$columns}n)) {
+        [dir=rtl] & {
+            border-left: $border;
+        }
+        :not([dir=rtl]) & {
+            border-right: $border;
+        }
+    }
+
+    > *:not(:nth-last-child(-n + #{$columns})) {
+        border-bottom: $border;
+    }
+}
+
+@mixin scrollbar($vertical_padding: 0, $horizontal_padding: 0) {
+    &::-webkit-scrollbar {
+        width: u(4);
+        height: u(4);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        width: u(4);
+        background: rgba(white, 0.35);
+        border-radius: u(62);
+
+        &:hover {
+            background: white;
+        }
+    }
+
+    &::-webkit-scrollbar-button {
+        height: u($vertical_padding);
+        width: u($horizontal_padding);
+        background: transparent;
+    }
+}
+
+// Add this mixin to a block, and wrap all child content into div.
+// That will make div nicely scrollable with scrollbar in the middle of right padding,
+// and will remove outer element vertical padding (so it doesnt look like scroll crops content)
+@mixin scrollable-block($padding) {
+    $half_padding: math.div($padding, 2);
+    // - 2 is half width of scrollbar
+    padding: 0 u($half_padding - 2) 0 u($half_padding);
+
+    > * {
+        padding: u($padding) u($half_padding + 2) u($padding) u($half_padding);
+        @include scrollbar($padding);
+        //noinspection CssInvalidPropertyValue
+        overflow-y: overlay;
+        height: 100%;
+    }
+}
