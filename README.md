@@ -1,5 +1,7 @@
 # alt:V UI
 
+In-game user interface of alt:V multiplayer.
+
 ## Event API
 
 ### Core -> UI
