@@ -100,24 +100,28 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 if (serverName != null) this.server = serverName;
                 this.progressAction = 'CONNECTING_TO_THE_SERVER';
                 this.progressType = ProgressType.Indeterminate;
+                this.cancelAction = null;
             });
 
             alt.on('connection:joining', () => {
                 this.reset();
                 this.progressAction = 'JOINING_THE_GAME';
                 this.progressType = ProgressType.Indeterminate;
+                this.cancelAction = null;
             });
 
             alt.on('connection:startingResources', () => {
                 this.reset();
                 this.progressAction = 'STARTING_RESOURCES';
                 this.progressType = ProgressType.Indeterminate;
+                this.cancelAction = null;
             });
 
             alt.on('connection:reloadingGameMap', () => {
                 this.reset();
                 this.progressAction = 'RELOADING_GAME_MAP';
                 this.progressType = ProgressType.Indeterminate;
+                this.cancelAction = null;
             });
 
             alt.on('connection:startingGame', (progress, progressTotal) => {
@@ -157,6 +161,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.progressTotal = bytesTotal;
                 this.progressInBytes = true;
                 this.progressSpeed = speed;
+                this.cancelAction = null;
             });
 
             alt.on('connection:validatingRuntimes', (bytesDownloaded: number, bytesTotal: number, speed?: number) => {
@@ -167,6 +172,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.progressTotal = bytesTotal;
                 this.progressInBytes = true;
                 this.progressSpeed = speed;
+                this.cancelAction = null;
             });
 
             alt.on('connection:inQueue', (message: string) => {
