@@ -151,6 +151,10 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.progressType = ProgressType.Determinate;
                 this.progressValue = resourcesValidated;
                 this.progressTotal = resourcesTotal;
+
+                if (resourcesValidated == resourcesTotal) {
+                    this.cancelAction = null;
+                }
             });
 
             alt.on('connection:downloadingRuntimes', (bytesDownloaded: number, bytesTotal: number, speed?: number) => {
