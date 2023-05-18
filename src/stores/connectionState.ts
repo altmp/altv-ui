@@ -117,6 +117,13 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.cancelAction = null;
             });
 
+            alt.on('connection:preloadingMods', () => {
+                this.reset();
+                this.progressAction = 'PRELOADING_MODS';
+                this.progressType = ProgressType.Indeterminate;
+                this.cancelAction = null;
+            });
+
             alt.on('connection:reloadingGameMap', () => {
                 this.reset();
                 this.progressAction = 'RELOADING_GAME_MAP';
