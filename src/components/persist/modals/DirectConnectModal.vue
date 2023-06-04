@@ -18,23 +18,26 @@ const address = ref(props.value.address ?? version.lastIp);
 const password = ref(props.value.password ?? "");
 
 function connect() {
-    connection.setServer(address.value);
-    version.updateLastIp(address.value);
-    if (address.value.match(/^https?:\/\//)) {
-        alt.emit('connection:connect', '', 0, address.value, '', password.value, '', address.value, false);
+    const addr = address.value?.trim() ?? '';
+    if (!addr) return;
+
+    connection.setServer(addr);
+    version.updateLastIp(addr);
+    if (addr.match(/^https?:\/\//)) {
+        alt.emit('connection:connect', '', 0, addr, '', password.value, '', addr, false);
     } else {
         let host: string, port = 0;
-        const data = address.value.match(/^(\[.*?]|[^:]+):?(\d+)?$/mi);
+        const data = addr.match(/^(\[.*?]|[^:]+):?(\d+)?$/mi);
         if (data) {
             host = data[1];
             port = +data[2] || 0;
         } else {
-            host = address.value;
+            host = addr;
         }
 
         if (host.startsWith("[") && host.endsWith("]")) host = host.substring(1, host.length - 1);
 
-        alt.emit('connection:connect', host, port, '', '', password.value, '', address.value);
+        alt.emit('connection:connect', host, port, '', '', password.value, '', addr);
     }
     modal.close();
 }
