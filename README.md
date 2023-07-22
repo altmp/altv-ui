@@ -59,6 +59,7 @@ In-game user interface of alt:V multiplayer.
 | Event                           | Arguments                                                                               | Description                                                                                                                                                |
 |:--------------------------------|-----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `settings:update`               | `newData: Record<string, any>`                                                          | Updates settings data. New data is applied on top, only keys that exist in the newData get updated. Keys that are not specified in newData are not deleted |
+| `settings:devices:update`       | `devicesData: Record<string, string>`                                                   | Updates available input audio devices. Key is unique device identifier, value is device name                                                               |
 | `settings:currentVolume:update` | `value: number`                                                                         | Sets current mic volume (level). Value is 0-100, it is used for preview in settings UI                                                                     |
 | `version:update`                | `version: string, branch: string, lastIp?: string, debug?: boolean, earlyLoad: boolean` | Updates version and branch data.                                                                                                                           |
 | `version:setRss`                | `rss?: string`                                                                          | Updates RSS feed.                                                                                                                                          |
@@ -103,13 +104,14 @@ In-game user interface of alt:V multiplayer.
 
 #### Misc
 
-| Event                           | Arguments                 | Description                                              |
-|:--------------------------------|---------------------------|----------------------------------------------------------|
-| `ui:resetSkin`                  |                           | Resets UI skin                                           |
-| `settings:change`               | `key: string, value: any` | Fires when user has changed a setting value              |
-| `settings:currentVolume:toggle` | `state: boolean`          | Sets if Core should emit `settings:currentVolume:update` |
-| `loaded`                        |                           | Fires when UI is loaded and ready to receive data        |
-| `exit`                          |                           | Fires when user decided to exit the game                 |
+| Event                           | Arguments                 | Description                                                  |
+|:--------------------------------|---------------------------|--------------------------------------------------------------|
+| `ui:resetSkin`                  |                           | Resets UI skin                                               |
+| `settings:change`               | `key: string, value: any` | Fires when user has changed a setting value                  |
+| `settings:devices:reload`       |                           | Requests audio devices from core (`settings:devices:update`) |
+| `settings:currentVolume:toggle` | `state: boolean`          | Sets if Core should emit `settings:currentVolume:update`     |
+| `loaded`                        |                           | Fires when UI is loaded and ready to receive data            |
+| `exit`                          |                           | Fires when user decided to exit the game                     |
 
 ## Example event flow
 

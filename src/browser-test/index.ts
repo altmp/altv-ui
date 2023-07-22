@@ -121,6 +121,10 @@ alt.viewOn('settings:currentVolume:toggle', (state: boolean) => {
         alt.viewEmit('settings:currentVolume:update', value);
     }, 100);
 })
+
+alt.viewOn('settings:devices:reload', () => {
+    console.log('Reload audio devices!');
+})
 // endregion
 
 // region Console
@@ -246,6 +250,8 @@ async function updateManifest() {
         const res = await fetch('http://cdn.altv.mp/rss/news.rss');
         const rss = await res.text();
         alt.viewEmit('version:setRss', rss);
+    } catch(e) {
+        console.log(e);
     } finally {
         alt.viewEmit('version:setRss', null);
         alt.viewEmit('version:ready');
@@ -285,6 +291,12 @@ alt.viewOn('loaded', () => {
     updateManifest();
     updateSkinIndex();
     alt.viewEmit('settings:update', {...defaultSettings, ...JSON.parse(localStorage.getItem('settings') ?? '{}')});
+    alt.viewEmit('settings:devices:update', {
+        default: 'Device 2',
+        device1: 'Device 1',
+        device2: 'Device 2',
+        long: 'Super long device name lorem ipsum dolor sit amet'
+    })
     alt.viewEmit('serverData:update', serverData);
     alt.viewEmit('servers:recent:update', history);
     alt.viewEmit('servers:favorite:update', favorites);

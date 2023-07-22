@@ -30,10 +30,12 @@ export const useSettingsStore = useInitializableStore(defineStore('settings', {
                 consoleHeight: 0.4,
                 consoleWidth: 0.45,
                 launcherSkin: '',
+                voiceInputDevice: 'default',
                 launcherSkinsDisabled: [] as string[]
             },
 
             currentVolume: 0,
+            devices: {} as Record<string, string>
         }
     },
     actions: {
@@ -62,6 +64,12 @@ export const useSettingsStore = useInitializableStore(defineStore('settings', {
                 if (this.data.name == 'Player') {
                     modal.open(ModalType.Nickname, {}, false);
                 }
+            });
+
+            alt.on('settings:devices:update', (devices: Record<string, string>) => {
+                this.$patch({
+                    devices
+                });
             });
         },
         save(key: keyof typeof this.$state['data']) {

@@ -5,12 +5,16 @@ import AltCheckbox from "../../components/form/AltCheckbox.vue";
 import AltInput from "../../components/form/AltInput.vue";
 import AltDropdown from "@/components/form/AltDropdown.vue";
 import {useLocalization} from "@/stores/localization";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import AltButton from "@/components/AltButton.vue";
 import AltSlider from "@/components/form/AltSlider.vue";
+import {useUIStore} from "@/stores/ui";
+import {useConnectionStateStore} from "@/stores/connectionState";
 
 const settings = useSettingsStore();
 const locale = useLocalization();
+const ui = useUIStore();
+const connection = useConnectionStateStore();
 
 function stringifySpeed(speed: number) {
     if (!speed) return '';
@@ -49,6 +53,16 @@ const regions = [
         value: 'asia'
     }
 ];
+watch(() => ui.ready && (ui.opened || !connection.connected), (value, oldValue, onCleanup) => {
+    alt.emit('settings:currentVolume:toggle', value);
+    onCleanup(() => alt.emit('settings:currentVolume:toggle', false));
+}, {immediate: true})
+
+watch(() => ui.ready && (ui.opened || !connection.connected), (value, oldValue, onCleanup) => {
+    alt.emit('settings:devices:reload');
+    const interval = setInterval(() => alt.emit('settings:devices:reload'), 1000);
+    onCleanup(() => clearInterval(interval));
+}, {immediate: true})
 
 const { t } = locale;
 </script>
