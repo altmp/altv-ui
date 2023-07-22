@@ -16,6 +16,10 @@ const props = defineProps({
         type: Array as PropType<Array<{ value: string; label: string; }>>,
         required: true
     },
+    unknownElement: {
+        type: String,
+        default: ""
+    }
 });
 
 watchEffect(() => {
@@ -37,7 +41,7 @@ function toggle() {
     open.state = !open.state;
 }
 
-const current = computed(() => props.elements!.find(e => e.value === props.modelValue)?.label ?? "");
+const current = computed(() => props.elements!.find(e => e.value === props.modelValue)?.label ?? props.unknownElement);
 </script>
 
 <template>
@@ -79,9 +83,17 @@ const current = computed(() => props.elements!.find(e => e.value === props.model
     font-family: 'Inter', Tahoma, sans-serif;
     cursor: pointer;
     display: flex;
+    gap: u(16);
     justify-content: space-between;
     position: relative;
     align-items: center;
+    white-space: nowrap;
+
+    .value {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 1;
+    }
 
     input {
         color: #F1F2F2;
@@ -90,6 +102,13 @@ const current = computed(() => props.elements!.find(e => e.value === props.model
         outline: none;
         line-height: u(20);
         unicode-bidi: plaintext;
+        width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+
+        &:placeholder-shown {
+            text-overflow: ellipsis;
+        }
 
         [dir=rtl] & {
             text-align: right;
@@ -113,6 +132,8 @@ const current = computed(() => props.elements!.find(e => e.value === props.model
     &::placeholder {
         color: rgba(#F1F2F2, 0.6);
         font-weight: 400;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 
     .menu {
@@ -129,6 +150,8 @@ const current = computed(() => props.elements!.find(e => e.value === props.model
 
         .element {
             padding: 0 u(16);
+            overflow: hidden;
+            text-overflow: ellipsis;
 
             &:hover {
                 background: rgba(white, 0.05);
