@@ -128,6 +128,9 @@ export const useLocalization = defineStore('localization', {
         t(this: any, state) {
             return (key: string, ...args: (string | number)[]) => this.formatString(state.currentLocale.preparedStrings?.get(key) || key, args);
         },
+        tRaw(this: any, state) {
+            return (key: string) => String(state.currentLocale.preparedStrings?.get(key) || key);
+        },
         tPlural(this: any, state) {
             const rules = new Intl.PluralRules(state.currentLocale.intlCode);
             const strings = state.currentLocale.preparedStrings;
