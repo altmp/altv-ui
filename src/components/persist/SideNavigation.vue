@@ -127,7 +127,7 @@ function exit() {
                 </tooltip>
             </router-link>
 
-            <a @click="exit" tabindex="-1" @mouseenter="clickItem">
+            <a @click="exit" tabindex="-1" @mouseenter="playHoverSound">
                 <tooltip :text="t('EXIT')" position="right">
                     <quit/>
                 </tooltip>
