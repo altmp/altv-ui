@@ -70,6 +70,13 @@
     "licenceLink": "https://chromium.googlesource.com/v8/v8.git/+/refs/heads/master/LICENSE"
   },
   {
+    "name": ".NET runtime",
+    "description": "Framework providing a platform for running and executing .NET applications",
+    "source": "https://github.com/dotnet/runtime/",
+    "licence": "MIT",
+    "licenceLink": "https://github.com/dotnet/runtime/blob/main/LICENSE.TXT"
+  },
+  {
     "name": "xxHash",
     "description": "Extremely fast non-cryptographic hash algorithm",
     "source": "https://github.com/Cyan4973/xxHash",
@@ -122,7 +129,35 @@
     "name": "RmlUi",
     "description": "Performant C++ user interface library",
     "source": "https://github.com/mikke89/RmlUi",
-    "license": "MIT",
-    "licenseLink": "https://github.com/mikke89/RmlUi/blob/master/LICENSE.txt"
+    "licence": "MIT",
+    "licenceLink": "https://github.com/mikke89/RmlUi/blob/master/LICENSE.txt"
+  },
+  {
+    "name": "MinHook",
+    "description": "The Minimalistic x86/x64 API Hooking Library for Windows",
+    "source": "https://github.com/TsudaKageyu/minhook",
+    "licence": "BSD 3-Clause",
+    "licenceLink": "https://github.com/TsudaKageyu/minhook/blob/master/LICENSE.txt"
+  },
+  {
+    "name": "TOML++",
+    "description": "TOML config parser and serializer for C++",
+    "source": "https://marzer.github.io/tomlplusplus/",
+    "licence": "MIT",
+    "licenceLink": "https://github.com/marzer/tomlplusplus/blob/master/LICENSE"
+  },
+  {
+    "name": "PicoSHA2",
+    "description": "A C++ SHA256 hash generator",
+    "source": "https://github.com/okdshin/PicoSHA2/tree/master/",
+    "licence": "MIT",
+    "licenceLink": "https://github.com/okdshin/PicoSHA2/blob/master/LICENSE"
+  },
+  {
+    "name": "BASS",
+    "description": "Audio library",
+    "source": "https://www.un4seen.com/",
+    "licence": "Custom",
+    "licenceLink": "https://www.un4seen.com/"
   }
 ]
