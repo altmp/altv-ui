@@ -15,8 +15,8 @@ const modalProps = getModalProps<ModalType.DeleteServerData>(modal);
 const { t } = useLocalization();
 const canDelete = modalProps.value.id != connectionState.connectedServerId;
 
-if (connectionState.active) modal.close();
-watch(() => connectionState.active, () => connectionState.active && modal.close());
+if (connectionState.inProgress) modal.close();
+watch(() => connectionState.inProgress, () => connectionState.inProgress && modal.close());
 
 function confirm() {
     servers.deleteServerData(modalProps.value.id, modalProps.value.type);

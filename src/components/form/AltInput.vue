@@ -84,5 +84,13 @@ input {
         color: rgba(#F1F2F2, 0.6);
         font-weight: 400;
     }
+
+    &:disabled {
+        color: #949494;
+
+        &::placeholder {
+            color: rgba(#949494, 0.6);
+        }
+    }
 }
 </style>

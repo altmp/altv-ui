@@ -23,7 +23,7 @@ export const useSettingsStore = useInitializableStore(defineStore('settings', {
                 voiceVolume: 100,
                 uiVolume: 100,
                 useExternalConsole: false,
-                netgraphEnabled: false,
+                netgraphEnabled: true,
                 crashReporterEnabled: true,
                 expandedConsole: true,
                 downloadSpeedLimit: 0,

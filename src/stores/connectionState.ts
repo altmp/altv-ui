@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {useInitializableStore} from "@/stores/storeInitializer";
 import {useUIStore} from "@/stores/ui";
 import { playErrorSound } from "@/utils/playSound";
+import {useRouter} from "vue-router";
 
 export enum ProgressType {
     None,
@@ -15,15 +16,15 @@ export interface IConnectionState {
     connectedServerId: string;
 
     // if true cancel button just closes connection ui
-    active: boolean;
+    inProgress: boolean;
     failed: boolean;
     server: string;
 
     action: string;
     message?: string | null;
     cancelAction?: string | null;
-    showExit: boolean;
     showReconnect: boolean;
+    showDisconnect: boolean;
 
     progressType: ProgressType;
     progressAction: string;
@@ -41,15 +42,15 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
             connected: false,
             connectedServerId: '',
 
-            active: false,
+            inProgress: false,
             failed: false,
             server: '',
 
             action: 'JOINING_SERVER',
             message: null,
             cancelAction: 'CANCEL',
-            showExit: false,
             showReconnect: false,
+            showDisconnect: false,
 
             progressType: ProgressType.None,
             progressAction: '',
@@ -60,15 +61,20 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
             progressHidden: false,
         }
     },
+    getters: {
+        active(state) {
+            return (state.connected || state.inProgress) && !(state.failed && !state.wasConnected);
+        }
+    },
     actions: {
         reset() {
             this.connected = false;
-            this.active = true;
+            this.inProgress = true;
             this.action = 'JOINING_SERVER';
             this.message = null;
             this.cancelAction = 'CANCEL';
-            this.showExit = false;
             this.showReconnect = false;
+            this.showDisconnect = false;
             this.progressType = ProgressType.None;
             this.progressAction = '';
             this.progressValue = 0;
@@ -82,13 +88,15 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
             this.server = server;
         },
         abort() {
-            if (this.failed) this.active = false;
+            if (this.failed) this.inProgress = false;
             else alt.emit('connection:abort');
         },
         init() {
+            const router = useRouter();
+
             alt.on('connection:idle', () => {
                 this.reset();
-                this.active = false;
+                this.inProgress = false;
             });
 
             alt.on('connection:setServer', (server: string) => {
@@ -101,6 +109,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.progressAction = 'CONNECTING_TO_THE_SERVER';
                 this.progressType = ProgressType.Indeterminate;
                 this.cancelAction = null;
+                router.push('/connection');
             });
 
             alt.on('connection:joining', () => {
@@ -224,7 +233,6 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.action = 'DISCONNECTED';
                 this.message = message;
                 this.cancelAction = null;
-                this.showExit = true;
                 this.showReconnect = true;
                 playErrorSound();
             });
@@ -235,7 +243,6 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.message = message;
                 this.failed = !this.wasConnected;
                 this.cancelAction = this.wasConnected ? null : 'CLOSE';
-                this.showExit = this.wasConnected;
                 this.showReconnect = true;
                 playErrorSound();
             });
@@ -244,7 +251,10 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 const wasConnected = this.connected;
 
                 this.reset();
-                this.active = false;
+                this.action = 'CONNECTED';
+                this.cancelAction = null;
+                this.showDisconnect = true;
+                this.inProgress = false;
                 this.connected = true;
                 this.wasConnected = true;
                 if (serverId != null) this.connectedServerId = serverId;

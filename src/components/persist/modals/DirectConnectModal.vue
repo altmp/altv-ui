@@ -2,15 +2,17 @@
 
 import AltButton from "@/components/AltButton.vue";
 import AltInput from "@/components/form/AltInput.vue";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {getModalProps, ModalType, useModalStore} from "@/stores/modal";
 import {useConnectionStateStore} from "@/stores/connectionState";
 import {useLocalization} from "@/stores/localization";
 import {useVersionStore} from "@/stores/version";
+import {useRouter} from "vue-router";
 
 const connection = useConnectionStateStore();
 const modal = useModalStore();
 const version = useVersionStore();
+const router = useRouter();
 const props = getModalProps<ModalType.DirectConnect>(modal);
 const { t } = useLocalization();
 
@@ -41,6 +43,10 @@ function connect() {
     }
     modal.close();
 }
+
+watch(() => connection.active, (value) => {
+    if (value) modal.close()
+}, { immediate: true })
 </script>
 
 <template>
