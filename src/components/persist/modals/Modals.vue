@@ -15,7 +15,10 @@ const modal = useModalStore();
 
 function handler(event: KeyboardEvent) {
     if (event.key != 'Escape') return;
-    if (modal.closeable) modal.close();
+    if (modal.closeable) {
+        modal.close();
+        playClickSound();
+    }
 }
 
 onMounted(() => document.addEventListener('keydown', handler));
