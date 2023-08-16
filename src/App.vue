@@ -42,6 +42,10 @@ watch(() => version.manifest, (value) => {
     document.body.setAttribute('style', style);
 });
 
+watch(() => ui.ready && (ui.opened || !connection.connected || ui.earlyAuth), (value) => {
+    alt.emit('ui:open', value);
+});
+
 const logo = ref<HTMLDivElement>();
 
 onMounted(() => {
