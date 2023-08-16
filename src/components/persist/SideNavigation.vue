@@ -12,11 +12,12 @@ import {ModalType, useModalStore} from "@/stores/modal";
 import {useVersionStore} from "@/stores/version";
 import Tooltip from "@/components/container/Tooltip.vue";
 import {useLocalization} from "@/stores/localization";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {playEmojiSound, playErrorSound, playHoverSound, playKarbySound, playMoveSound} from "@/utils/playSound";
 import {useUIStore} from "@/stores/ui";
 import {ProgressType, useConnectionStateStore} from "@/stores/connectionState";
 import Download from "@/components/icons/Download.vue";
+import {formatBytes} from "@/utils/formatBytes";
 
 const modal = useModalStore();
 const version = useVersionStore();
@@ -27,6 +28,14 @@ const {t} = useLocalization();
 const clicked = ref(0);
 const lastClicked = ref(0);
 const active = ref(false);
+
+const progress = computed(() => {
+    if (!connection.progressInBytes) {
+        return [ connection.progressValue, connection.progressTotal ];
+    }
+
+    return [ formatBytes(connection.progressValue), formatBytes(connection.progressTotal) ];
+});
 
 function click() {
     if (active.value) return;
@@ -96,7 +105,7 @@ function exit() {
 
         <div class="navigation__group">
             <router-link :to="{ name: 'connection' }" v-if="connection.active" tabindex="-1" @click="clickItem" @mouseenter="playHoverSound">
-                <tooltip :text="t(connection.action)" position="right">
+                <tooltip :text="t(connection.action) + ((connection.progressType === ProgressType.Determinate && !connection.progressHidden) ? ` (${progress[0]} / ${progress[1]})` : '')" position="right">
                     <connection v-if="['CONNECTED', 'DISCONNECTED', 'CONNECTION_FAILED', 'IN_QUEUE'].includes(connection.action)" />
                     <download v-else/>
                     <svg class="progressCircle"
