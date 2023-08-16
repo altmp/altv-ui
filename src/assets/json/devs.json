@@ -1,5 +1,9 @@
 [
   {
+    "name": "Tuxick",
+    "role": "Developer and Founder"
+  },
+  {
     "name": "VadZz",
     "role": "Developer",
     "picture": "https://avatars.githubusercontent.com/u/15704718?s=128"
@@ -17,6 +21,11 @@
     "role": "Developer"
   },
   {
+    "name": "zziger",
+    "role": "Developer and C# module maintainer",
+    "picture": "https://avatars.githubusercontent.com/u/27638710?s=128"
+  },
+  {
     "name": "DurtyFree",
     "role": "Public Relations"
   },
@@ -25,13 +34,9 @@
     "role": "Public Relations"
   },
   {
-    "name": "zziger",
-    "role": "Frontend Developer and C# module maintainer",
-    "picture": "https://avatars.githubusercontent.com/u/27638710?s=128"
-  },
-  {
     "name": "fronty!",
-    "role": "Designer"
+    "role": "Designer",
+    "picture": "https://avatars.githubusercontent.com/u/23662478?s=128"
   },
   {
     "name": "C0kkie",
@@ -56,15 +61,17 @@
   },
   {
     "name": "deluvas1911",
-    "role": "Quality Assurance"
+    "role": "Contributor"
   },
   {
-    "name": "ouli",
-    "role": "Quality Assurance"
+    "name": ".json",
+    "role": "Quality Assurance",
+    "picture": "https://avatars.githubusercontent.com/u/60060712?s=128"
   },
   {
-    "name": "Tuxick",
-    "role": "Former Developer and Founder"
+    "name": "xshady",
+    "role": "Quality Assurance",
+    "picture": "https://avatars.githubusercontent.com/u/54737754?s=128"
   },
   {
     "name": "Hazard",
@@ -90,5 +97,9 @@
   {
     "name": "drake",
     "role": "Former Lua module developer"
+  },
+  {
+    "name": "ouli",
+    "role": "Former Quality Assurance"
   }
 ]

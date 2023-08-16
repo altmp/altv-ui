@@ -40,7 +40,7 @@ function open(url: string) {
 const images = import.meta.glob("@/assets/avatars/*.png", { eager: true });
 
 function getImage(username: string) {
-    const filename = `${username.toLowerCase().replace('!', '')}.png`;
+    const filename = `${username.toLowerCase().replace(/[!.]/g, '')}.png`;
     return (Object.entries(images).find(e => e[0].endsWith(filename))?.[1] as any)?.default;
 }
 
@@ -100,7 +100,8 @@ const considerSupporting = sanitize(t('CONSIDER_SUPPORTING')).replace('{0}', '<a
                             Interactive Software. alt:V Multiplayer and altMP Project do not
                             host any user-made servers and is not responsible for user-made
                             content. All user-made content are the property of their
-                            respective owners.
+                            respective owners.<br/><br/>
+                            &copy; 2023 AMC Alternative Multiplayer Solutions LTD
                         </p>
                         <p class="view__notice view__emoji" @click="updateEmoji">{{ emoji }}</p>
                     </div>
