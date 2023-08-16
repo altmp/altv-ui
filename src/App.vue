@@ -12,12 +12,14 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useSettingsStore } from "@/stores/settings";
 import Logo from "@/components/icons/Logo.vue";
 import { useVersionStore } from "@/stores/version";
+import {ModalType, useModalStore} from "@/stores/modal";
 
 const ui = useUIStore();
 const connection = useConnectionStateStore();
 const locale = useLocalization();
 const settings = useSettingsStore();
 const version = useVersionStore();
+const modal = useModalStore();
 
 watch(() => locale.dir, (value) => {
     document.dir = value;
@@ -42,7 +44,7 @@ watch(() => version.manifest, (value) => {
     document.body.setAttribute('style', style);
 });
 
-watch(() => ui.ready && (ui.opened || !connection.connected || ui.earlyAuth), (value) => {
+watch(() => ui.ready && (ui.opened || !connection.connected || ui.earlyAuth || modal.type != ModalType.None), (value) => {
     alt.emit('ui:open', value);
 }, { immediate: true });
 
