@@ -43,6 +43,7 @@ watch(() => version.manifest, (value) => {
 });
 
 watch(() => ui.ready && (ui.opened || !connection.connected || ui.earlyAuth), (value) => {
+    console.log('Send UI open request', value);
     alt.emit('ui:open', value);
 }, { immediate: true });
 
