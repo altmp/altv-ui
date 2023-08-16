@@ -44,7 +44,7 @@ watch(() => version.manifest, (value) => {
 
 watch(() => ui.ready && (ui.opened || !connection.connected || ui.earlyAuth), (value) => {
     alt.emit('ui:open', value);
-});
+}, { immediate: true });
 
 const logo = ref<HTMLDivElement>();
 
