@@ -32,17 +32,22 @@ defineProps({
             display: inline-block;
             font-size: u(32);
             font-weight: 500;
+            line-height: 140%;
         }
 
         :deep(svg) {
             height: u(32);
             width: u(33);
-            margin-left: u(16);
-            [dir=rtl] & {
-                margin-left: unset;
-                margin-right: u(16);
+            stroke: $text_light;
+            fill: $text_light;
+            vertical-align: -0.17em;
+            cursor: pointer;
+
+            &.star {
+                height: u(28);
+                cursor: default;
+                vertical-align: -0.05em;
             }
-            vertical-align: -0.1em;
         }
     }
 }

@@ -12,11 +12,13 @@ import {useVersionStore} from "@/stores/version";
 import Tooltip from "@/components/container/Tooltip.vue";
 import {useLocalization} from "@/stores/localization";
 import {ref} from "vue";
-import { playHoverSound, playMoveSound, playErrorSound, playKarbySound, playEmojiSound } from "@/utils/playSound";
+import {playHoverSound, playMoveSound, playErrorSound, playKarbySound, playEmojiSound} from "@/utils/playSound";
+import {useUIStore} from "@/stores/ui";
 
 const modal = useModalStore();
 const version = useVersionStore();
-const { t } = useLocalization();
+const ui = useUIStore();
+const {t} = useLocalization();
 
 const clicked = ref(0);
 const lastClicked = ref(0);
@@ -36,6 +38,10 @@ function click() {
     }
 }
 
+function clickItem() {
+    playMoveSound();
+    ui.setNavigationHighlight(false);
+}
 function exit() {
     modal.open(ModalType.Exit, {}, true);
     playErrorSound();
@@ -54,41 +60,51 @@ function exit() {
             </div>
             <img id="karby" :class="{ active }" src="@/assets/img/karby.png" alt="">
 
-            <router-link :to="{ name: 'home' }" style="" tabindex="-1" @click="playMoveSound" @mouseenter="playHoverSound">
+            <router-link
+                    :to="{ name: 'home' }"
+                    tabindex="-1"
+                    @click="clickItem" @mouseenter="playHoverSound">
                 <tooltip :text="t('HOME')" position="right">
-                    <home />
+                    <home/>
                 </tooltip>
             </router-link>
 
-            <router-link :to="{ name: 'server-list' }" v-if="version.branch === 'release' || version.branch === 'internal'" tabindex="-1" @click="playMoveSound" @mouseenter="playHoverSound">
+            <router-link :to="{ name: 'server-list' }"
+                         :class="{ highlighted: ui.highlightElevent == 'servers' }"
+                         v-if="version.branch === 'release' || version.branch === 'internal'"
+                         tabindex="-1"
+                         @click="clickItem" @mouseenter="playHoverSound">
                 <tooltip :text="t('SERVERS')" position="right">
-                    <server />
+                    <server/>
                 </tooltip>
             </router-link>
 
-            <a @click="() => {modal.open(ModalType.DirectConnect, {}, true); playMoveSound()}" tabindex="-1" @mouseenter="playHoverSound">
+            <a @click="() => {modal.open(ModalType.DirectConnect, {}, true); clickItem()}"
+               :class="{ highlighted: ui.highlightElevent == 'direct-connect' }"
+               tabindex="-1"
+               @mouseenter="playHoverSound">
                 <tooltip :text="t('DIRECT_CONNECT')" position="right">
-                    <direct-connect />
+                    <direct-connect/>
                 </tooltip>
             </a>
         </div>
 
         <div class="navigation__group">
-            <router-link :to="{ name: 'about' }" tabindex="-1" @click="playMoveSound" @mouseenter="playHoverSound">
+            <router-link :to="{ name: 'about' }" tabindex="-1" @click="clickItem" @mouseenter="playHoverSound">
                 <tooltip :text="t('ABOUT')" position="right">
-                    <information />
+                    <information/>
                 </tooltip>
             </router-link>
 
-            <router-link :to="{ name: 'settings' }" tabindex="-1" @click="playMoveSound" @mouseenter="playHoverSound">
+            <router-link :to="{ name: 'settings' }" tabindex="-1" @click="clickItem" @mouseenter="playHoverSound">
                 <tooltip :text="t('SETTINGS')" position="right">
-                    <settings />
+                    <settings/>
                 </tooltip>
             </router-link>
 
-            <a @click="exit" tabindex="-1" @mouseenter="playHoverSound">
+            <a @click="exit" tabindex="-1" @mouseenter="clickItem">
                 <tooltip :text="t('EXIT')" position="right">
-                    <quit />
+                    <quit/>
                 </tooltip>
             </a>
         </div>
@@ -97,6 +113,7 @@ function exit() {
 
 <style lang="scss" scoped>
 @import '@/assets/_util.scss';
+@import '@/assets/_palette.scss';
 
 .navigation {
     border-right: #f1f2f21a u(1) solid;
@@ -161,6 +178,23 @@ function exit() {
         flex-direction: column;
         align-items: center;
 
+        @keyframes highlighted-navlink {
+            from {
+                transform: scale(1);
+            }
+
+            to {
+                transform: scale(1.1);
+            }
+        }
+
+        .highlighted {
+            svg {
+                animation: highlighted-navlink 0.8s ease-in-out infinite alternate;
+                border-color: $text_link;
+            }
+        }
+
         a {
             padding: u(12) u(20);
             width: u(96);
@@ -176,7 +210,7 @@ function exit() {
                 padding: u(16);
                 fill: #F1F2F2;
                 border: transparent #{u(2)} solid;
-                transition: background-color 0.15s ease-in-out, fill 0.15s ease-in-out, transform 0.2s ease;
+                transition: background-color 0.15s ease-in-out, fill 0.15s ease-in-out, transform 0.2s ease, border 0.2s ease;
 
                 &:hover {
                     background: rgba(241, 242, 242, 0.03);
@@ -209,6 +243,7 @@ function exit() {
             left: 100%;
         }
     }
+
     &.active {
         display: block;
         position: fixed;

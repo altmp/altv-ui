@@ -6,9 +6,15 @@ import {useServersStore} from "@/stores/servers";
 import {useLocalization} from "@/stores/localization";
 import {useVersionStore} from "@/stores/version";
 import Logo from "@/components/icons/Logo.vue";
+import Localized from "@/components/Localized.vue";
+import DirectConnect from "@/components/icons/DirectConnect.vue";
+import Server from "@/components/icons/Server.vue";
+import {useUIStore} from "@/stores/ui";
+import {playClickSound} from "@/utils/playSound";
 
 const servers = useServersStore();
 const version = useVersionStore();
+const ui = useUIStore();
 const { t } = useLocalization();
 
 </script>
@@ -41,7 +47,12 @@ const { t } = useLocalization();
 
                         <home-server-group :servers="servers.recent.slice(0, 4)">
                             <template #empty>
-                                <div>{{ t('NO_RECENT_SERVERS') }}</div>
+                                <div>
+                                    <localized localeKey="NO_RECENT_SERVERS">
+                                        <template #0><span @click="ui.setNavigationHighlight('servers'); playClickSound();"><server /></span></template>
+                                        <template #1><span @click="ui.setNavigationHighlight('direct-connect'); playClickSound();"><direct-connect /></span></template>
+                                    </localized>
+                                </div>
                             </template>
                         </home-server-group>
                     </div>
@@ -51,8 +62,11 @@ const { t } = useLocalization();
 
                         <home-server-group :servers="[...servers.favorite].reverse()">
                             <template #empty>
-                                <div>{{ t('NO_FAVORITE_SERVERS') }}</div>
-                                <star-outline/>
+                                <div>
+                                    <localized localeKey="NO_FAVORITE_SERVERS">
+                                        <template #0><star-outline/></template>
+                                    </localized>
+                                </div>
                             </template>
                         </home-server-group>
                     </div>
@@ -71,6 +85,7 @@ const { t } = useLocalization();
 
 <style lang="scss" scoped>
 @import '@/assets/_util.scss';
+@import '@/assets/_palette.scss';
 
 .view {
     display: grid;

@@ -1,5 +1,7 @@
 import {defineStore} from "pinia";
 import {useInitializableStore} from "@/stores/storeInitializer";
+import {useRoute, useRouter} from "vue-router";
+import {watch} from "vue";
 
 export const useUIStore = useInitializableStore(defineStore('ui', {
     state: () => {
@@ -8,6 +10,7 @@ export const useUIStore = useInitializableStore(defineStore('ui', {
             ready: false,
             earlyAuth: false,
             startupProgress: -1,
+            highlightElevent: false as string | false,
             watermarkPosition: 'bottomright',
             netgraph: {
                 active: false,
@@ -25,6 +28,9 @@ export const useUIStore = useInitializableStore(defineStore('ui', {
         },
         toggleNetgraph(state: boolean) {
             this.netgraph.active = state
+        },
+        setNavigationHighlight(element: string | false) {
+            this.highlightElevent = element;
         },
         init() {
             alt.on('ui:toggle', (state?: boolean) => {
