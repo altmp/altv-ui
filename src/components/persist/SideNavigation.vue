@@ -97,7 +97,7 @@ function exit() {
         <div class="navigation__group">
             <router-link :to="{ name: 'connection' }" v-if="connection.active" tabindex="-1" @click="clickItem" @mouseenter="playHoverSound">
                 <tooltip :text="t(connection.action)" position="right">
-                    <connection v-if="connection.action === 'CONNECTED' || connection.action === 'DISCONNECTED' || connection.action === 'IN_QUEUE'" />
+                    <connection v-if="['CONNECTED', 'DISCONNECTED', 'CONNECTION_FAILED', 'IN_QUEUE'].includes(connection.action)" />
                     <download v-else/>
                     <svg class="progressCircle"
                          viewBox="0 0 65 65"
@@ -107,19 +107,23 @@ function exit() {
                         <circle class="circle" cx="32.5" cy="32.5" r="30" stroke-width="3" fill="none" :stroke-dasharray="2 * Math.PI * 30" transform="rotate(-90 32.5 32.5)" />
                     </svg>
                     <div class="notification"
-                         v-if="connection.action === 'DISCONNECTED'"></div>
-                </tooltip>
-            </router-link>
-
-            <router-link :to="{ name: 'about' }" tabindex="-1" @click="clickItem" @mouseenter="playHoverSound">
-                <tooltip :text="t('ABOUT')" position="right">
-                    <information/>
+                         v-if="['CONNECTED', 'DISCONNECTED', 'CONNECTION_FAILED', 'IN_QUEUE'].includes(connection.action)"
+                         :class="{
+                             yellow: connection.action === 'IN_QUEUE',
+                             green: connection.action === 'CONNECTED',
+                         }"></div>
                 </tooltip>
             </router-link>
 
             <router-link :to="{ name: 'settings' }" tabindex="-1" @click="clickItem" @mouseenter="playHoverSound">
                 <tooltip :text="t('SETTINGS')" position="right">
                     <settings/>
+                </tooltip>
+            </router-link>
+
+            <router-link :to="{ name: 'about' }" tabindex="-1" @click="clickItem" @mouseenter="playHoverSound">
+                <tooltip :text="t('ABOUT')" position="right">
+                    <information/>
                 </tooltip>
             </router-link>
 
@@ -232,11 +236,19 @@ function exit() {
             right: u(4);
             width: u(8);
             height: u(8);
-            background: #EB3640;
             border-radius: 50%;
-            //box-shadow: 0 0 10px 10px green;
-            box-shadow: 0 0 8px 1px rgba(235, 54, 64, 0.70);
-            //filter: drop-shadow(0px 0px 8px rgba(235, 54, 64, 0.70));
+            background: #EB3640;
+            box-shadow: 0 0 8px 1px rgba(#eb3640, 0.70);
+
+            &.yellow {
+                background: #FFB900;
+                box-shadow: 0 0 8px 1px rgba(#FFB900, 0.70);
+            }
+
+            &.green {
+                background: #00AD56;
+                box-shadow: 0 0 8px 1px rgba(#00AD56, 0.70);
+            }
         }
 
         .progressCircle {

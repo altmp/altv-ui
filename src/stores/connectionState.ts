@@ -93,6 +93,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
         },
         init() {
             const router = useRouter();
+            const ui = useUIStore();
 
             alt.on('connection:idle', () => {
                 this.reset();
@@ -235,6 +236,8 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.cancelAction = null;
                 this.showReconnect = true;
                 playErrorSound();
+
+                if (!ui.opened) router.push('/connection');
             });
 
             alt.on('connection:failed', (message: string) => {
@@ -242,9 +245,11 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.action = 'CONNECTION_FAILED';
                 this.message = message;
                 this.failed = !this.wasConnected;
-                this.cancelAction = this.wasConnected ? null : 'CLOSE';
+                this.cancelAction = null;
                 this.showReconnect = true;
                 playErrorSound();
+
+                if (!ui.opened) router.push('/connection');
             });
 
             alt.on('connection:connected', (serverId?: string) => {
@@ -259,10 +264,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.wasConnected = true;
                 if (serverId != null) this.connectedServerId = serverId;
 
-                // don't close ui if 'connected' was emitted to close 'downloadingAdditionalResources'
-                // todo handle this differently
-                const ui = useUIStore();
-                ui.toggleUi(false);
+                if (!wasConnected) ui.toggleUi(false);
             });
         }
     }
