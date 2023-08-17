@@ -62,6 +62,11 @@ watch(() => ui.ready && (ui.opened || !connection.connected), (value, oldValue, 
     alt.emit('settings:devices:reload');
     const interval = setInterval(() => alt.emit('settings:devices:reload'), 1000);
     onCleanup(() => clearInterval(interval));
+}, {immediate: true});
+
+watch(() => ui.ready && (ui.opened || !connection.connected), (value, oldValue, onCleanup) => {
+    if (!value) settings.toggleMicTest(false);
+    onCleanup(() => settings.toggleMicTest(false));
 }, {immediate: true})
 
 const { t } = locale;

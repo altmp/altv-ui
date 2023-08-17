@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {useInitializableStore} from "@/stores/storeInitializer";
 import {useUIStore} from "@/stores/ui";
 import {ModalType, useModalStore} from "@/stores/modal";
+import {watch} from "vue";
 
 export const useSettingsStore = useInitializableStore(defineStore('settings', {
     state: () => {
@@ -20,6 +21,7 @@ export const useSettingsStore = useInitializableStore(defineStore('settings', {
                 voiceInputSensitivity: 0,
                 voiceActivationKey: 0x4e,
                 voiceInputVolume: 100,
+                voiceNormalization: true,
                 voiceVolume: 100,
                 uiVolume: 100,
                 useExternalConsole: false,
@@ -34,6 +36,7 @@ export const useSettingsStore = useInitializableStore(defineStore('settings', {
                 launcherSkinsDisabled: [] as string[]
             },
 
+            micTest: false,
             currentVolume: 0,
             devices: {} as Record<string, string>
         }
@@ -42,6 +45,9 @@ export const useSettingsStore = useInitializableStore(defineStore('settings', {
         toggleConsole() {
             this.data.expandedConsole = !this.data.expandedConsole;
             this.save('expandedConsole');
+        },
+        toggleMicTest(state?: boolean) {
+            this.micTest = state ?? !this.micTest;
         },
         init() {
             const ui = useUIStore();
@@ -71,6 +77,10 @@ export const useSettingsStore = useInitializableStore(defineStore('settings', {
                     devices
                 });
             });
+
+            watch(() => this.micTest, () => {
+                alt.emit('settings:micTest:toggle', this.micTest);
+            })
         },
         save(key: keyof typeof this.$state['data']) {
             alt.emit('settings:change', key, this.data[key]);

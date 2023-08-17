@@ -38,13 +38,14 @@ const {t} = useLocalization();
     </div>
 
     <volume-display :value="settings.currentVolume" :label="t('MIC_TEST')"></volume-display>
-    <alt-checkbox v-model="settings.data.voiceAutoInputVolume" @change="settings.save('voiceAutoInputVolume')"
-                  :label="t('AUTO_INPUT_VOLUME')"></alt-checkbox>
-    <alt-slider v-if="!settings.data.voiceAutoInputVolume" v-model="settings.data.voiceInputVolume"
+    <alt-button @click="settings.toggleMicTest()">{{ t(settings.micTest ? 'STOP_MIC_TEST' : 'START_MIC_TEST') }}</alt-button>
+    <alt-slider v-model="settings.data.voiceInputVolume"
                 @change="settings.save('voiceInputVolume')"
                 :label="t('INPUT_VOLUME')"></alt-slider>
     <alt-slider v-model="settings.data.voiceVolume" @change="settings.save('voiceVolume')"
                 :label="t('OUTPUT_VOLUME')"></alt-slider>
+    <alt-checkbox v-model="settings.data.voiceNormalization" @change="settings.save('voiceNormalization')"
+                  :label="t('VOICE_NORMALIZATION')"></alt-checkbox>
     <alt-checkbox v-model="settings.data.voiceNoiseSuppression" @change="settings.save('voiceNoiseSuppression')"
                   :label="t('NOISE_SUPPRESSION')"></alt-checkbox>
 
