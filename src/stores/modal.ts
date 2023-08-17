@@ -60,6 +60,7 @@ export const useModalStore = useInitializableStore(defineStore('modal', {
             });
 
             alt.on('exit', () => {
+                if (this.type == ModalType.Exit) return;
                 this.open(ModalType.Exit, {}, true);
                 playMoveSound();
             });
