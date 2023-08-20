@@ -58,7 +58,7 @@ function reconnect() {
         <div class="connection__actions">
             <alt-button color="red" v-if="connectionState.cancelAction" @click="abort">{{ t(connectionState.cancelAction) }}</alt-button>
             <alt-button color="red" v-if="connectionState.showExit" @click="exit">{{t('EXIT')}}</alt-button>
-            <alt-button color="red" v-if="connectionState.showReconnect && (version.branch === 'internal' || version.branch === 'dev')" @click="reconnect">{{t('RECONNECT')}}</alt-button>
+            <alt-button color="red" v-if="connectionState.showReconnect && (settings.data.debug || version.branch === 'internal')" @click="reconnect">{{t('RECONNECT')}}</alt-button>
         </div>
     </div>
 </template>
