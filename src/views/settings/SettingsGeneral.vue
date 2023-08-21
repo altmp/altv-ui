@@ -62,6 +62,11 @@ watch(() => ui.ready && (ui.opened || !connection.connected), (value, oldValue, 
     alt.emit('settings:devices:reload');
     const interval = setInterval(() => alt.emit('settings:devices:reload'), 1000);
     onCleanup(() => clearInterval(interval));
+}, {immediate: true});
+
+watch(() => ui.ready && (ui.opened || !connection.connected), (value, oldValue, onCleanup) => {
+    if (!value) settings.toggleMicTest(false);
+    onCleanup(() => settings.toggleMicTest(false));
 }, {immediate: true})
 
 const { t } = locale;
@@ -70,7 +75,7 @@ const { t } = locale;
 <template>
     <div class="menu__group">
         <h3>{{ t('NICKNAME') }}</h3>
-        <alt-input v-model="settings.data.name" @change="settings.save('name')"></alt-input>
+        <alt-input :disabled="connection.active || connection.wasConnected" v-model="settings.data.name" @change="settings.save('name')"></alt-input>
     </div>
 
     <div class="menu__group">
@@ -82,14 +87,14 @@ const { t } = locale;
 
     <div class="menu__group">
         <h3>{{ t('REGION') }}</h3>
-        <alt-dropdown v-model="settings.data.region" :elements="regions" @change="settings.save('region')"></alt-dropdown>
+        <alt-dropdown :disabled="connection.active || connection.wasConnected" v-model="settings.data.region" :elements="regions" @change="settings.save('region')"></alt-dropdown>
     </div>
 
     <alt-slider v-model="settings.data.uiVolume" @change="settings.save('uiVolume')" :label="t('UI_VOLUME')"></alt-slider>
 
     <div class="menu__group">
         <h3>{{ t('DOWNLOAD_SPEED_LIMIT') }}</h3>
-        <alt-input v-model="speedLimit" :placeholder="t('UNLIMITED')" @keydown.enter="saveSpeedLimit" @blur="saveSpeedLimit"></alt-input>
+        <alt-input v-model="speedLimit" :disabled="connection.inProgress" :placeholder="t('UNLIMITED')" @keydown.enter="saveSpeedLimit" @blur="saveSpeedLimit"></alt-input>
     </div>
 
     <div class="menu__group">
@@ -101,7 +106,6 @@ const { t } = locale;
         <h3>{{ t('DEBUG') }}</h3>
         <alt-checkbox v-model="settings.data.netgraphEnabled" @change="settings.save('netgraphEnabled')" :label="t('NETGRAPH')"></alt-checkbox>
         <alt-checkbox v-model="settings.data.useExternalConsole" @change="settings.save('useExternalConsole')" :label="t('USE_EXTERNAL_CONSOLE')"></alt-checkbox>
-        <alt-checkbox v-model="settings.data.crashReporterEnabled" @change="settings.save('crashReporterEnabled')" :label="t('CRASH_REPORTER_ENABLED')"></alt-checkbox>
     </div>
 
     <alt-button v-if="settings.data.launcherSkin !== ''" color="gray" @click="resetSkin">{{ t('RESTORE_DEFAULT_SKIN') }}</alt-button>

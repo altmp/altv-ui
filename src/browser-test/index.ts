@@ -231,7 +231,7 @@ alt.viewOn('servers:reload', () => loadServers());
 //     name: 'Custom name',
 //     branch: 'release',
 //     primaryColor: 'ffa000',
-//     rss: 'http://cdn.altv.mp/rss/news.rss',
+//     rss: 'http://cdn.alt-mp.com/rss/news.rss',
 //     servers: [
 //         {
 //             name: 'Test',
@@ -247,7 +247,7 @@ async function updateManifest() {
 
     alt.viewEmit('version:setManifest', skin ? JSON.stringify(manifest) : null);
     try {
-        const res = await fetch('http://cdn.altv.mp/rss/news.rss');
+        const res = await fetch('http://cdn.alt-mp.com/rss/news-short.rss');
         const rss = await res.text();
         alt.viewEmit('version:setRss', rss);
     } catch(e) {

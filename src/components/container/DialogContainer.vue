@@ -3,7 +3,6 @@
 import {ModalType, useModalStore} from "@/stores/modal";
 import {useConnectionStateStore} from "@/stores/connectionState";
 import Modals from '@/components/persist/modals/Modals.vue';
-import Connection from '@/components/persist/connection/Connection.vue';
 import {playClickSound} from "@/utils/playSound";
 
 const modal = useModalStore();
@@ -19,12 +18,9 @@ function closeModal() {
 
 <template>
     <teleport to="body">
-        <div class="dialog-container" :class="{ visible: modal.type !== ModalType.None || connectionState.active }" @mousedown.self="closeModal">
+        <div class="dialog-container" :class="{ visible: modal.type !== ModalType.None }" @mousedown.self="closeModal">
             <transition name="fade">
                 <modals v-if="modal.type !== ModalType.None" />
-            </transition>
-            <transition name="fade">
-                <connection v-if="modal.type === ModalType.None && connectionState.active" />
             </transition>
         </div>
     </teleport>

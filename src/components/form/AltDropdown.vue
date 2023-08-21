@@ -16,6 +16,10 @@ const props = defineProps({
         type: Array as PropType<Array<{ value: string; label: string; }>>,
         required: true
     },
+    disabled: {
+        type: Boolean,
+        default: false
+    },
     unknownElement: {
         type: String,
         default: ""
@@ -23,6 +27,10 @@ const props = defineProps({
 });
 
 watchEffect(() => {
+    if (props.disabled) {
+        open.state = false;
+    }
+
     if (open.state) {
         searchRef.value?.focus();
     } else {
@@ -45,7 +53,7 @@ const current = computed(() => props.elements!.find(e => e.value === props.model
 </script>
 
 <template>
-    <div class="dropdown" :class="{ open: open.state }" @click.stop="toggle(); playClickSound()" @mouseenter="playHoverSound">
+    <div class="dropdown" :class="{ open: open.state, disabled: props.disabled }" @click.stop="toggle(); playClickSound()" @mouseenter="playHoverSound">
         <div class="value">
             <input type="text" ref="searchRef" v-model="search" v-if="open.state" :placeholder="current">
             {{ !open.state ? current : "" }}
@@ -164,6 +172,11 @@ const current = computed(() => props.elements!.find(e => e.value === props.model
 
         border-bottom-left-radius: u(4);
         border-bottom-right-radius: u(4);
+    }
+
+    &.disabled {
+        pointer-events: none;
+        color: #949494;
     }
 }
 </style>

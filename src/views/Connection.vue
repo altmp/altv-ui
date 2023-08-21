@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import AltButton from "@/components/AltButton.vue";
 import {ProgressType, useConnectionStateStore} from "@/stores/connectionState";
-import {computed} from "vue";
+import {computed, watch} from "vue";
 import {formatBytes} from "@/utils/formatBytes";
 import {useSettingsStore} from "@/stores/settings";
 import {useLocalization} from "@/stores/localization";
 import {useVersionStore} from "@/stores/version";
 import {ModalType, useModalStore} from "@/stores/modal";
+import {useRouter} from "vue-router";
 
 const connectionState = useConnectionStateStore();
 const settings = useSettingsStore();
 const version = useVersionStore();
 const modal = useModalStore();
+const router = useRouter();
 const { t } = useLocalization();
 
 const progress = computed(() => {
@@ -26,13 +28,22 @@ function abort() {
     connectionState.abort();
 }
 
-function exit() {
-    modal.open(ModalType.Exit, {}, true);
+function disconnect() {
+    alt.emit('connection:disconnect');
 }
 
 function reconnect() {
     alt.emit('connection:reconnect');
 }
+
+watch(() => {
+    const active = connectionState.inProgress;
+    const connected = connectionState.connected;
+
+    return active || connected;
+}, (value) => {
+    if (!value) router.push('/settings');
+}, { immediate: true });
 </script>
 
 <template>
@@ -51,13 +62,13 @@ function reconnect() {
                 <div v-if="connectionState.progressType === ProgressType.Indeterminate" class="progress__fill progress__fill--indeterminate"></div>
             </div>
             <div class="progress__status" v-if="connectionState.progressType === ProgressType.Determinate && !connectionState.progressHidden" :data-split="connectionState.progressSpeed != null">
-                <span v-if="!connectionState.hideProgressAmount">{{ progress[0] }} / {{ progress[1] }}</span>
+                <span>{{ progress[0] }} / {{ progress[1] }}</span>
                 <span v-if="connectionState.progressSpeed != null">{{ formatBytes(connectionState.progressSpeed) }}/s</span>
             </div>
         </div>
         <div class="connection__actions">
             <alt-button color="red" v-if="connectionState.cancelAction" @click="abort">{{ t(connectionState.cancelAction) }}</alt-button>
-            <alt-button color="red" v-if="connectionState.showExit" @click="exit">{{t('EXIT')}}</alt-button>
+            <alt-button color="red" v-if="connectionState.showDisconnect" @click="disconnect">{{t('DISCONNECT')}}</alt-button>
             <alt-button color="red" v-if="connectionState.showReconnect && (settings.data.debug || version.branch === 'internal')" @click="reconnect">{{t('RECONNECT')}}</alt-button>
         </div>
     </div>

@@ -23,6 +23,11 @@ const router = createRouter({
       name: 'settings',
       component: () => import('../views/Settings.vue')
     },
+    {
+      path: '/connection',
+      name: 'connection',
+      component: () => import('../views/Connection.vue')
+    },
   ]
 });
 

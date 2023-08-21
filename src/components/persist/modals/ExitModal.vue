@@ -5,15 +5,26 @@ import AltButton from "@/components/AltButton.vue";
 import {useLocalization} from "@/stores/localization";
 import AltInput from "@/components/form/AltInput.vue";
 import {useSettingsStore} from "@/stores/settings";
-import {nextTick, onMounted, onUpdated, ref, watch} from "vue";
+import {nextTick, onMounted, onUnmounted, onUpdated, ref, watch} from "vue";
+import {playMoveSound} from "@/utils/playSound";
 
 const settings = useSettingsStore();
 const modal = useModalStore();
 const { t } = useLocalization();
 
+
 function exit() {
     alt.emit('exit');
 }
+
+function handler(event: KeyboardEvent) {
+    if (event.key != 'Enter') return;
+    playMoveSound();
+    exit();
+}
+
+onMounted(() => document.addEventListener('keydown', handler));
+onUnmounted(() => document.removeEventListener('keydown', handler));
 
 function cancel() {
     modal.close();

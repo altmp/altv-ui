@@ -7,22 +7,35 @@ import DirectConnect from '@/components/icons/DirectConnect.vue';
 import Information from '@/components/icons/Information.vue';
 import Settings from '@/components/icons/Settings.vue';
 import Quit from '@/components/icons/Quit.vue';
+import Connection from "@/components/icons/Connection.vue";
 import {ModalType, useModalStore} from "@/stores/modal";
 import {useVersionStore} from "@/stores/version";
 import Tooltip from "@/components/container/Tooltip.vue";
 import {useLocalization} from "@/stores/localization";
-import {ref} from "vue";
-import {playHoverSound, playMoveSound, playErrorSound, playKarbySound, playEmojiSound} from "@/utils/playSound";
+import {computed, ref} from "vue";
+import {playEmojiSound, playErrorSound, playHoverSound, playKarbySound, playMoveSound} from "@/utils/playSound";
 import {useUIStore} from "@/stores/ui";
+import {ProgressType, useConnectionStateStore} from "@/stores/connectionState";
+import Download from "@/components/icons/Download.vue";
+import {formatBytes} from "@/utils/formatBytes";
 
 const modal = useModalStore();
 const version = useVersionStore();
 const ui = useUIStore();
+const connection = useConnectionStateStore();
 const {t} = useLocalization();
 
 const clicked = ref(0);
 const lastClicked = ref(0);
 const active = ref(false);
+
+const progress = computed(() => {
+    if (!connection.progressInBytes) {
+        return [ connection.progressValue, connection.progressTotal ];
+    }
+
+    return [ formatBytes(connection.progressValue), formatBytes(connection.progressTotal) ];
+});
 
 function click() {
     if (active.value) return;
@@ -62,6 +75,7 @@ function exit() {
 
             <router-link
                     :to="{ name: 'home' }"
+                    :class="{ disabled: connection.active }"
                     tabindex="-1"
                     @click="clickItem" @mouseenter="playHoverSound">
                 <tooltip :text="t('HOME')" position="right">
@@ -70,7 +84,7 @@ function exit() {
             </router-link>
 
             <router-link :to="{ name: 'server-list' }"
-                         :class="{ highlighted: ui.highlightElevent == 'servers' }"
+                         :class="{ highlighted: ui.highlightElevent == 'servers', disabled: connection.active }"
                          v-if="version.branch === 'release' || version.branch === 'internal'"
                          tabindex="-1"
                          @click="clickItem" @mouseenter="playHoverSound">
@@ -80,7 +94,7 @@ function exit() {
             </router-link>
 
             <a @click="() => {modal.open(ModalType.DirectConnect, {}, true); clickItem()}"
-               :class="{ highlighted: ui.highlightElevent == 'direct-connect' }"
+               :class="{ highlighted: ui.highlightElevent == 'direct-connect', disabled: connection.active }"
                tabindex="-1"
                @mouseenter="playHoverSound">
                 <tooltip :text="t('DIRECT_CONNECT')" position="right">
@@ -90,9 +104,23 @@ function exit() {
         </div>
 
         <div class="navigation__group">
-            <router-link :to="{ name: 'about' }" tabindex="-1" @click="clickItem" @mouseenter="playHoverSound">
-                <tooltip :text="t('ABOUT')" position="right">
-                    <information/>
+            <router-link :to="{ name: 'connection' }" v-if="connection.active" tabindex="-1" @click="clickItem" @mouseenter="playHoverSound">
+                <tooltip :text="t(connection.action) + ((connection.progressType === ProgressType.Determinate && !connection.progressHidden) ? ` (${progress[0]} / ${progress[1]})` : '')" position="right">
+                    <connection v-if="['CONNECTED', 'DISCONNECTED', 'CONNECTION_FAILED', 'IN_QUEUE'].includes(connection.action)" />
+                    <download v-else/>
+                    <svg class="progressCircle"
+                         viewBox="0 0 65 65"
+                         v-if="connection.progressType !== ProgressType.None"
+                         :style="{ '--dashoffset': Math.PI * 60 * (1 - (connection.progressType === ProgressType.Indeterminate ? 0.3 : (connection.progressValue / connection.progressTotal))) }"
+                         :class="{ indeterminate: connection.progressType === ProgressType.Indeterminate }">
+                        <circle class="circle" cx="32.5" cy="32.5" r="30" stroke-width="3" fill="none" :stroke-dasharray="2 * Math.PI * 30" transform="rotate(-90 32.5 32.5)" />
+                    </svg>
+                    <div class="notification"
+                         v-if="['CONNECTED', 'DISCONNECTED', 'CONNECTION_FAILED', 'IN_QUEUE'].includes(connection.action)"
+                         :class="{
+                             yellow: connection.action === 'IN_QUEUE',
+                             green: connection.action === 'CONNECTED',
+                         }"></div>
                 </tooltip>
             </router-link>
 
@@ -102,7 +130,13 @@ function exit() {
                 </tooltip>
             </router-link>
 
-            <a @click="exit" tabindex="-1" @mouseenter="clickItem">
+            <router-link :to="{ name: 'about' }" tabindex="-1" @click="clickItem" @mouseenter="playHoverSound">
+                <tooltip :text="t('ABOUT')" position="right">
+                    <information/>
+                </tooltip>
+            </router-link>
+
+            <a @click="exit" tabindex="-1" @mouseenter="playHoverSound">
                 <tooltip :text="t('EXIT')" position="right">
                     <quit/>
                 </tooltip>
@@ -191,7 +225,54 @@ function exit() {
         .highlighted {
             svg {
                 animation: highlighted-navlink 0.8s ease-in-out infinite alternate;
-                border-color: $text_link;
+                border: solid 2px $text_link !important;
+            }
+        }
+
+        @keyframes circleProgress-indeterminate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .notification {
+            position: absolute;
+            top: u(4);
+            right: u(4);
+            width: u(8);
+            height: u(8);
+            border-radius: 50%;
+            background: #EB3640;
+            box-shadow: 0 0 8px 1px rgba(#eb3640, 0.70);
+
+            &.yellow {
+                background: #FFB900;
+                box-shadow: 0 0 8px 1px rgba(#FFB900, 0.70);
+            }
+
+            &.green {
+                background: #00AD56;
+                box-shadow: 0 0 8px 1px rgba(#00AD56, 0.70);
+            }
+        }
+
+        .progressCircle {
+            position: absolute;
+            top: u(-1);
+            left: u(-3);
+            width: u(62);
+            height: u(62);
+            border: none;
+            stroke: rgba($text_link, 1);
+            transition: stroke-dashoffset 0.2s;
+            stroke-dashoffset: var(--dashoffset);
+
+            &.indeterminate {
+                animation: circleProgress-indeterminate 1.5s linear infinite;
             }
         }
 
@@ -200,8 +281,9 @@ function exit() {
             width: u(96);
             height: u(80);
             cursor: pointer;
+            position: relative;
 
-            svg {
+            svg:not(.progressCircle) {
                 border-radius: 50%;
                 width: u(60);
                 height: u(60);
@@ -222,10 +304,18 @@ function exit() {
                 }
             }
 
-            &.router-link-active svg {
+            &.router-link-active svg:not(.progressCircle) {
                 border: #{u(2)} solid rgba(241, 242, 242, 0.25);
                 background: rgba(241, 242, 242, 0.03);
                 fill: #F1F2F2;
+            }
+        }
+
+        .disabled {
+            pointer-events: none;
+
+            svg {
+                fill: #949494 !important;
             }
         }
     }
