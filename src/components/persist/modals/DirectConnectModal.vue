@@ -37,8 +37,6 @@ function connect() {
             host = addr;
         }
 
-        if (host.startsWith("[") && host.endsWith("]")) host = host.substring(1, host.length - 1);
-
         alt.emit('connection:connect', host, port, '', '', password.value, '', addr);
     }
     modal.close();
