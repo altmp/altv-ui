@@ -176,13 +176,14 @@ let favorites = [
     {name: 'Test server 4', id: '75364d28be416bb061f5d768a1c3cd80'},
     {name: 'Test server 5', id: '6761089a930f31a9e91a3a29544f4568'}
 ];
-const serverData = Array(0).fill(null)
-    .map((_, i) => ({
+const serverData = Array(10).fill(null)
+    .map((_, i, a) => ({
             id: String(i),
             name: 'Some random server ' + i,
             resourcesSize: 100 * i,
             dataSize: 10 * i,
-            lastVisit: Date.now() / 1000 - 60 * 60 * 24 * i
+            lastVisit: Date.now() / 1000 - 60 * 60 * 24 * i,
+            type: i < (a.length / 3) ? 'shared' : 'server'
         }
     ));
 

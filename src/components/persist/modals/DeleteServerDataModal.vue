@@ -4,7 +4,7 @@ import {getModalProps, ModalType, useModalStore} from "@/stores/modal";
 import AltButton from "@/components/AltButton.vue";
 import {formatBytes} from "@/utils/formatBytes";
 import {useConnectionStateStore} from "@/stores/connectionState";
-import {watch} from "vue";
+import {computed, watch} from "vue";
 import {useLocalization} from "@/stores/localization";
 import {ServerDataType, useServersStore} from "@/stores/servers";
 
@@ -13,7 +13,7 @@ const modal = useModalStore();
 const servers = useServersStore();
 const modalProps = getModalProps<ModalType.DeleteServerData>(modal);
 const { t } = useLocalization();
-const canDelete = modalProps.value.id != connectionState.connectedServerId;
+const canDelete = computed(() => !connectionState.connected || !connectionState.connectedCacheKeys.includes(modalProps.value.id));
 
 if (connectionState.inProgress) modal.close();
 watch(() => connectionState.inProgress, () => connectionState.inProgress && modal.close());

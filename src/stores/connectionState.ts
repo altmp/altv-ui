@@ -14,6 +14,7 @@ export interface IConnectionState {
     wasConnected: boolean;
     connected: boolean;
     connectedServerId: string;
+    connectedCacheKeys: string[];
 
     // if true cancel button just closes connection ui
     inProgress: boolean;
@@ -41,6 +42,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
             wasConnected: false,
             connected: false,
             connectedServerId: '',
+            connectedCacheKeys: [],
 
             inProgress: false,
             failed: false,
@@ -252,7 +254,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 if (!ui.opened) router.push('/connection');
             });
 
-            alt.on('connection:connected', (serverId?: string) => {
+            alt.on('connection:connected', (serverId?: string, resourcesCacheKey?: string, dataCacheKey?: string) => {
                 const wasConnected = this.connected;
 
                 this.reset();
@@ -263,6 +265,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.connected = true;
                 this.wasConnected = true;
                 if (serverId != null) this.connectedServerId = serverId;
+                this.connectedCacheKeys = [resourcesCacheKey, dataCacheKey].filter(Boolean) as string[];
 
                 if (!wasConnected) ui.toggleUi(false);
             });

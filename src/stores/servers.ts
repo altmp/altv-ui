@@ -9,6 +9,7 @@ export interface IServerData {
     lastVisit: number;
     resourcesSize: number;
     dataSize: number;
+    type: string;
 }
 
 export interface ServersStore {
@@ -98,7 +99,7 @@ export const useServersStore = useInitializableStore(defineStore('servers', {
                 this.favorite = data;
             });
             alt.on('serverData:update', (data: IServerData[]) => {
-                this.serverData = data.sort((a, b) => b.lastVisit - a.lastVisit);
+                this.serverData = data.sort((a, b) => a.type === 'shared' ? -1 : (b.lastVisit - a.lastVisit));
             });
             alt.on('serverData:updateOne', (data: IServerData) => {
                 const idx = this.serverData.findIndex(e => e.id == data.id);
