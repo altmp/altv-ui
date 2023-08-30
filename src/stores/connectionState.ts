@@ -240,13 +240,13 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 if (!ui.opened) router.push('/connection');
             });
 
-            alt.on('connection:failed', (message: string) => {
+            alt.on('connection:failed', (message: string, allowReconnect?: boolean) => {
                 this.reset();
                 this.action = 'CONNECTION_FAILED';
                 this.message = message;
                 this.failed = !this.wasConnected;
                 this.cancelAction = null;
-                this.showReconnect = true;
+                this.showReconnect = allowReconnect ?? true;
                 playErrorSound();
 
                 if (!ui.opened) router.push('/connection');

@@ -45,7 +45,8 @@ function connect() {
     const server = modalProps.value.server;
     if (!server) return;
     connection.setServer(server.name);
-    alt.emit('connection:connect', server.host, server.port, server.cdnUrl, server.earlyAuthUrl, password.value, server.id, server.name, hasSkin.value && skinChecked.value);
+    const url = server.earlyAuthUrl ? server.earlyAuthUrl : (server.host + ":" + server.port);
+    alt.emit('connection:connect', url, password.value, server.id, server.name, hasSkin.value && skinChecked.value);
     modal.close();
 }
 </script>

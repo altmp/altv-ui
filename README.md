@@ -26,7 +26,7 @@ In-game user interface of alt:V multiplayer.
 | `connection:downloadingAdditionalResources` | `bytesDownloaded: number, bytesTotal: number, speed?: number` | Set "Downloading additional resources" stage (for resources dl after join). Speed in bytes                 |
 | `connection:validatingAdditionalResources`  | `bytesDownloaded: number, bytesTotal: number, speed?: number` | Set "Validating additional resources" stage (for resources validation after join). Speed in bytes          |
 | `connection:disconnected`                   | `message: string`                                             | Set "Disconnected" stage. Message can be a localization string.                                            |
-| `connection:failed`                         | `message: string`                                             | Sets "Connection failed" state, which can be closed by Close button. Message can be a localization string. |
+| `connection:failed`                         | `message: string, allowReconnect?: boolean`                   | Sets "Connection failed" state, which can be closed by Close button. Message can be a localization string. |
 | `connection:connected`                      | `serverId?: string`                                           | Set UI into connected state and toggles UI off (if wasn't connected yet) by default.                       |
 | `connection:requestPermissions`             | `required: number[], optional: number[]`                      | Open "Permission request" modal (not a connection stage). Permissions from enum.                           |
 

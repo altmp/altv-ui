@@ -25,20 +25,7 @@ function connect() {
 
     connection.setServer(addr);
     version.updateLastIp(addr);
-    if (addr.match(/^https?:\/\//)) {
-        alt.emit('connection:connect', '', 0, addr, '', password.value, '', addr, false);
-    } else {
-        let host: string, port = 0;
-        const data = addr.match(/^(\[.*?]|[^:]+):?(\d+)?$/mi);
-        if (data) {
-            host = data[1];
-            port = +data[2] || 0;
-        } else {
-            host = addr;
-        }
-
-        alt.emit('connection:connect', host, port, '', '', password.value, '', addr);
-    }
+    alt.emit('connection:connect', addr, password.value, '', addr, false);
     modal.close();
 }
 
