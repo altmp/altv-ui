@@ -25,7 +25,7 @@ function connect() {
 
     connection.setServer(addr);
     version.updateLastIp(addr);
-    alt.emit('connection:connect', addr, password.value, '', addr, false);
+    alt.emit('connection:connect', addr, password.value, '', '', false);
     modal.close();
 }
 
