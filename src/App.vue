@@ -36,9 +36,9 @@ watch(() => version.manifest, (value) => {
         }
     }
 
-    if (value?.imageBackground64) {
-        style += `--background-dark: linear-gradient(to bottom, rgba(10, 10, 10, 35%), rgba(10, 10, 10, 35%)), url(data:image/png;base64,${value.imageBackground64});`;
-        style += `--background: url(data:image/png;base64,${value.imageBackground64});`;
+    if (value?.uiBackground) {
+        style += `--background-dark: linear-gradient(to bottom, rgba(10, 10, 10, 35%), rgba(10, 10, 10, 35%)), url(data:image/png;base64,${value.uiBackground});`;
+        style += `--background: url(data:image/png;base64,${value.uiBackground});`;
     }
 
     document.body.setAttribute('style', style);

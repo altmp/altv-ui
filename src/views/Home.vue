@@ -22,7 +22,7 @@ const { t } = useLocalization();
 <template>
     <div class="view" :class="{ 'view--no-news': !version.rss }">
         <div class="view__header">
-            <logo custom-logo class="view__logo" v-if="version.manifest?.imageLogo64"></logo>
+            <logo custom-logo class="view__logo" v-if="version.manifest?.logo"></logo>
             <h1>{{ t('WELCOME_TO', version.manifest?.name || (version.orange ? "GTA:Orange" : 'alt:V Multiplayer') )}}</h1>
         </div>
 

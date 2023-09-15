@@ -8,8 +8,8 @@ import RssParser from "rss-parser/dist/rss-parser";
 export interface IManifest {
     name: string;
     rss: string;
-    imageLogo64?: string;
-    imageBackground64?: string;
+    logo?: string;
+    uiBackground?: string;
     primaryColor?: string;
     servers: IHistoryServer[];
 }

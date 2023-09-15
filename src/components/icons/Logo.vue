@@ -11,7 +11,7 @@ const colors: Record<string, string> = {
 
 const props = defineProps<{ customLogo?: boolean, logoRef: (el: HTMLDivElement) => void }>();
 const version = useVersionStore();
-const customLogo = computed(() => props.customLogo && version.manifest?.imageLogo64);
+const customLogo = computed(() => props.customLogo && version.manifest?.logo);
 const color = computed(() => colors[version.branch] ?? colors.release);
 </script>
 
