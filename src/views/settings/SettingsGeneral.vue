@@ -103,7 +103,8 @@ const { t } = locale;
     </div>
 
     <div class="menu__group">
-        <h3>{{ t('DEBUG') }}</h3>
+        <h3>{{ t('MISC_SETTINGS') }}</h3>
+        <alt-checkbox v-model="settings.data.discordRichPresence" @change="settings.save('discordRichPresence')" :label="t('DISCORD_RICH_PRESENCE')"></alt-checkbox>
         <alt-checkbox v-model="settings.data.netgraphEnabled" @change="settings.save('netgraphEnabled')" :label="t('NETGRAPH')"></alt-checkbox>
         <alt-checkbox v-model="settings.data.useExternalConsole" @change="settings.save('useExternalConsole')" :label="t('USE_EXTERNAL_CONSOLE')"></alt-checkbox>
     </div>

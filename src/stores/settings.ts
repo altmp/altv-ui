@@ -33,7 +33,8 @@ export const useSettingsStore = useInitializableStore(defineStore('settings', {
                 consoleWidth: 0.45,
                 launcherSkin: '',
                 voiceInputDevice: 'default',
-                launcherSkinsDisabled: [] as string[]
+                launcherSkinsDisabled: [] as string[],
+                discordRichPresence: true
             },
 
             micTest: false,
