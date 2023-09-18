@@ -61,7 +61,7 @@ watch(() => {
         </div>
         <div class="connection__message" v-if="connectionState.message">{{ message.str }}</div>
         <div class="progress" v-if="connectionState.progressType !== ProgressType.None">
-            <div class="progress__label">{{ message }}</div>
+            <div class="progress__label">{{ t(connectionState.progressAction) }}</div>
             <div class="progress__bar" dir="ltr">
                 <div v-if="connectionState.progressType === ProgressType.Determinate" class="progress__fill progress__fill--bg"></div>
                 <div v-if="connectionState.progressType === ProgressType.Determinate" class="progress__fill"
