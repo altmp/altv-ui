@@ -131,6 +131,53 @@ export const useLocalization = defineStore('localization', {
         tRaw(this: any, state) {
             return (key: string) => String(state.currentLocale.preparedStrings?.get(key) || key);
         },
+        // takes string in format of LOCALE_KEY;["arg1","arg2"]
+        // array is in json format
+        tArgsFromStr(this: any, state) {
+            return (key: string) => {
+                const re = /(?<!\\);/gs;
+                const fallback = String(state.currentLocale.preparedStrings?.get(key) || key);
+                try {
+                    if (!re.test(key)) return fallback;
+                    const elements = key.split(re);
+                    if (elements.length != 2) return fallback;
+                    const localeKey = elements[0] ?? '';
+                    if (!state.currentLocale.preparedStrings?.has(localeKey)) return fallback;
+                    const args = JSON.parse(elements[1] ?? '');
+                    if (!args) return fallback;
+                    return this.formatString(state.currentLocale.preparedStrings?.get(localeKey), args);
+                } catch {
+                    return fallback;
+                }
+            };
+        },
+        // takes string in format of LOCALE_KEY;["arg1","arg2"];context
+        // array is in json format
+        tArgsFromStrCtx(this: any, state) {
+            return (key: string) => {
+                const re = /(?<!\\);/gs;
+                const fallback = {
+                    str: String(state.currentLocale.preparedStrings?.get(key) || key),
+                    context: null
+                };
+
+                try {
+                    if (!re.test(key)) return fallback;
+                    const elements = key.split(re);
+                    if (elements.length < 2) return fallback;
+                    const localeKey = elements[0] ?? '';
+                    if (!state.currentLocale.preparedStrings?.has(localeKey)) return fallback;
+                    const args = JSON.parse(elements[1] ?? '');
+                    if (!args) return fallback;
+                    return {
+                        str: this.formatString(state.currentLocale.preparedStrings?.get(localeKey), args),
+                        context: elements[2] ?? null
+                    };
+                } catch {
+                    return fallback;
+                }
+            };
+        },
         tPlural(this: any, state) {
             const rules = new Intl.PluralRules(state.currentLocale.intlCode);
             const strings = state.currentLocale.preparedStrings;

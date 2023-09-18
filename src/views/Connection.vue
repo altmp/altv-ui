@@ -14,7 +14,7 @@ const settings = useSettingsStore();
 const version = useVersionStore();
 const modal = useModalStore();
 const router = useRouter();
-const { t } = useLocalization();
+const { t, tArgsFromStrCtx } = useLocalization();
 
 const progress = computed(() => {
     if (!connectionState.progressInBytes) {
@@ -23,6 +23,8 @@ const progress = computed(() => {
 
     return [ formatBytes(connectionState.progressValue), formatBytes(connectionState.progressTotal) ];
 });
+
+const message = computed(() => tArgsFromStrCtx(connectionState.message ?? ''));
 
 function abort() {
     connectionState.abort();
@@ -34,6 +36,11 @@ function disconnect() {
 
 function reconnect() {
     alt.emit('connection:reconnect');
+}
+
+function openContext() {
+    if (message.value.context)
+        window.open(message.value.context);
 }
 
 watch(() => {
@@ -52,9 +59,9 @@ watch(() => {
             <div class="connection__title">{{ t(connectionState.action) }}</div>
             <div class="connection__server">{{ connectionState.server }}</div>
         </div>
-        <div class="connection__message" v-if="connectionState.message">{{ t(connectionState.message) }}</div>
+        <div class="connection__message" v-if="connectionState.message">{{ message.str }}</div>
         <div class="progress" v-if="connectionState.progressType !== ProgressType.None">
-            <div class="progress__label">{{ t(connectionState.progressAction) }}</div>
+            <div class="progress__label">{{ message }}</div>
             <div class="progress__bar" dir="ltr">
                 <div v-if="connectionState.progressType === ProgressType.Determinate" class="progress__fill progress__fill--bg"></div>
                 <div v-if="connectionState.progressType === ProgressType.Determinate" class="progress__fill"
@@ -68,8 +75,9 @@ watch(() => {
         </div>
         <div class="connection__actions">
             <alt-button color="red" v-if="connectionState.cancelAction" @click="abort">{{ t(connectionState.cancelAction) }}</alt-button>
-            <alt-button color="red" v-if="connectionState.showDisconnect" @click="disconnect">{{t('DISCONNECT')}}</alt-button>
-            <alt-button color="red" v-if="connectionState.showReconnect && (settings.data.debug || version.branch === 'internal')" @click="reconnect">{{t('RECONNECT')}}</alt-button>
+            <alt-button v-if="connectionState.showDisconnect" @click="disconnect">{{t('DISCONNECT')}}</alt-button>
+            <alt-button v-if="connectionState.showReconnect && (settings.data.debug || version.branch === 'internal')" @click="reconnect">{{t('RECONNECT')}}</alt-button>
+            <alt-button v-if="message.context != null" @click="openContext">{{t('VIEW_MORE')}}</alt-button>
         </div>
     </div>
 </template>
@@ -110,6 +118,7 @@ watch(() => {
         font-size: u(18);
         white-space: pre-line;
         text-align: center;
+        line-height: 1.6
     }
 
     .progress {
