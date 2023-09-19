@@ -13,10 +13,6 @@
     "role": "Developer and C# module developer"
   },
   {
-    "name": "LeonMrBonnie",
-    "role": "Developer and JS module maintainer"
-  },
-  {
     "name": "Vektor",
     "role": "Developer"
   },
@@ -72,6 +68,10 @@
     "name": "xshady",
     "role": "Quality Assurance",
     "picture": "https://avatars.githubusercontent.com/u/54737754?s=128"
+  },
+  {
+    "name": "LeonMrBonnie",
+    "role": "Former Developer and JS module maintainer"
   },
   {
     "name": "Hazard",
