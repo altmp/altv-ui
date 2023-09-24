@@ -18,7 +18,7 @@ const input = ref<HTMLInputElement | null>(null);
 
 function update() {
     if (!input.value) return;
-    input.value.setAttribute('style', `--fill: ${input.value.value}%`);
+    input.value.setAttribute('style', `--fill: ${(input.value.value - input.value.min) / input.value.max * 100}%`);
 }
 
 function updateSound() {
