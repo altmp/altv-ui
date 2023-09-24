@@ -9,6 +9,21 @@ const props = defineProps({
     },
     label: {
         type: String,
+    },
+    min: {
+        type: Number,
+        required: false,
+        default: 0
+    },
+    max: {
+        type: Number,
+        required: false,
+        default: 100
+    },
+    step: {
+        type: Number,
+        required: false,
+        default: 1
     }
 });
 
@@ -18,8 +33,7 @@ const input = ref<HTMLInputElement | null>(null);
 
 function update() {
     if (!input.value) return;
-    const inputMax = input.value.max == 0 ? 100 : input.value.max;
-    const fillPercent = (input.value.value - input.value.min) / inputMax * 100;
+    const fillPercent = (input.value.value - input.value.min) / input.value.max * 100;
     input.value.setAttribute('style', `--fill: ${fillPercent}%`);
 }
 
@@ -65,13 +79,16 @@ onMounted(() => {
     <label>
         {{ label }}
         <input dir="ltr" type="range" v-bind="$attrs"
-               :value="modelValue"
-               @input="onInputChange"
-               ref="input"
-               @wheel="onWheel"
-               @mouseenter="playHoverSound"
-               @mousedown="playSliderEnterSound"
-               @mouseup="playSliderLeaveSound"/>
+            :min="min"
+            :max="max"
+            :step="step"
+            :value="modelValue"
+            @input="onInputChange"
+            ref="input"
+            @wheel="onWheel"
+            @mouseenter="playHoverSound"
+            @mousedown="playSliderEnterSound"
+            @mouseup="playSliderLeaveSound"/>
     </label>
 </template>
 
