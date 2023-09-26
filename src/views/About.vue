@@ -8,6 +8,8 @@ import {useLocalization} from "@/stores/localization";
 import sanitizeHtml from "sanitize-html";
 import {ref} from "vue";
 import { playEmojiSound, playHoverSound, playMoveSound } from "@/utils/playSound";
+import type {IDeveloper} from "@/types/IDeveloper";
+import Developer from "@/views/about/Developer.vue";
 
 interface ILibrary {
     name: string;
@@ -15,12 +17,6 @@ interface ILibrary {
     source: string;
     licence: string;
     licenceLink: string;
-}
-
-interface IDeveloper {
-    name: string;
-    role: string;
-    picture: string;
 }
 
 const libs = libsJson as ILibrary[];
@@ -110,14 +106,7 @@ const considerSupporting = sanitize(t('CONSIDER_SUPPORTING')).replace('{0}', '<a
                         <!--                        <div class="view__list-wrapper">-->
                         <h2>{{ t('DEVELOPERS_AND_CONTRIBUTORS') }}</h2>
                         <p class="view__notice" v-html="considerSupporting" />
-                        <block-container class="developer" v-for="dev in devs">
-                            <object v-if="dev.picture" :data="dev.picture" type="image/png" class="developer__image">
-                                <img :src="getImage(dev.name)" alt="" class="developer__image">
-                            </object>
-                            <img v-else :src="getImage(dev.name)" alt="" class="developer__image">
-                            <div class="developer__username">{{ dev.name }}</div>
-                            <div class="developer__desc">{{ dev.role }}</div>
-                        </block-container>
+                        <developer :dev="dev" v-for="dev in devs" />
                         <!--                        </div>-->
                     </div>
                 </div>
