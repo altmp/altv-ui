@@ -106,10 +106,13 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.server = server;
             });
 
-            alt.on('connection:connecting', (serverName?: string, cacheKeys?: string[]) => {
+            alt.on('connection:setCacheKeys', (resourceCacheKey?: string, dataCacheKey?: string) => {
+                this.connectedCacheKeys = [resourceCacheKey, dataCacheKey].filter(Boolean) as string[];
+            });
+
+            alt.on('connection:connecting', (serverName?: string) => {
                 this.reset();
                 if (serverName != null) this.server = serverName;
-                if (cacheKeys) this.connectedCacheKeys = cacheKeys;
                 this.progressAction = 'CONNECTING_TO_THE_SERVER';
                 this.progressType = ProgressType.Indeterminate;
                 this.cancelAction = null;
