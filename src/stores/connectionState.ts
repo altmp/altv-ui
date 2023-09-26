@@ -106,9 +106,10 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.server = server;
             });
 
-            alt.on('connection:connecting', (serverName?: string) => {
+            alt.on('connection:connecting', (serverName?: string, cacheKeys?: string[]) => {
                 this.reset();
                 if (serverName != null) this.server = serverName;
+                if (cacheKeys) this.connectedCacheKeys = cacheKeys;
                 this.progressAction = 'CONNECTING_TO_THE_SERVER';
                 this.progressType = ProgressType.Indeterminate;
                 this.cancelAction = null;
@@ -237,6 +238,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.message = message;
                 this.cancelAction = null;
                 this.showReconnect = true;
+                this.connectedCacheKeys = [];
                 playErrorSound();
 
                 if (!ui.opened) router.push('/connection');
@@ -249,12 +251,13 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.failed = !this.wasConnected;
                 this.cancelAction = null;
                 this.showReconnect = allowReconnect ?? true;
+                this.connectedCacheKeys = [];
                 playErrorSound();
 
                 if (!ui.opened) router.push('/connection');
             });
 
-            alt.on('connection:connected', (serverId?: string, resourcesCacheKey?: string, dataCacheKey?: string) => {
+            alt.on('connection:connected', (serverId?: string) => {
                 const wasConnected = this.connected;
 
                 this.reset();
@@ -265,7 +268,6 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.connected = true;
                 this.wasConnected = true;
                 if (serverId != null) this.connectedServerId = serverId;
-                this.connectedCacheKeys = [resourcesCacheKey, dataCacheKey].filter(Boolean) as string[];
 
                 if (!wasConnected) ui.toggleUi(false);
             });

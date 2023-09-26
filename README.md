@@ -8,27 +8,27 @@ In-game user interface of alt:V multiplayer.
 
 #### Connection
 
-| Event                                       | Arguments                                                              | Description                                                                                                |
-|:--------------------------------------------|------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
-| `connection:idle`                           |                                                                        | Close connection UI                                                                                        |
-| `connection:setServer`                      | `serverName: string`                                                   | Set target joining server name                                                                             |
-| `connection:connecting`                     | `serverName?: string`                                                  | Set "Connecting to the server" stage (indeterminate progress bar).                                         |
-| `connection:joining`                        |                                                                        | Set "Joining the game" stage (indeterminate progress bar).                                                 |
-| `connection:startingResources`              |                                                                        | Set "Starting resources" stage (indeterminate progress bar).                                               |
-| `connection:reloadingGameMap`               |                                                                        | Set "Reloading game map" stage (indeterminate progress bar).                                               |
-| `connection:preloadingMods`                 |                                                                        | Set "Preloading mods" stage (indeterminate progress bar).                                                  |
-| `connection:startingGame`                   | `progress: number, progressTotal: number`                              | Set "Starting the game" stage                                                                              |
-| `connection:downloadingResources`           | `bytesDownloaded: number, bytesTotal: number, speed?: number`          | Set "Downloading resources" stage. Speed in bytes                                                          |
-| `connection:validatingResources`            | `resourcesValidated: number, resourcesTotal: number`                   | Set "Validating resources" stage                                                                           |
-| `connection:downloadingRuntimes`            | `bytesDownloaded: number, bytesTotal: number, speed?: number`          | Set "Downloading runtimes" stage. Speed in bytes                                                           |
-| `connection:validatingRuntimes`             | `bytesDownloaded: number, bytesTotal: number, speed?: number`          | Set "Validating runtimes" stage. Speed in bytes                                                            |
-| `connection:inQueue`                        | `message?: string`                                                     | Set "In queue" stage. Message can be a localization string.                                                |
-| `connection:downloadingAdditionalResources` | `bytesDownloaded: number, bytesTotal: number, speed?: number`          | Set "Downloading additional resources" stage (for resources dl after join). Speed in bytes                 |
-| `connection:validatingAdditionalResources`  | `bytesDownloaded: number, bytesTotal: number, speed?: number`          | Set "Validating additional resources" stage (for resources validation after join). Speed in bytes          |
-| `connection:disconnected`                   | `message: string`                                                      | Set "Disconnected" stage. Message can be a localization string.                                            |
-| `connection:failed`                         | `message: string, allowReconnect?: boolean`                            | Sets "Connection failed" state, which can be closed by Close button. Message can be a localization string. |
-| `connection:connected`                      | `serverId?: string, resourcesCacheKey?: string, dataCacheKey?: string` | Set UI into connected state and toggles UI off (if wasn't connected yet) by default.                       |
-| `connection:requestPermissions`             | `required: number[], optional: number[]`                               | Open "Permission request" modal (not a connection stage). Permissions from enum.                           |
+| Event                                       | Arguments                                                     | Description                                                                                                |
+|:--------------------------------------------|---------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
+| `connection:idle`                           |                                                               | Close connection UI                                                                                        |
+| `connection:setServer`                      | `serverName: string`                                          | Set target joining server name                                                                             |
+| `connection:connecting`                     | `serverName?: string, cacheKeys?: string[]`                   | Set "Connecting to the server" stage (indeterminate progress bar).                                         |
+| `connection:joining`                        |                                                               | Set "Joining the game" stage (indeterminate progress bar).                                                 |
+| `connection:startingResources`              |                                                               | Set "Starting resources" stage (indeterminate progress bar).                                               |
+| `connection:reloadingGameMap`               |                                                               | Set "Reloading game map" stage (indeterminate progress bar).                                               |
+| `connection:preloadingMods`                 |                                                               | Set "Preloading mods" stage (indeterminate progress bar).                                                  |
+| `connection:startingGame`                   | `progress: number, progressTotal: number`                     | Set "Starting the game" stage                                                                              |
+| `connection:downloadingResources`           | `bytesDownloaded: number, bytesTotal: number, speed?: number` | Set "Downloading resources" stage. Speed in bytes                                                          |
+| `connection:validatingResources`            | `resourcesValidated: number, resourcesTotal: number`          | Set "Validating resources" stage                                                                           |
+| `connection:downloadingRuntimes`            | `bytesDownloaded: number, bytesTotal: number, speed?: number` | Set "Downloading runtimes" stage. Speed in bytes                                                           |
+| `connection:validatingRuntimes`             | `bytesDownloaded: number, bytesTotal: number, speed?: number` | Set "Validating runtimes" stage. Speed in bytes                                                            |
+| `connection:inQueue`                        | `message?: string`                                            | Set "In queue" stage. Message can be a localization string.                                                |
+| `connection:downloadingAdditionalResources` | `bytesDownloaded: number, bytesTotal: number, speed?: number` | Set "Downloading additional resources" stage (for resources dl after join). Speed in bytes                 |
+| `connection:validatingAdditionalResources`  | `bytesDownloaded: number, bytesTotal: number, speed?: number` | Set "Validating additional resources" stage (for resources validation after join). Speed in bytes          |
+| `connection:disconnected`                   | `message: string`                                             | Set "Disconnected" stage. Message can be a localization string.                                            |
+| `connection:failed`                         | `message: string, allowReconnect?: boolean`                   | Sets "Connection failed" state, which can be closed by Close button. Message can be a localization string. |
+| `connection:connected`                      | `serverId?: string`                                           | Set UI into connected state and toggles UI off (if wasn't connected yet) by default.                       |
+| `connection:requestPermissions`             | `required: number[], optional: number[]`                      | Open "Permission request" modal (not a connection stage). Permissions from enum.                           |
 
 #### Console
 
