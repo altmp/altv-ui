@@ -18,7 +18,7 @@ const props = defineProps<{
 }>();
 const modal = useModalStore();
 const connectionState = useConnectionStateStore();
-const canDelete = computed(() => !connectionState.connected || !connectionState.connectedCacheKeys.includes(props.id));
+const canDelete = computed(() => !connectionState.connectedCacheKeys.includes(props.id));
 
 function deleteData(type: number) {
     modal.open(ModalType.DeleteServerData, { id: props.id, type, size: type === 0 ? props.resourcesSize : props.dataSize, name: props.name });

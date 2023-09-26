@@ -13,10 +13,7 @@ const modal = useModalStore();
 const servers = useServersStore();
 const modalProps = getModalProps<ModalType.DeleteServerData>(modal);
 const { t } = useLocalization();
-const canDelete = computed(() => !connectionState.connected || !connectionState.connectedCacheKeys.includes(modalProps.value.id));
-
-if (connectionState.inProgress) modal.close();
-watch(() => connectionState.inProgress, () => connectionState.inProgress && modal.close());
+const canDelete = computed(() => !connectionState.connectedCacheKeys.includes(modalProps.value.id));
 
 function confirm() {
     servers.deleteServerData(modalProps.value.id, modalProps.value.type);
