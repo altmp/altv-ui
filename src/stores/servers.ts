@@ -65,7 +65,7 @@ export const useServersStore = useInitializableStore(defineStore('servers', {
                 this.favorite = this.favorite.filter(e => e.id !== id);
                 alt.emit('servers:favorite:remove', id);
             } else {
-                const server = this.servers.find(e => e.id == id);
+                const server = this.servers.find(e => e.publicId == id);
                 if (!server) return;
 
                 this.favorite = [...this.favorite, {id, name: server.name}]
@@ -88,7 +88,7 @@ export const useServersStore = useInitializableStore(defineStore('servers', {
                 this.serversLoading = false;
             });
             alt.on('servers:setPing', (id: string, ping: number) => {
-                const server = this.servers.find(e => e.id == id);
+                const server = this.servers.find(e => e.publicId == id);
                 if (!server) return;
                 server.ping = ping;
             })

@@ -43,7 +43,7 @@ const data: ComputedRef<DataType> = computed((): DataType => {
 
 function open() {
     if (props.server.id) {
-        const server = servers.servers.find(e => e.id == props.server.id);
+        const server = servers.servers.find(e => e.publicId == props.server.id);
         if (!server) return;
 
         modal.open(ModalType.Connect, { server }, true);
@@ -64,7 +64,7 @@ function open() {
         <template v-if="!data.direct">
             <div v-if="data.offline !== undefined" class="server__players server__players--offline">{{ t('OFFLINE') }}</div>
             <div v-if="data.offline === undefined" class="server__players server__players--online" dir="ltr">
-                {{ data.players }} <span>/ {{ data.maxPlayers }}</span>
+                {{ data.playersCount }} <span>/ {{ data.maxPlayersCount }}</span>
             </div>
         </template>
     </block-container>

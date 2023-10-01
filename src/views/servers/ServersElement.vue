@@ -22,7 +22,7 @@ const props = defineProps({
     },
 })
 
-const favorite = computed(() => servers.favoriteIds.has(props.item?.id ?? ""));
+const favorite = computed(() => servers.favoriteIds.has(props.item?.publicId ?? ""));
 </script>
 
 <template>
@@ -42,7 +42,7 @@ const favorite = computed(() => servers.favoriteIds.has(props.item?.id ?? ""));
             </div>
         </td>
         <td class="players">
-            <player-count :online="true" dir="ltr" :players="item.players" :max-players="item.maxPlayers"></player-count>
+            <player-count :online="true" dir="ltr" :players="item.playersCount" :max-players="item.maxPlayersCount"></player-count>
         </td>
 <!--        <td class="ping">-->
 <!--            <div class="ping__value" v-if="item.ping === 65535">...</div>-->

@@ -18,7 +18,7 @@ const { t } = useLocalization();
 
 <template>
 <div class="server-icons" v-bind="$attrs">
-    <tooltip :text="t('SERVER_LOCKED')" v-if="server.locked">
+    <tooltip :text="t('SERVER_LOCKED')" v-if="server.passworded">
         <private />
     </tooltip>
     <tooltip :text="t('SERVER_VERIFIED')" v-if="server.verified">

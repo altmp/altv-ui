@@ -7,7 +7,7 @@ import Loader from "@/components/Loader.vue";
 
 const servers = useServersStore();
 const serversCount = computed(() => servers.servers.length);
-const playersCount = computed(() => servers.servers.reduce((prev, curr) => prev + curr.players, 0));
+const playersCount = computed(() => servers.servers.reduce((prev, curr) => prev + curr.playersCount, 0));
 const { tPlural: t } = useLocalization();
 </script>
 

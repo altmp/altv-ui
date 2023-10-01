@@ -210,7 +210,7 @@ async function loadServers() {
 
     try {
         await wait(1000);
-        const res = await fetch('https://api.altv.mp/servers/list');
+        const res = await fetch('https://api-new.alt-mp.com/servers');
         servers = (await res.json()) as any[];
 
         alt.viewEmit('servers:update', servers);

@@ -45,15 +45,15 @@ const sortedData = computed(() => {
 
     return servers.servers
         .filter((e) => {
-            if (filter.hideFull && e.maxPlayers == e.players) return false;
-            if (filter.hideEmpty && e.players == 0) return false;
-            if (filter.hideLocked && e.locked) return false;
+            if (filter.hideFull && e.maxPlayersCount == e.playersCount) return false;
+            if (filter.hideEmpty && e.playersCount == 0) return false;
+            if (filter.hideLocked && e.passworded) return false;
 
-            if (maxPlayers != null && e.players > maxPlayers) return false;
-            if (minPlayers != null && e.players < minPlayers) return false;
+            if (maxPlayers != null && e.playersCount > maxPlayers) return false;
+            if (minPlayers != null && e.playersCount < minPlayers) return false;
 
-            if (maxSlots != null && e.maxPlayers > maxSlots) return false;
-            if (minSlots != null && e.maxPlayers < minSlots) return false;
+            if (maxSlots != null && e.maxPlayersCount > maxSlots) return false;
+            if (minSlots != null && e.maxPlayersCount < minSlots) return false;
 
             // if (maxPing != null && e.ping != -1 && e.ping != null && e.ping > maxPing) return false;
 
@@ -95,7 +95,7 @@ const sortedData = computed(() => {
         </tr>
         </thead>
         <tbody>
-        <servers-element v-for="item in sortedData" :key="item.id" :item="item" @click="playMoveSound" @mouseenter="playHoverSound" />
+        <servers-element v-for="item in sortedData" :key="item.publicId" :item="item" @click="playMoveSound" @mouseenter="playHoverSound" />
         </tbody>
     </table>
 </template>

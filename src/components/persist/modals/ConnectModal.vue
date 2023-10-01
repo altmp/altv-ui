@@ -22,14 +22,14 @@ const modal = useModalStore();
 const { t } = useLocalization();
 const modalProps = getModalProps<ModalType.Connect>(modal);
 
-const favorite = computed(() => servers.favoriteIds.has(modalProps.value.server.id));
+const favorite = computed(() => servers.favoriteIds.has(modalProps.value.server.publicId));
 const bannerError = ref(false);
 const bannerLoading = ref(true);
-const hasSkin = computed(() => servers.skinServers.includes(modalProps.value.server.id));
-const skinChecked = computed(() => !settings.data.launcherSkinsDisabled.includes(modalProps.value.server.id));
+const hasSkin = computed(() => servers.skinServers.includes(modalProps.value.server.publicId));
+const skinChecked = computed(() => !settings.data.launcherSkinsDisabled.includes(modalProps.value.server.publicId));
 
 function toggleSkinChecked() {
-    const id = modalProps.value.server.id;
+    const id = modalProps.value.server.publicId;
     const arr = settings.data.launcherSkinsDisabled;
     const index = arr.indexOf(id);
     if (index == -1) arr.push(id);
@@ -45,8 +45,7 @@ function connect() {
     const server = modalProps.value.server;
     if (!server) return;
     connection.setServer(server.name);
-    const url = server.cdnUrl ? server.cdnUrl : (server.host + ":" + server.port);
-    alt.emit('connection:connect', url, password.value, server.id, server.name, hasSkin.value && skinChecked.value);
+    alt.emit('connection:connect', server.address, password.value, server.publicId, server.name, hasSkin.value && skinChecked.value);
     modal.close();
 }
 </script>
@@ -64,12 +63,14 @@ function connect() {
                     <server-icons :server="modalProps.server" class="connect__icons" />
                     <span>{{ modalProps.server.name }}</span>
                 </div>
-                <div class="connect__favorite" @click="() => {servers.toggleFavorite(modalProps.server.id); playClickSound();}" @mouseenter="playHoverSound"><star-outline v-if="!favorite" /><star v-if="favorite" /></div>
+                <div class="connect__favorite" @click="() => {servers.toggleFavorite(modalProps.server.publicId); playClickSound();}" @mouseenter="playHoverSound"><star-outline v-if="!favorite" /><star v-if="favorite" /></div>
             </div>
             <div class="connect__data">
                 <div class="info">
                     <div class="info__element" dir="ltr">
-                        {{ t('SERVER_PLAYERS', `${modalProps.server.players} / ${modalProps.server.maxPlayers}`)}}
+                        {{
+                            t('SERVER_PLAYERS', `${modalProps.server.playersCount} / ${modalProps.server.maxPlayersCount}`)
+                        }}
                     </div>
                     <div class="info__element">
                         {{ modalProps.server.gameMode }}
@@ -86,11 +87,11 @@ function connect() {
                 </div>
             </div>
             <div class="connect__actions">
-                <alt-input class="connect__password" @keydown.enter.stop="connect" type="password" placeholder="Password" autocomplete="off" v-if="modalProps.server.locked" v-model="password"></alt-input>
+                <alt-input class="connect__password" @keydown.enter.stop="connect" type="password" placeholder="Password" autocomplete="off" v-if="modalProps.server.passworded" v-model="password"></alt-input>
                 <alt-button color="primary" @click="connect">{{ t('CONNECT') }}</alt-button>
-                <alt-checkbox class="connect__checkbox" :model-value="skinChecked" @click="toggleSkinChecked" v-if="hasSkin && !modalProps.server.locked" :label="t('APPLY_SERVER_SKIN')"></alt-checkbox>
+                <alt-checkbox class="connect__checkbox" :model-value="skinChecked" @click="toggleSkinChecked" v-if="hasSkin && !modalProps.server.passworded" :label="t('APPLY_SERVER_SKIN')"></alt-checkbox>
             </div>
-            <alt-checkbox class="connect__checkbox connect__checkbox--newline" v-if="hasSkin && modalProps.server.locked" :label="t('APPLY_SERVER_SKIN')"></alt-checkbox>
+            <alt-checkbox class="connect__checkbox connect__checkbox--newline" v-if="hasSkin && modalProps.server.passworded" :label="t('APPLY_SERVER_SKIN')"></alt-checkbox>
         </div>
     </div>
 </template>
