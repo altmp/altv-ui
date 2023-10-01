@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router';
+import {RouterView} from 'vue-router';
 import SideNavigation from '@/components/persist/SideNavigation.vue';
 import Watermark from "@/components/persist/Watermark.vue";
 import DialogContainer from "@/components/container/DialogContainer.vue";
 import Console from "@/components/persist/console/Console.vue";
-import { useUIStore } from "@/stores/ui";
-import { useConnectionStateStore } from "@/stores/connectionState";
+import {useUIStore} from "@/stores/ui";
+import {useConnectionStateStore} from "@/stores/connectionState";
 import Netgraph from "@/components/persist/Netgraph.vue";
-import { useLocalization } from "@/stores/localization";
-import { computed, onMounted, ref, watch } from "vue";
-import { useSettingsStore } from "@/stores/settings";
-import Logo from "@/components/icons/Logo.vue";
-import { useVersionStore } from "@/stores/version";
+import {useLocalization} from "@/stores/localization";
+import {onMounted, onUnmounted, ref, watch} from "vue";
+import {useSettingsStore} from "@/stores/settings";
+import {useVersionStore} from "@/stores/version";
 import {ModalType, useModalStore} from "@/stores/modal";
 
 const ui = useUIStore();
@@ -86,6 +85,14 @@ onMounted(() => {
         }
     }
 })
+
+function handler(event: KeyboardEvent) {
+    if (event.key != 'Escape') return;
+    if (connection.connected && ui.opened && (modal.type == ModalType.None || !modal.closeable)) ui.toggleUi(false);
+}
+
+onMounted(() => document.addEventListener('keydown', handler));
+onUnmounted(() => document.removeEventListener('keydown', handler));
 </script>
 
 <template>
