@@ -12,7 +12,7 @@ import { playHoverSound, playMoveSound, playClickSound } from "@/utils/playSound
 const filter = useFilterStore();
 const settings = useSettingsStore();
 const servers = useServersStore();
-const { t } = useLocalization();
+const { t, locales } = useLocalization();
 
 const headers = computed( () => {
     return [
@@ -57,9 +57,11 @@ const sortedData = computed(() => {
 
             // if (maxPing != null && e.ping != -1 && e.ping != null && e.ping > maxPing) return false;
 
-            if (!e.name.toLowerCase().includes(query)) return false;
-
-            return true;
+            return (
+                e.name.toLowerCase().includes(query) ||
+                locales.get(e.language)?.name.toLowerCase().includes(query) ||
+                e.tags.some(e => e.toLowerCase().includes(query))
+            );
         })
         .sort((a: any, b: any) => {
             if (settings.data.promotedOnTop && a.promoted != b.promoted) {
