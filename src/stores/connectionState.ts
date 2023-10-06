@@ -65,7 +65,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
     },
     getters: {
         active(state) {
-            return (state.connected || state.inProgress) && !(state.failed && !state.wasConnected);
+            return (state.connected || state.inProgress);
         }
     },
     actions: {
@@ -90,8 +90,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
             this.server = server;
         },
         abort() {
-            if (this.failed) this.inProgress = false;
-            else alt.emit('connection:abort');
+            alt.emit('connection:abort');
         },
         init() {
             const router = useRouter();

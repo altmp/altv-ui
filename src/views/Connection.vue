@@ -43,12 +43,7 @@ function openContext() {
         window.open(message.value.context);
 }
 
-watch(() => {
-    const active = connectionState.inProgress;
-    const connected = connectionState.connected;
-
-    return active || connected;
-}, (value) => {
+watch(() => connectionState.active, (value) => {
     if (!value) router.push('/settings');
 }, { immediate: true });
 </script>
