@@ -9,6 +9,11 @@ const props = defineProps({
     },
     label: {
         type: String,
+    },
+    line: {
+        type: Number,
+        required: false,
+        default: 0
     }
 });
 
@@ -20,7 +25,7 @@ function update() {
     if (!input.value) return;
     const inputMax = input.value.max == 0 ? 100 : input.value.max;
     const fillPercent = (input.value.value - input.value.min) / inputMax * 100;
-    input.value.setAttribute('style', `--fill: ${fillPercent}%`);
+    input.value.setAttribute('style', `--fill: ${fillPercent}%; --line: ${props.line}%`);
 }
 
 function updateSound() {
@@ -56,6 +61,10 @@ onMounted(() => {
     if (!input.value) {
         return;
     }
+    update();
+});
+
+watch(() => props.line, () => {
     update();
 });
 
@@ -98,7 +107,7 @@ input[type="range"] {
     border-radius: u(2.4);
     --dir: right;
 
-    background: linear-gradient(to var(--dir), rgb(var(--primary-color-light)), rgb(var(--primary-color-light)) var(--fill), rgb(241, 242, 242, .15) var(--fill)) no-repeat;
+    background: linear-gradient(to var(--dir), rgba(white, 0.5), rgba(white, 0.5) var(--line), transparent var(--line)), linear-gradient(to var(--dir), rgb(var(--primary-color-light)), rgb(var(--primary-color-light)) var(--fill), rgb(241, 242, 242, .15) var(--fill)) no-repeat;
     background-size: 100% 100%;
     outline: none;
     cursor: grab;
