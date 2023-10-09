@@ -9,9 +9,6 @@ const props = defineProps({
     },
     label: {
         type: String,
-    },
-    secondaryValue: {
-        type: Number,
     }
 });
 
@@ -19,19 +16,11 @@ const emit = defineEmits(["update:modelValue"]);
 
 const input = ref<HTMLInputElement | null>(null);
 
-function getFillValue() {
-    if (!input.value) return 0;
+function update() {
+    if (!input.value) return;
     const inputMax = input.value.max == 0 ? 100 : input.value.max;
     const fillPercent = (input.value.value - input.value.min) / inputMax * 100;
-
-    return fillPercent;
-}
-
-function getFillValueSecondary() {
-    if(props.secondaryValue != undefined)
-        return props.secondaryValue;
-
-    return 0;
+    input.value.setAttribute('style', `--fill: ${fillPercent}%`);
 }
 
 function updateSound() {
@@ -50,6 +39,7 @@ function onInputChange() {
     }
 
     emit('update:modelValue', Number.parseInt(input.value.value));
+    update();
     updateSound();
 }
 
@@ -59,12 +49,14 @@ function onWheel(evt: WheelEvent) {
     input.value.value = (+(input.value.value ?? 0) + evt.deltaY / -5).toString();
     emit('update:modelValue', Number.parseInt(input.value.value));
     updateSound();
+    update();
 }
 
 onMounted(() => {
     if (!input.value) {
         return;
     }
+    update();
 });
 
 </script>
@@ -79,10 +71,6 @@ onMounted(() => {
                @wheel="onWheel"
                @mouseenter="playHoverSound"
                @mousedown="playSliderEnterSound"
-               :style="{ 
-                    '--fill': getFillValue() + '%',
-                    '--fillSecondary': getFillValueSecondary() + '%'
-                }"
                @mouseup="playSliderLeaveSound"/>
     </label>
 </template>
@@ -110,13 +98,7 @@ input[type="range"] {
     border-radius: u(2.4);
     --dir: right;
 
-    background: linear-gradient(
-        to var(--dir), 
-        rgb(var(--primary-color-light), .60) var(--fillSecondary), 
-        rgb(var(--primary-color-light)) var(--fillSecondary) var(--fill), 
-        rgb(241, 242, 242, .15) var(--fill)
-    ) no-repeat;
-
+    background: linear-gradient(to var(--dir), rgb(var(--primary-color-light)), rgb(var(--primary-color-light)) var(--fill), rgb(241, 242, 242, .15) var(--fill)) no-repeat;
     background-size: 100% 100%;
     outline: none;
     cursor: grab;

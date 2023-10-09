@@ -56,7 +56,7 @@ const {t} = useLocalization();
         <alt-key-input v-model="settings.data.voiceActivationKey"
                        @change="settings.save('voiceActivationKey')"></alt-key-input>
     </div>
-    <alt-slider :secondaryValue="settings.currentVolume" v-if="settings.data.voiceActivation" v-model="settings.data.voiceInputSensitivity"
+    <alt-slider v-if="settings.data.voiceActivation" v-model="settings.data.voiceInputSensitivity"
                 @change="settings.save('voiceInputSensitivity')" :label="t('INPUT_SENSITIVITY')"></alt-slider>
 </template>
 
