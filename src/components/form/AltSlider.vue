@@ -23,8 +23,7 @@ const input = ref<HTMLInputElement | null>(null);
 
 function update() {
     if (!input.value) return;
-    const inputMax = input.value.max == 0 ? 100 : input.value.max;
-    const fillPercent = (input.value.value - input.value.min) / inputMax * 100;
+    const fillPercent = (+input.value.value - +input.value.min) / +input.value.max * 100;
     input.value.setAttribute('style', `--fill: ${fillPercent}%; --line: ${props.line}%`);
 }
 
@@ -73,7 +72,11 @@ watch(() => props.line, () => {
 <template>
     <label>
         {{ label }}
-        <input dir="ltr" type="range" v-bind="$attrs"
+        <input dir="ltr" type="range"
+               min="0"
+               step="0"
+               max="100"
+               v-bind="$attrs"
                :value="modelValue"
                @input="onInputChange"
                ref="input"
