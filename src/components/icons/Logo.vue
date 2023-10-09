@@ -9,14 +9,14 @@ const colors: Record<string, string> = {
     internal: '#782FEF',
 };
 
-const props = defineProps<{ customLogo?: boolean, logoRef: (el: HTMLDivElement) => void }>();
+const props = defineProps<{ customLogo?: boolean, logoRef?: (el: HTMLDivElement) => void }>();
 const version = useVersionStore();
 const customLogo = computed(() => props.customLogo && version.manifest?.logo);
 const color = computed(() => colors[version.branch] ?? colors.release);
 </script>
 
 <template>
-    <div :ref="logoRef" v-bind="$attrs">
+    <div :ref="logoRef ?? (() => {})" v-bind="$attrs">
         <template v-if="!customLogo">
             <svg width="49" height="48" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" v-if="version.orange">
                 <mask id="mask0_207_9" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="22" width="468"

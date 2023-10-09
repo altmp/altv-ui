@@ -31,7 +31,7 @@ const {t} = useLocalization();
                           },
                           ...Object.entries(settings.devices)
                             .filter(e => e[0] != 'default')
-                            .map(e => ({ value: e[0], label: e[1] }))
+                            .map(e => ({ value: String(e[0]), label: e[1] }))
                       ]"
                       @change="settings.save('voiceInputDevice')"
                     :unknown-element="t('UNKNOWN_INPUT_DEVICE')"></alt-dropdown>
@@ -56,7 +56,7 @@ const {t} = useLocalization();
         <alt-key-input v-model="settings.data.voiceActivationKey"
                        @change="settings.save('voiceActivationKey')"></alt-key-input>
     </div>
-    <alt-slider v-if="settings.data.voiceActivation" v-model="settings.data.voiceInputSensitivity"
+    <alt-slider v-if="settings.data.voiceActivation" v-model="settings.data.voiceInputSensitivity" :line="settings.currentVolume"
                 @change="settings.save('voiceInputSensitivity')" :label="t('INPUT_SENSITIVITY')"></alt-slider>
 </template>
 
