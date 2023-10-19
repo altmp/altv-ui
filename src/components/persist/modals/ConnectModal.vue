@@ -90,7 +90,7 @@ function connect() {
                 <alt-button color="primary" @click="connect">{{ t('CONNECT') }}</alt-button>
                 <alt-checkbox class="connect__checkbox" :model-value="skinChecked" @click="toggleSkinChecked" v-if="modalProps.server.hasCustomSkin && !modalProps.server.passworded" :label="t('APPLY_SERVER_SKIN')"></alt-checkbox>
             </div>
-            <alt-checkbox class="connect__checkbox connect__checkbox--newline" @click="toggleSkinChecked" v-if="modalProps.server.hasCustomSkin && modalProps.server.passworded" :label="t('APPLY_SERVER_SKIN')"></alt-checkbox>
+            <alt-checkbox class="connect__checkbox connect__checkbox--newline" :model-value="skinChecked" @click="toggleSkinChecked" v-if="modalProps.server.hasCustomSkin && modalProps.server.passworded" :label="t('APPLY_SERVER_SKIN')"></alt-checkbox>
         </div>
     </div>
 </template>
