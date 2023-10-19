@@ -104,19 +104,21 @@ defineProps({
 
         .resource {
             white-space: nowrap;
+            display: inline-block;
             background: #2d3436;
             color: white;
             padding: 0 u(5);
             border-radius: u(4);
             border: solid u(1) rgba(white, 0.2);
+          line-height: 1.3;
         }
 
         .copy {
-          vertical-align: middle;
-          margin-right: 6px;
+          vertical-align: -.23em;
+          margin-right: u(6);
           display: inline-block !important;
-          width: 14px;
-          height: 14px;
+          width: u(16);
+          height: u(16);
           cursor: pointer;
         }
 
