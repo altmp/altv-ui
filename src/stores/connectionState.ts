@@ -3,6 +3,8 @@ import {useInitializableStore} from "@/stores/storeInitializer";
 import {useUIStore} from "@/stores/ui";
 import { playErrorSound } from "@/utils/playSound";
 import {useRouter} from "vue-router";
+import {useSettingsStore} from "@/stores/settings";
+import {useVersionStore} from "@/stores/version";
 
 export enum ProgressType {
     None,
@@ -25,6 +27,7 @@ export interface IConnectionState {
     message?: string | null;
     cancelAction?: string | null;
     showReconnect: boolean;
+    showReconnectPassword: boolean;
     showDisconnect: boolean;
 
     progressType: ProgressType;
@@ -52,6 +55,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
             message: null,
             cancelAction: 'CANCEL',
             showReconnect: false,
+            showReconnectPassword: false,
             showDisconnect: false,
 
             progressType: ProgressType.None,
@@ -64,8 +68,16 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
         }
     },
     getters: {
-        active(state) {
-            return (state.connected || state.inProgress);
+        uiActive(state) {
+            return state.connected || state.inProgress || state.failed;
+        },
+        newConnectionPossible(state) {
+            return !state.connected && !state.inProgress && !state.wasConnected;
+        },
+        reconnectPossible(state) {
+            const settings = useSettingsStore();
+            const version = useVersionStore();
+            return !state.inProgress && (settings.data.debug || version.branch === 'internal' || (!state.wasConnected && !state.connected && state.failed))
         }
     },
     actions: {
@@ -76,6 +88,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
             this.message = null;
             this.cancelAction = 'CANCEL';
             this.showReconnect = false;
+            this.showReconnectPassword = false;
             this.showDisconnect = false;
             this.progressType = ProgressType.None;
             this.progressAction = '';
@@ -246,13 +259,15 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 if (!ui.opened) router.push('/connection');
             });
 
-            alt.on('connection:failed', (message: string, allowReconnect?: boolean) => {
+            alt.on('connection:failed', (message: string) => {
                 this.reset();
                 this.action = 'CONNECTION_FAILED';
                 this.message = message;
-                this.failed = !this.wasConnected;
+                this.inProgress = false;
+                this.failed = true;
                 this.cancelAction = null;
-                this.showReconnect = allowReconnect ?? true;
+                this.showReconnect = true;
+                this.showReconnectPassword = message === 'WRONG_PASSWORD';
                 this.connectedCacheKeys = [];
                 playErrorSound();
 

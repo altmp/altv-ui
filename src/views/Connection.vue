@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import AltButton from "@/components/AltButton.vue";
 import {ProgressType, useConnectionStateStore} from "@/stores/connectionState";
-import {computed, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {formatBytes} from "@/utils/formatBytes";
 import {useSettingsStore} from "@/stores/settings";
 import {useLocalization} from "@/stores/localization";
 import {useVersionStore} from "@/stores/version";
 import {ModalType, useModalStore} from "@/stores/modal";
 import {useRouter} from "vue-router";
+import AltInput from "@/components/form/AltInput.vue";
 
 const connectionState = useConnectionStateStore();
 const settings = useSettingsStore();
@@ -15,6 +16,8 @@ const version = useVersionStore();
 const modal = useModalStore();
 const router = useRouter();
 const { t, tArgsFromStrCtx } = useLocalization();
+
+const reconnectPassword = ref("");
 
 const progress = computed(() => {
     if (!connectionState.progressInBytes) {
@@ -35,7 +38,7 @@ function disconnect() {
 }
 
 function reconnect() {
-    alt.emit('connection:reconnect');
+    alt.emit('connection:reconnect', reconnectPassword.value);
 }
 
 function openContext() {
@@ -43,7 +46,7 @@ function openContext() {
         window.open(message.value.context);
 }
 
-watch(() => connectionState.active, (value) => {
+watch(() => connectionState.uiActive, (value) => {
     if (!value) router.push('/settings');
 }, { immediate: true });
 </script>
@@ -69,10 +72,33 @@ watch(() => connectionState.active, (value) => {
             </div>
         </div>
         <div class="connection__actions">
-            <alt-button color="red" v-if="connectionState.cancelAction" @click="abort">{{ t(connectionState.cancelAction) }}</alt-button>
-            <alt-button v-if="connectionState.showDisconnect" @click="disconnect">{{t('DISCONNECT')}}</alt-button>
-            <alt-button v-if="connectionState.showReconnect && (settings.data.debug || version.branch === 'internal')" @click="reconnect">{{t('RECONNECT')}}</alt-button>
-            <alt-button v-if="message.context != null" @click="openContext">{{t('VIEW_MORE')}}</alt-button>
+            <alt-button
+                color="red"
+                v-if="connectionState.cancelAction"
+                @click="abort">
+              {{ t(connectionState.cancelAction) }}
+            </alt-button>
+            <alt-button
+                v-if="connectionState.showDisconnect"
+                @click="disconnect">
+              {{t('DISCONNECT')}}
+            </alt-button>
+            <alt-input
+                v-if="connectionState.showReconnect && connectionState.showReconnectPassword && connectionState.reconnectPossible"
+                v-model="reconnectPassword"
+                type="password"
+                :placeholder="t('PASSWORD')"
+            />
+            <alt-button
+                v-if="connectionState.showReconnect && connectionState.reconnectPossible"
+                @click="reconnect">
+              {{t('RECONNECT')}}
+            </alt-button>
+            <alt-button
+                v-if="message.context != null"
+                @click="openContext">
+              {{t('VIEW_MORE')}}
+            </alt-button>
         </div>
     </div>
 </template>

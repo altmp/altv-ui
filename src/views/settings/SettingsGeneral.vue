@@ -75,7 +75,7 @@ const { t } = locale;
 <template>
     <div class="menu__group">
         <h3>{{ t('NICKNAME') }}</h3>
-        <alt-input :disabled="connection.active || connection.wasConnected" v-model="settings.data.name" @change="settings.save('name')"></alt-input>
+        <alt-input :disabled="!connection.newConnectionPossible" v-model="settings.data.name" @change="settings.save('name')"></alt-input>
     </div>
 
     <div class="menu__group">
@@ -87,7 +87,7 @@ const { t } = locale;
 
     <div class="menu__group">
         <h3>{{ t('REGION') }}</h3>
-        <alt-dropdown :disabled="connection.active || connection.wasConnected" v-model="settings.data.region" :elements="regions" @change="settings.save('region')"></alt-dropdown>
+        <alt-dropdown :disabled="!connection.newConnectionPossible" v-model="settings.data.region" :elements="regions" @change="settings.save('region')"></alt-dropdown>
     </div>
 
     <alt-slider v-model="settings.data.uiVolume" @change="settings.save('uiVolume')" :label="t('UI_VOLUME')"></alt-slider>

@@ -29,7 +29,7 @@ function connect() {
     modal.close();
 }
 
-watch(() => connection.active, (value) => {
+watch(() => !connection.newConnectionPossible, (value) => {
     if (value) modal.close()
 }, { immediate: true })
 </script>
