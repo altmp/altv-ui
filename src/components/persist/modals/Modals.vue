@@ -21,8 +21,8 @@ function handler(event: KeyboardEvent) {
     }
 }
 
-onMounted(() => document.addEventListener('keydown', handler));
-onUnmounted(() => document.removeEventListener('keydown', handler));
+onMounted(() => document.addEventListener('keyup', handler));
+onUnmounted(() => document.removeEventListener('keyup', handler));
 </script>
 
 <template>
