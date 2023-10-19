@@ -25,7 +25,6 @@ const modalProps = getModalProps<ModalType.Connect>(modal);
 const favorite = computed(() => servers.favoriteIds.has(modalProps.value.server.publicId));
 const bannerError = ref(false);
 const bannerLoading = ref(true);
-const hasSkin = computed(() => servers.skinServers.includes(modalProps.value.server.publicId));
 const skinChecked = computed(() => !settings.data.launcherSkinsDisabled.includes(modalProps.value.server.publicId));
 
 function toggleSkinChecked() {
@@ -89,9 +88,9 @@ function connect() {
             <div class="connect__actions">
                 <alt-input class="connect__password" @keydown.enter.stop="connect" type="password" placeholder="Password" autocomplete="off" v-if="modalProps.server.passworded" v-model="password"></alt-input>
                 <alt-button color="primary" @click="connect">{{ t('CONNECT') }}</alt-button>
-                <alt-checkbox class="connect__checkbox" :model-value="skinChecked" @click="toggleSkinChecked" v-if="hasSkin && !modalProps.server.passworded" :label="t('APPLY_SERVER_SKIN')"></alt-checkbox>
+                <alt-checkbox class="connect__checkbox" :model-value="skinChecked" @click="toggleSkinChecked" v-if="modalProps.server.hasCustomSkin && !modalProps.server.passworded" :label="t('APPLY_SERVER_SKIN')"></alt-checkbox>
             </div>
-            <alt-checkbox class="connect__checkbox connect__checkbox--newline" v-if="hasSkin && modalProps.server.passworded" :label="t('APPLY_SERVER_SKIN')"></alt-checkbox>
+            <alt-checkbox class="connect__checkbox connect__checkbox--newline" @click="toggleSkinChecked" v-if="modalProps.server.hasCustomSkin && modalProps.server.passworded" :label="t('APPLY_SERVER_SKIN')"></alt-checkbox>
         </div>
     </div>
 </template>

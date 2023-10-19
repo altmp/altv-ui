@@ -26,4 +26,5 @@ export interface IServer {
     lastUpdate: number,
     ping?: number,
     offline?: true, // added in UI in some places
+    hasCustomSkin: boolean;
 }
