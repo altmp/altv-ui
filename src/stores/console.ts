@@ -1,5 +1,6 @@
 import {defineStore} from "pinia";
 import {useInitializableStore} from "@/stores/storeInitializer";
+import {nthIndexOf} from "@/utils/nthIndexOf";
 
 export enum LogType {
     Info,
@@ -61,12 +62,18 @@ function format(string: string) {
             '<a href="$&" target="_blank">$&</a>')!;
 }
 
+const maxNewlines = 50;
+const maxLength = 10000;
+
 let newLastCount = 0;
 let newLastDate = '';
 
 let last: LogEntry | null = null;
 let queue: LogEntry[] = [];
-let buffer = '';
+let dataBuffer = '';
+let htmlBuffer = '';
+let messageLength = 0;
+let messageNewlines = 0;
 
 export const useLogStore = useInitializableStore(defineStore('logs', {
     state: (): IConsoleState => {
@@ -108,19 +115,33 @@ export const useLogStore = useInitializableStore(defineStore('logs', {
             }, 16);
 
             alt.on('console:push', (color: number, value: string) => {
-                const content = stripHtml(value);
-                if (color != 14) buffer += `<span style="color: ${colorsArr[color] ?? colors.w}">${content}</span>`; // not white
-                else buffer += content; // white
+                let content = stripHtml(value);
+                dataBuffer += value;
+
+                if (messageNewlines >= maxNewlines || messageLength >= maxLength) return;
+
+                const heightLimitIndex = nthIndexOf(content, '\n', maxNewlines - messageNewlines);
+                let trimmedText = (heightLimitIndex == -1 ? content : content.substring(0, heightLimitIndex + 1)).substring(0, maxLength - messageLength);
+                messageNewlines += trimmedText.match(/\n/g)?.length ?? 0;
+                messageLength += trimmedText.length;
+
+                if (color != 14) htmlBuffer += `<span style="color: ${colorsArr[color] ?? colors.w}">${trimmedText}</span>`; // not white
+                else htmlBuffer += trimmedText; // white
             });
+
             alt.on('console:reset', () => {
-                buffer = '';
+                htmlBuffer = '';
+                dataBuffer = '';
+                messageLength = 0;
+                messageNewlines = 0;
             });
+
             alt.on('console:end', (resource: string, type: number) => {
                 const date = new Date();
                 const time = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
-                buffer = buffer.trim();
+                htmlBuffer = htmlBuffer.trim();
 
-                if (last && last.message == buffer && last.resource == resource && last.type == type) {
+                if (last && last.message == htmlBuffer && last.resource == resource && last.type == type) {
                     // if last item is still in queue
                     if (queue.length) {
                         last.count++;
@@ -130,15 +151,17 @@ export const useLogStore = useInitializableStore(defineStore('logs', {
                     newLastCount++;
                     newLastDate = time;
 
-                    buffer = '';
+                    htmlBuffer = '';
                     return;
                 }
+
+                const postfix = dataBuffer.length > messageLength ? `... ${(dataBuffer.length - messageLength)} chars more ...` : '';
 
                 const entry = {
                     id: this.id++,
                     time,
-                    message: buffer,
-                    html: format(buffer),
+                    message: dataBuffer,
+                    html: format(htmlBuffer) + postfix,
                     count: 1,
                     type,
                     resource
@@ -148,7 +171,10 @@ export const useLogStore = useInitializableStore(defineStore('logs', {
                 last = entry;
                 newLastCount = 1;
 
-                buffer = '';
+                htmlBuffer = '';
+                dataBuffer = '';
+                messageLength = 0;
+                messageNewlines = 0;
             });
             alt.on('console:open', this.toggle.bind(this));
             alt.on('console:clear', this.clearLogs.bind(this));

@@ -4,6 +4,8 @@ import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import type {LogEntry} from "@/stores/console";
 import {LogType} from "@/stores/console";
 import {DynamicScrollerItem} from 'vue-virtual-scroller';
+import {copyText} from "@/utils/copy";
+import Copy from "@/components/icons/Copy.vue";
 
 defineProps({
     item: {
@@ -41,7 +43,7 @@ defineProps({
             <path d="M10.5 2.751a.75.75 0 0 0-1.5 0v.752c0 .633.196 1.22.53 1.703A3.753 3.753 0 0 0 7.01 8.49h-.257a2.25 2.25 0 0 1-2.24-2.26l.006-1.485a.75.75 0 1 0-1.5-.006l-.007 1.485A3.75 3.75 0 0 0 6.747 9.99H7v1.51H2.75a.75.75 0 0 0 0 1.5H7v1.992h-.253a3.75 3.75 0 0 0-3.735 3.765l.007 1.486a.75.75 0 0 0 1.5-.006l-.007-1.486a2.25 2.25 0 0 1 2.241-2.259H7.226a5.002 5.002 0 0 0 9.548 0H17.247a2.25 2.25 0 0 1 2.24 2.26l-.006 1.485a.75.75 0 0 0 1.5.006l.006-1.486a3.75 3.75 0 0 0-3.734-3.765H17V13h4.251a.75.75 0 0 0 0-1.5H17V9.99h.253a3.75 3.75 0 0 0 3.735-3.766L20.98 4.74a.75.75 0 0 0-1.5.006l.006 1.486a2.25 2.25 0 0 1-2.24 2.259h-.256a3.753 3.753 0 0 0-2.52-3.284c.333-.484.529-1.07.529-1.703v-.752a.75.75 0 0 0-1.5 0v.752a1.5 1.5 0 0 1-3 0v-.752Zm-2 6.002a2.25 2.25 0 0 1 2.25-2.25h2.5a2.25 2.25 0 0 1 2.25 2.25V15a3.5 3.5 0 1 1-7 0V8.753Z"/>
         </svg>
         <div class="text">
-            <span class="right"><span v-if="item.resource" class="resource">{{ item.resource }}</span> <span class="time">{{ item.time }}</span></span><span class="count" v-if="item.count > 1">{{ item.count }}</span>
+            <span class="right"><span class="copy" @click="copyText(item.message)"><copy /></span><span v-if="item.resource" class="resource">{{ item.resource }}</span> <span class="time">{{ item.time }}</span></span><span class="count" v-if="item.count > 1">{{ item.count }}</span>
             <span class="content"><span v-html="item.html" />&nbsp;</span>
         </div>
     </DynamicScrollerItem>
@@ -107,6 +109,31 @@ defineProps({
             padding: 0 u(5);
             border-radius: u(4);
             border: solid u(1) rgba(white, 0.2);
+        }
+
+        .copy {
+          vertical-align: middle;
+          margin-right: 6px;
+          display: inline-block !important;
+          width: 14px;
+          height: 14px;
+          cursor: pointer;
+        }
+
+        .copy {
+          svg {
+            fill: rgba(white, 0.7);
+            margin: 0;
+            position: unset;
+          }
+
+          &:hover svg {
+            fill: rgba(white, 1);
+          }
+
+          &:active svg {
+            fill: rgba(white, 0.85);
+          }
         }
 
         overflow: hidden;
