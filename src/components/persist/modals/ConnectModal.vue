@@ -44,7 +44,7 @@ function connect() {
     const server = modalProps.value.server;
     if (!server) return;
     connection.setServer(server.name);
-    alt.emit('connection:connect', server.address, password.value, server.publicId, server.name, hasSkin.value && skinChecked.value);
+    alt.emit('connection:connect', server.address, password.value, server.publicId, server.name, server.hasCustomSkin && skinChecked.value);
     modal.close();
 }
 </script>
