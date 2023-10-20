@@ -42,7 +42,7 @@ function open() {
 
         <template v-if="server.id">
             <div v-if="!fullData" class="server__players server__players--offline">{{ t('OFFLINE') }}</div>
-            <div v-else-if="invalidBranch" class="server__players server__players--offline">Invalid branch</div>
+<!--            <div v-else-if="invalidBranch" class="server__players server__players&#45;&#45;offline">{{ t('INVALID_BRANCH') }}</div>-->
             <div v-else class="server__players server__players--online" dir="ltr">
                 {{ fullData.playersCount }} <span>/ {{ fullData.maxPlayersCount }}</span>
             </div>
