@@ -89,7 +89,7 @@ const { t } = locale;
 
     <div class="menu__group">
         <h3>{{ t('REGION') }}</h3>
-        <alt-dropdown :disabled="!connection.newConnectionPossible" v-model="settings.data.region" :elements="regions" @change="settings.save('region'); servers.reload();"></alt-dropdown>
+        <alt-dropdown :disabled="!connection.newConnectionPossible" v-model="settings.data.region" :elements="regions" @change="settings.save('region');"></alt-dropdown>
     </div>
 
     <alt-slider v-model="settings.data.uiVolume" @change="settings.save('uiVolume')" :label="t('UI_VOLUME')"></alt-slider>

@@ -3,6 +3,7 @@ import {useInitializableStore} from "@/stores/storeInitializer";
 import {useUIStore} from "@/stores/ui";
 import {ModalType, useModalStore} from "@/stores/modal";
 import {watch} from "vue";
+import {useServersStore} from "@/stores/servers";
 
 export const useSettingsStore = useInitializableStore(defineStore('settings', {
     state: () => {
@@ -53,14 +54,17 @@ export const useSettingsStore = useInitializableStore(defineStore('settings', {
         init() {
             const ui = useUIStore();
             const modal = useModalStore();
+            const servers = useServersStore();
 
             alt.on('settings:update', (data: Record<string, any>) => {
-                for (const key in data) {
-                    if (key in this.$state.data)
-                        (this.data as any)[key] = data[key];
-                }
+                const obj = {...this.$state.data};
+                Object.assign(obj, data);
+                this.$patch({
+                    data: obj
+                })
 
                 if ('netgraphEnabled' in data) ui.toggleNetgraph(data.netgraphEnabled);
+                if ('region' in data) servers.reload();
             });
 
             alt.on('settings:currentVolume:update', (value: number) => {
