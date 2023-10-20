@@ -47,13 +47,10 @@ In-game user interface of alt:V multiplayer.
 
 | Event                     | Arguments                        | Description                                                                     |
 |:--------------------------|----------------------------------|---------------------------------------------------------------------------------|
-| `servers:update`          | `servers: IServer[]`             | Updates server list. Core should emit `servers:setPing` for each server         |
-| `servers:updateError`     | `error?: string`                 | Shows server list error. If message is not specified, it's an unspecified error |
 | `servers:recent:update`   | `servers: IHistoryServer[]`      | Updates list of recent servers                                                  |
 | `servers:favorite:update` | `servers: IHistoryServer[]`      | Updates list of favorite servers                                                |
 | `serverData:update`       | `data: IServerData[]`            | Updates server cache (storage) data                                             |
-| `serverData:updateOne`    | `data: IServerData`              | Updates server cache (storage) data for one server                              |
-| `servers:setPing`         | `serverId: string, ping: number` | Updates server's ping. -1 is "N/A"                                              | 
+| `serverData:updateOne`    | `data: IServerData`              | Updates server cache (storage) data for one server                              | 
 
 #### Misc
 
@@ -100,7 +97,6 @@ In-game user interface of alt:V multiplayer.
 |:--------------------------|----------------------------|----------------------------------------------------------------------------------|
 | `servers:favorite:add`    | `id: string, name: strnig` | Add server to favorites                                                          |
 | `servers:favorite:remove` | `id: string`               | Remove server from favorites                                                     |
-| `servers:reload`          |                            | Requests server list reload. Core should emit `servers:update` with the new data |
 | `serverData:delete`       | `id: string, type: number` | Delete server cache. `id` is masterlist id. Type 0 - resources, type 1 - data    |
 
 #### Misc
@@ -127,7 +123,6 @@ In-game user interface of alt:V multiplayer.
 - UI <-- Core `serverData:update` `[ ...server data (cache) info list... ]`
 - UI <-- Core `servers:recent:update` `[ ...recent servers list... ]`
 - UI <-- Core `servers:favorite:update` `[ ...favorite servers list... ]`
-- UI <-- Core `servers:update` `[ ...servers list... ]`
 - UI <-- Core `ui:ready`
 
 ### Server connection

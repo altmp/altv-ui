@@ -9,8 +9,11 @@ import {useLocalization} from "@/stores/localization";
 import {useServersStore} from "@/stores/servers";
 import { playHoverSound, playClickSound } from "@/utils/playSound";
 
+const { t } = useLocalization();
+const servers = useServersStore();
+
 function reloadServers() {
-    alt.emit('servers:reload');
+  servers.reload();
 }
 
 // cannot use :active, cuz it triggers to every mouse button in CEF
@@ -24,9 +27,6 @@ function mouseDown(e: MouseEvent) {
     }
     document.addEventListener('mouseup', mouseUp);
 }
-
-const { t } = useLocalization();
-const servers = useServersStore();
 
 const filters = t('FILTERS');
 </script>

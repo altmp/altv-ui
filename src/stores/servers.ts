@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {useInitializableStore} from "@/stores/storeInitializer";
 import type {IHistoryServer} from "@/types/IHistoryServer";
 import type {IServer} from "@/types/IServer";
+import {useVersionStore} from "@/stores/version";
 
 export interface IServerData {
     id: string;
@@ -14,8 +15,11 @@ export interface IServerData {
 
 export interface ServersStore {
     servers: IServer[];
+    serversLookup: Record<string, number>;
+    privateServers: Record<string, IServer>;
     serversError: string | null;
     serversLoading: boolean;
+    lastReload: number;
     serverData: IServerData[];
     favorite: IHistoryServer[];
     recent: IHistoryServer[];
@@ -33,12 +37,17 @@ export enum ServerDataType {
     Data
 }
 
+const api = 'https://api-new.alt-mp.com';
+
 export const useServersStore = useInitializableStore(defineStore('servers', {
     state: (): ServersStore => {
         return {
             servers: [],
+            serversLookup: {},
+            privateServers: {},
             serversError: null,
-            serversLoading: true,
+            serversLoading: false,
+            lastReload: 0,
             serverData: [],
             favorite: [],
             recent: [],
@@ -47,6 +56,7 @@ export const useServersStore = useInitializableStore(defineStore('servers', {
     },
     getters: {
         favoriteIds: (state): Set<string> => new Set<string>(state.favorite.filter(e => e.id).map(e => e.id!)),
+        getServer: (state) => (id: string): IServer | undefined => state.servers[state.serversLookup[id]] ?? state.privateServers[id],
     },
     actions: {
         deleteServerData(id: string, type: ServerDataType) {
@@ -65,33 +75,63 @@ export const useServersStore = useInitializableStore(defineStore('servers', {
                 this.favorite = this.favorite.filter(e => e.id !== id);
                 alt.emit('servers:favorite:remove', id);
             } else {
-                const server = this.servers.find(e => e.publicId == id);
+                const server = this.getServer(id);
                 if (!server) return;
 
                 this.favorite = [...this.favorite, {id, name: server.name}]
                 alt.emit('servers:favorite:add', id, server.name);
             }
         },
-        init() {
-            alt.on('servers:update', (data: IServer[] | null) => {
+        async reload() {
+            if (Date.now() - this.lastReload < 3000) return;
+            if (this.serversLoading) return;
+            const version = useVersionStore();
+
+            try {
                 this.serversError = null;
-                if (data == null) {
-                    this.servers = [];
-                    this.serversLoading = true;
-                } else {
-                    this.servers = data;
-                    this.serversLoading = false;
-                }
-            });
-            alt.on('servers:update:error', (error?: string) => {
-                this.serversError = error ?? '';
+                this.serversLoading = true;
+
+                const data = await fetch(`${api}/servers${version.branch != 'internal' ? '?branch=' + version.branch : ''}`);
+                const json = await data.json() as IServer[];
+
+                this.servers = json;
+                this.serversLookup = Object.fromEntries(json.map((e, i) => [e.publicId, i]));
+
+                const knownIds = json.map(e => e.publicId);
+                const serverEntries = [...this.recent.slice(0, 4), ...this.favorite].filter(e => e.id && !knownIds.includes(e.id));
+                const servers = (await Promise.all(serverEntries.map(e =>
+                    fetch(`${api}/servers/${e.id}`)
+                        .then(e => e.status === 200 ? e.json() : null)
+                ))).filter(e => e != null);
+                this.privateServers = Object.fromEntries(servers.map(e => [e.publicId, e]));
+
+                this.lastReload = Date.now();
                 this.serversLoading = false;
-            });
-            alt.on('servers:setPing', (id: string, ping: number) => {
-                const server = this.servers.find(e => e.publicId == id);
-                if (!server) return;
-                server.ping = ping;
-            })
+            } catch(e) {
+                this.serversLoading = false;
+                this.serversError = String(e);
+            }
+        },
+        init() {
+            // alt.on('servers:update', (data: IServer[] | null) => {
+            //     this.serversError = null;
+            //     if (data == null) {
+            //         this.servers = [];
+            //         this.serversLoading = true;
+            //     } else {
+            //         this.servers = data;
+            //         this.serversLoading = false;
+            //     }
+            // });
+            // alt.on('servers:update:error', (error?: string) => {
+            //     this.serversError = error ?? '';
+            //     this.serversLoading = false;
+            // });
+            // alt.on('servers:setPing', (id: string, ping: number) => {
+            //     const server = this.servers.find(e => e.publicId == id);
+            //     if (!server) return;
+            //     server.ping = ping;
+            // })
             alt.on('servers:recent:update', (data: IHistoryServer[]) => {
                 this.recent = data.reverse();
             });

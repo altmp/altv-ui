@@ -8,7 +8,9 @@ import {useLocalization} from "@/stores/localization";
 import {ModalType, useModalStore} from "@/stores/modal";
 import type {IServer} from "@/types/IServer";
 import Star from "@/components/icons/Star.vue";
+import {useVersionStore} from "@/stores/version";
 
+const version = useVersionStore();
 const servers = useServersStore();
 const modal = useModalStore();
 const { t } = useLocalization();
@@ -16,55 +18,33 @@ const props = defineProps({
     server: { type: Object as PropType<IHistoryServer>, required: true }
 });
 
-type DataType = (IServer & { direct?: boolean; offline?: boolean; name: string; url?: string });
+const fullData = computed(() => props.server.id != null ? servers.getServer(props.server.id) : undefined);
 
-const data: ComputedRef<DataType> = computed((): DataType => {
-    const fullData: any =
-        props.server.id !== undefined &&
-        servers.servers.find((s: any) => s.id == props.server.id);
-
-    if (props.server.url) {
-        return (
-            fullData || {
-                direct: true,
-                name: props.server.name,
-                url: props.server.url
-            }
-        );
-    } else {
-        return (
-            fullData || {
-                offline: true,
-                name: props.server.name
-            }
-        );
-    }
-});
+const name = computed(() => fullData.value?.name ?? props.server.name);
+const invalidBranch = computed(() => version.branch != 'internal' && version.branch != fullData.value?.branch);
 
 function open() {
-    if (props.server.id) {
-        const server = servers.servers.find(e => e.publicId == props.server.id);
-        if (!server) return;
-
-        modal.open(ModalType.Connect, { server }, true);
-    } else {
-        modal.open(ModalType.DirectConnect, { address: props.server.url })
+    if (fullData.value) {
+        modal.open(ModalType.Connect, { server: fullData.value }, true);
+    } else if(props.server.url) {
+        modal.open(ModalType.DirectConnect, { address: props.server.url }, true)
+    } else if(props.server.id) {
+        modal.open(ModalType.DirectConnect, { address: '@' + props.server.id }, true);
     }
 }
-
-// todo a way to unfavorite offline servers
 </script>
 
 <template>
-    <block-container class="server__frame" :class="{ 'server__frame--offline': data.offline !== undefined }" @click="open">
+    <block-container class="server__frame" :class="{ 'server__frame--offline': !fullData && !server.url }" @click="open">
         <div class="server__name">
-            {{ data.name }}
+            {{ name }}
         </div>
 
-        <template v-if="!data.direct">
-            <div v-if="data.offline !== undefined" class="server__players server__players--offline">{{ t('OFFLINE') }}</div>
-            <div v-if="data.offline === undefined" class="server__players server__players--online" dir="ltr">
-                {{ data.playersCount }} <span>/ {{ data.maxPlayersCount }}</span>
+        <template v-if="server.id">
+            <div v-if="!fullData" class="server__players server__players--offline">{{ t('OFFLINE') }}</div>
+            <div v-else-if="invalidBranch" class="server__players server__players--offline">Invalid branch</div>
+            <div v-else class="server__players server__players--online" dir="ltr">
+                {{ fullData.playersCount }} <span>/ {{ fullData.maxPlayersCount }}</span>
             </div>
         </template>
     </block-container>

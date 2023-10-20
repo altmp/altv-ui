@@ -10,12 +10,24 @@ import Localized from "@/components/Localized.vue";
 import DirectConnect from "@/components/icons/DirectConnect.vue";
 import Server from "@/components/icons/Server.vue";
 import {useUIStore} from "@/stores/ui";
-import {playClickSound} from "@/utils/playSound";
+import {playClickSound, playHoverSound} from "@/utils/playSound";
+import Refresh from "@/components/icons/Refresh.vue";
 
 const servers = useServersStore();
 const version = useVersionStore();
 const ui = useUIStore();
 const { t } = useLocalization();
+
+function refreshMouseDown(e: MouseEvent) {
+  if (e.button != 0) return e.preventDefault();
+  const target = e.currentTarget as HTMLDivElement;
+  target.classList.add('active');
+  function mouseUp() {
+    target.classList.remove('active');
+    document.removeEventListener('mouseup', mouseUp);
+  }
+  document.addEventListener('mouseup', mouseUp);
+}
 
 </script>
 
@@ -43,7 +55,10 @@ const { t } = useLocalization();
                     </div>
 
                     <div class="view__group">
+                      <div class="view__title-row">
                         <h3>{{ t('RECENT_SERVERS') }}</h3>
+                        <refresh class="view__refresh" @click="playClickSound(); servers.reload();" @mousedown="refreshMouseDown" @mouseenter="playHoverSound" />
+                      </div>
 
                         <home-server-group :servers="servers.recent.slice(0, 4)">
                             <template #empty>
@@ -161,6 +176,38 @@ const { t } = useLocalization();
         > h3 {
             margin-bottom: u(24);
         }
+    }
+
+    &__title-row {
+      display: flex;
+      margin-bottom: u(24);
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    &__refresh {
+      position: absolute;
+      right: 0;
+      top: 0;
+
+      width: u(24);
+      height: u(24);
+      cursor: pointer;
+      flex-shrink: 0;
+      fill: rgba(#f1f2f2, 0.32);
+      transition: fill 0.1s ease, rotate 0.5s ease;
+      rotate: 360deg;
+
+      &:hover {
+        fill: rgba(#f1f2f2, 0.5);
+      }
+
+      &.active {
+        rotate: 0deg;
+        fill: rgba(#f1f2f2, 0.8);
+        transition: fill 0.1s ease;
+      }
     }
 }
 </style>

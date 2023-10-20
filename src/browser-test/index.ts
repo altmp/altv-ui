@@ -163,8 +163,8 @@ alt.viewOn('console:setState', (state: boolean) => {
 const history = [
     {name: 'Test server', id: '3f5d34fffdaeefa8e38b6096190d258e'},
     {name: 'Test server 2', id: '737b3648ac6b21bab60e7f6f37eb50e6'},
-    {name: 'Test server 3', id: 'test'},
-    {name: 'Test server 4', id: '75364d28be416bb061f5d768a1c3cd80'},
+    {name: 'Test server 3', id: 'dReXS74'},
+    {name: 'Test server 4', id: '75364d28be416bb061f5d768a1c3cd80', url: 'localhost:7788'},
     {name: 'localhost:7788', url: 'localhost:7788'},
     {name: 'Test server 5', id: '6761089a930f31a9e91a3a29544f4568'}
 ];
@@ -205,26 +205,26 @@ alt.viewOn('servers:favorite:remove', (id: string) => {
 
 let servers: any[] = [];
 
-async function loadServers() {
-    alt.viewEmit('servers:update', null);
-
-    try {
-        await wait(1000);
-        const res = await fetch('https://api-new.alt-mp.com/servers');
-        servers = (await res.json()) as any[];
-
-        alt.viewEmit('servers:update', servers);
-
-        servers.forEach(e => {
-            const ping = Math.round(Math.random() * 200);
-            setTimeout(() => alt.viewEmit('servers:setPing', e.id, ping), ping)
-        });
-    } catch {
-        alt.viewEmit('servers:update:error', '');
-    }
-}
-
-alt.viewOn('servers:reload', () => loadServers());
+// async function loadServers() {
+//     alt.viewEmit('servers:update', null);
+//
+//     try {
+//         await wait(1000);
+//         const res = await fetch('https://api-new.alt-mp.com/servers');
+//         servers = (await res.json()) as any[];
+//
+//         alt.viewEmit('servers:update', servers);
+//
+//         servers.forEach(e => {
+//             const ping = Math.round(Math.random() * 200);
+//             setTimeout(() => alt.viewEmit('servers:setPing', e.id, ping), ping)
+//         });
+//     } catch {
+//         alt.viewEmit('servers:update:error', '');
+//     }
+// }
+//
+// alt.viewOn('servers:reload', () => loadServers());
 // endregion
 
 // region Manifest
@@ -288,7 +288,7 @@ alt.viewOn('ui:resetSkin', () => {
 // endregion
 
 alt.viewOn('loaded', () => {
-    alt.viewEmit('version:update', '14.0', 'internal', 'localhost', true, true);
+    alt.viewEmit('version:update', '14.0', 'dev', 'localhost', true, true);
     updateManifest();
     updateSkinIndex();
     alt.viewEmit('settings:update', {...defaultSettings, ...JSON.parse(localStorage.getItem('settings') ?? '{}')});
@@ -301,7 +301,7 @@ alt.viewOn('loaded', () => {
     alt.viewEmit('serverData:update', serverData);
     alt.viewEmit('servers:recent:update', history);
     alt.viewEmit('servers:favorite:update', favorites);
-    loadServers();
+    // loadServers();
     // setTimeout(() => {
     //     alt.viewEmit('ui:ready');
     // }, 5000);

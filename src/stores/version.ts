@@ -4,6 +4,7 @@ import type {IHistoryServer} from "@/types/IHistoryServer";
 import type Parser from "rss-parser";
 // @ts-ignore
 import RssParser from "rss-parser/dist/rss-parser";
+import {useServersStore} from "@/stores/servers";
 
 export interface IManifest {
     name: string;
@@ -75,6 +76,9 @@ export const useVersionStore = useInitializableStore(defineStore('version', {
 
             alt.on('version:ready', () => {
                 this.initialized = true;
+
+                const servers = useServersStore();
+                servers.reload();
             })
         },
     },
