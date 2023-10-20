@@ -32,7 +32,7 @@ function refreshMouseDown(e: MouseEvent) {
 </script>
 
 <template>
-    <div class="view" :class="{ 'view--no-news': !version.rss }">
+    <div class="view" :class="{ 'view--no-news': !version.rss || (version.manifest?.isRssHidden ?? false) }">
         <div class="view__header">
             <logo custom-logo class="view__logo" v-if="version.manifest?.logo"></logo>
             <h1>{{ t('WELCOME_TO', version.manifest?.name || (version.orange ? "GTA:Orange" : 'alt:V Multiplayer') )}}</h1>

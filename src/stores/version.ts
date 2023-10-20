@@ -8,11 +8,12 @@ import {useServersStore} from "@/stores/servers";
 
 export interface IManifest {
     name: string;
-    rss: string;
+    rss?: string;
     logo?: string;
     uiBackground?: string;
     primaryColor?: string;
     servers: IHistoryServer[];
+    isRssHidden: boolean;
 }
 
 export interface VersionStore {
