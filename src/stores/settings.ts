@@ -84,7 +84,7 @@ export const useSettingsStore = useInitializableStore(defineStore('settings', {
             })
         },
         save(key: keyof typeof this.$state['data']) {
-            alt.emit('settings:change', key, this.data[key]);
+            alt.emit('settings:change', key, JSON.parse(JSON.stringify(this.data[key])));
         }
     },
 
