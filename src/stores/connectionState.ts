@@ -20,7 +20,7 @@ export interface IConnectionState {
 
     // if true cancel button just closes connection ui
     inProgress: boolean;
-    failed: boolean;
+    disconnected: boolean;
     server: string;
 
     action: string;
@@ -48,7 +48,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
             connectedCacheKeys: [],
 
             inProgress: false,
-            failed: false,
+            disconnected: false,
             server: '',
 
             action: 'JOINING_SERVER',
@@ -69,7 +69,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
     },
     getters: {
         uiActive(state) {
-            return state.connected || state.inProgress || state.failed;
+            return state.connected || state.inProgress || state.disconnected;
         },
         newConnectionPossible(state) {
             return !state.connected && !state.inProgress && !state.wasConnected;
@@ -77,7 +77,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
         reconnectPossible(state) {
             const settings = useSettingsStore();
             const version = useVersionStore();
-            return !state.inProgress && (settings.data.debug || version.branch === 'internal' || (!state.wasConnected && !state.connected && state.failed))
+            return !state.inProgress && (settings.data.debug || version.branch === 'internal' || (!state.wasConnected && !state.connected && state.disconnected))
         }
     },
     actions: {
@@ -97,7 +97,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
             this.progressSpeed = null;
             this.progressInBytes = false;
             this.progressHidden = false;
-            this.failed = false;
+            this.disconnected = false;
         },
         setServer(server: string) {
             this.server = server;
@@ -252,6 +252,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.action = 'DISCONNECTED';
                 this.message = message;
                 this.inProgress = false;
+                this.disconnected = true;
                 this.cancelAction = null;
                 this.showReconnect = true;
                 this.connectedCacheKeys = [];
@@ -265,7 +266,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.action = 'CONNECTION_FAILED';
                 this.message = message;
                 this.inProgress = false;
-                this.failed = true;
+                this.disconnected = true;
                 this.cancelAction = null;
                 this.showReconnect = true;
                 this.showReconnectPassword = message === 'WRONG_PASSWORD';
