@@ -10,11 +10,13 @@ import AltButton from "@/components/AltButton.vue";
 import AltSlider from "@/components/form/AltSlider.vue";
 import {useUIStore} from "@/stores/ui";
 import {useConnectionStateStore} from "@/stores/connectionState";
+import {useServersStore} from "@/stores/servers";
 
 const settings = useSettingsStore();
 const locale = useLocalization();
 const ui = useUIStore();
 const connection = useConnectionStateStore();
+const servers = useServersStore();
 
 function stringifySpeed(speed: number) {
     if (!speed) return '';
@@ -87,7 +89,7 @@ const { t } = locale;
 
     <div class="menu__group">
         <h3>{{ t('REGION') }}</h3>
-        <alt-dropdown :disabled="!connection.newConnectionPossible" v-model="settings.data.region" :elements="regions" @change="settings.save('region')"></alt-dropdown>
+        <alt-dropdown :disabled="!connection.newConnectionPossible" v-model="settings.data.region" :elements="regions" @change="settings.save('region'); servers.reload();"></alt-dropdown>
     </div>
 
     <alt-slider v-model="settings.data.uiVolume" @change="settings.save('uiVolume')" :label="t('UI_VOLUME')"></alt-slider>

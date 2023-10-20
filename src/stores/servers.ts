@@ -3,6 +3,7 @@ import {useInitializableStore} from "@/stores/storeInitializer";
 import type {IHistoryServer} from "@/types/IHistoryServer";
 import type {IServer} from "@/types/IServer";
 import {useVersionStore} from "@/stores/version";
+import {useSettingsStore} from "@/stores/settings";
 
 export interface IServerData {
     id: string;
@@ -37,8 +38,6 @@ export enum ServerDataType {
     Data
 }
 
-const api = 'https://api-new.alt-mp.com';
-
 export const useServersStore = useInitializableStore(defineStore('servers', {
     state: (): ServersStore => {
         return {
@@ -56,6 +55,10 @@ export const useServersStore = useInitializableStore(defineStore('servers', {
     },
     getters: {
         favoriteIds: (state): Set<string> => new Set<string>(state.favorite.filter(e => e.id).map(e => e.id!)),
+        apiUrl: (state) => {
+            const settings = useSettingsStore();
+            return settings.data.region == 'asia' ? 'https://api-cn.alt-mp.com' : 'https://api-new.alt-mp.com'
+        },
         getServer: (state) => (id: string): IServer | undefined => state.servers[state.serversLookup[id]] ?? state.privateServers[id],
     },
     actions: {
@@ -83,7 +86,6 @@ export const useServersStore = useInitializableStore(defineStore('servers', {
             }
         },
         async reload() {
-            if (Date.now() - this.lastReload < 3000) return;
             if (this.serversLoading) return;
             const version = useVersionStore();
 
@@ -91,7 +93,7 @@ export const useServersStore = useInitializableStore(defineStore('servers', {
                 this.serversError = null;
                 this.serversLoading = true;
 
-                const data = await fetch(`${api}/servers${version.branch != 'internal' ? '?branch=' + version.branch : ''}`);
+                const data = await fetch(`${this.apiUrl}/servers${version.branch != 'internal' ? '?branch=' + version.branch : ''}`);
                 const json = await data.json() as IServer[];
 
                 this.servers = json;
@@ -100,7 +102,7 @@ export const useServersStore = useInitializableStore(defineStore('servers', {
                 const knownIds = json.map(e => e.publicId);
                 const serverEntries = [...this.recent.slice(0, 4), ...this.favorite].filter(e => e.id && !knownIds.includes(e.id));
                 const servers = (await Promise.all(serverEntries.map(e =>
-                    fetch(`${api}/servers/${e.id}`)
+                    fetch(`${this.apiUrl}/servers/${e.id}`)
                         .then(e => e.status === 200 ? e.json() : null)
                 ))).filter(e => e != null);
                 this.privateServers = Object.fromEntries(servers.map(e => [e.publicId, e]));
