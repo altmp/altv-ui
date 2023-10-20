@@ -24,7 +24,7 @@ const headers = computed( () => {
     ]
 });
 
-const sortBy = ref<string>("players");
+const sortBy = ref<string>("playersCount");
 const sortDirection = ref<number>(1); // 1 is desc, -1 is asc
 
 function changeSortBy(newSortBy: string) {
