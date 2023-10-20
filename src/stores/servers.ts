@@ -24,7 +24,6 @@ export interface ServersStore {
     serverData: IServerData[];
     favorite: IHistoryServer[];
     recent: IHistoryServer[];
-    skinServers: string[];
 }
 
 export interface IServerSkinEntry {
@@ -49,8 +48,7 @@ export const useServersStore = useInitializableStore(defineStore('servers', {
             lastReload: 0,
             serverData: [],
             favorite: [],
-            recent: [],
-            skinServers: []
+            recent: []
         }
     },
     getters: {
@@ -151,10 +149,10 @@ export const useServersStore = useInitializableStore(defineStore('servers', {
                 obj.resourcesSize = data.resourcesSize;
                 this.serverData[idx] = obj;
             });
-            alt.on('servers:skinIndex', (json: string) => {
-                const data = JSON.parse(json).indexEntries as IServerSkinEntry[];
-                this.skinServers = data.map(e => e.serverId);
-            });
+            // alt.on('servers:skinIndex', (json: string) => {
+            //     const data = JSON.parse(json).indexEntries as IServerSkinEntry[];
+            //     this.skinServers = data.map(e => e.serverId);
+            // });
         }
     }
 }));
