@@ -288,7 +288,7 @@ alt.viewOn('ui:resetSkin', () => {
 // endregion
 
 alt.viewOn('loaded', () => {
-    alt.viewEmit('version:update', '14.0', 'dev', 'localhost', true, true);
+    alt.viewEmit('version:update', '14.0', 'internal', 'localhost', true, true);
     updateManifest();
     updateSkinIndex();
     alt.viewEmit('settings:update', {...defaultSettings, ...JSON.parse(localStorage.getItem('settings') ?? '{}')});

@@ -7,7 +7,6 @@ const locale = useLocalization();
 const props = defineProps<{ localeKey: string }>();
 
 const blocks = computed(() => {
-    console.log(props)
     const raw = locale.tRaw(props.localeKey);
     const slots = (raw.match(/{(\d+)}/g) ?? []).map(e => e.substring(1, e.length - 1));
     const parts = raw.split(/{\d+}/g) ?? [];
