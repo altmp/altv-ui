@@ -17,7 +17,7 @@ const { t, locales } = useLocalization();
 const headers = computed( () => {
     return [
         {id: "name", name: t('SERVER_NAME')},
-        {id: "players", name: t('PLAYERS')},
+        {id: "playersCount", name: t('PLAYERS')},
         // {id: "ping", name: t('PING')},
         {id: "gameMode", name: t('GAMEMODE')},
         {id: "language", name: t('LANGUAGE')},
