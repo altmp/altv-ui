@@ -87,6 +87,7 @@ watch(() => connectionState.uiActive, (value) => {
                 v-if="connectionState.showReconnect && connectionState.showReconnectPassword && connectionState.reconnectPossible"
                 v-model="reconnectPassword"
                 type="password"
+                @keydown.enter.prevent="reconnect"
                 :placeholder="t('PASSWORD')"
             />
             <alt-button
