@@ -9,6 +9,7 @@ import {ModalType, useModalStore} from "@/stores/modal";
 import type {IServer} from "@/types/IServer";
 import Star from "@/components/icons/Star.vue";
 import {useVersionStore} from "@/stores/version";
+import {playMoveSound} from "@/utils/playSound";
 
 const version = useVersionStore();
 const servers = useServersStore();
@@ -24,6 +25,8 @@ const name = computed(() => fullData.value?.name ?? props.server.name);
 const invalidBranch = computed(() => version.branch != 'internal' && version.branch != fullData.value?.branch);
 
 function open() {
+  playMoveSound();
+
     if (fullData.value) {
         modal.open(ModalType.Connect, { server: fullData.value }, true);
     } else if(props.server.url) {
