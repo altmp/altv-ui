@@ -2,7 +2,7 @@ import {defineStore} from "pinia";
 import {useInitializableStore} from "@/stores/storeInitializer";
 import {useUIStore} from "@/stores/ui";
 import {ModalType, useModalStore} from "@/stores/modal";
-import {watch} from "vue";
+import {toValue, watch} from "vue";
 
 export const useSettingsStore = useInitializableStore(defineStore('settings', {
     state: () => {
@@ -84,7 +84,7 @@ export const useSettingsStore = useInitializableStore(defineStore('settings', {
             })
         },
         save(key: keyof typeof this.$state['data']) {
-            alt.emit('settings:change', key, this.data[key]);
+            alt.emit('settings:change', key, toValue(this.data[key]));
         }
     },
 
