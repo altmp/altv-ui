@@ -251,6 +251,7 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
                 this.reset();
                 this.action = 'DISCONNECTED';
                 this.message = message;
+                this.inProgress = false;
                 this.cancelAction = null;
                 this.showReconnect = true;
                 this.connectedCacheKeys = [];
