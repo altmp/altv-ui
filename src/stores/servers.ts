@@ -55,7 +55,7 @@ export const useServersStore = useInitializableStore(defineStore('servers', {
         favoriteIds: (state): Set<string> => new Set<string>(state.favorite.filter(e => e.id).map(e => e.id!)),
         apiUrl: (state) => {
             const settings = useSettingsStore();
-            return settings.data.region == 'asia' ? 'https://api-cn.alt-mp.com' : 'https://api-new.alt-mp.com'
+            return settings.data.region == 'asia' ? 'https://api-cn.alt-mp.com' : 'https://api.alt-mp.com'
         },
         getServer: (state) => (id: string): IServer | undefined => state.servers[state.serversLookup[id]] ?? state.privateServers[id],
     },
