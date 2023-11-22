@@ -84,11 +84,11 @@
     "licenceLink": "https://github.com/Cyan4973/xxHash/blob/dev/LICENSE"
   },
   {
-    "name": "cpp-httplib",
-    "description": "A C++ header-only HTTP/HTTPS server and client library",
-    "source": "https://github.com/yhirose/cpp-httplib",
-    "licence": "MIT",
-    "licenceLink": "https://github.com/yhirose/cpp-httplib/blob/master/LICENSE"
+    "name": "Boost.Beast",
+    "description": "HTTP and WebSocket built on Boost.Asio in C++11",
+    "source": "https://github.com/boostorg/beast",
+    "licence": "Custom",
+    "licenceLink": "https://github.com/boostorg/beast/blob/develop/LICENSE_1_0.txt"
   },
   {
     "name": "Vue.js",
