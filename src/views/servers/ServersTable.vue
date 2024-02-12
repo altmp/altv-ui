@@ -12,11 +12,13 @@ import {
 	playMoveSound,
 	playClickSound,
 } from "@/utils/playSound";
-import type { OnlineServer } from "@/types/IServer";
+import type { IServer } from "@/types/IServer";
+import { useExpandedStateStore } from "@/stores/expandedState";
 
 const filter = useFilterStore();
 const settings = useSettingsStore();
 const servers = useServersStore();
+const expandedState = useExpandedStateStore();
 const { t, locales } = useLocalization();
 
 const headers = computed(() => {
@@ -29,18 +31,43 @@ const headers = computed(() => {
 	];
 });
 
-const sortBy = ref<string>("playersCount");
+type SortByProperty = keyof (ServerGroup | IServer);
+const sortBy = ref<SortByProperty>("playersCount");
 const sortDirection = ref<number>(1); // 1 is desc, -1 is asc
 
-function changeSortBy(newSortBy: string) {
-	if (sortBy.value === newSortBy) sortDirection.value = -sortDirection.value;
-	else {
+function changeSortBy(newSortBy: keyof (ServerGroup | IServer)) {
+	if (sortBy.value === newSortBy) {
+		sortDirection.value = -sortDirection.value;
+	} else {
 		sortBy.value = newSortBy;
 		sortDirection.value = 1;
 	}
 }
 
-const sortedData = computed(() => {
+const sortItems = (a: IServer | ServerGroup, b: IServer | ServerGroup) => {
+	if (settings.data.promotedOnTop && a.promoted != b.promoted) {
+		return a.promoted ? -1 : 1;
+	}
+
+	if (!sortBy.value) {
+		return 0;
+	}
+
+	const aSortBy = a[sortBy.value];
+	const bSortBy = b[sortBy.value];
+
+	if (aSortBy > bSortBy) {
+		return -1 * sortDirection.value;
+	}
+
+	if (aSortBy < bSortBy) {
+		return 1 * sortDirection.value;
+	}
+
+	return 0;
+};
+
+const normalizedFilters = computed(() => {
 	const maxPlayers =
 		!filter.maxPlayers || isNaN(+filter.maxPlayers) ? null : +filter.maxPlayers;
 	const minPlayers =
@@ -52,96 +79,73 @@ const sortedData = computed(() => {
 	// const maxPing = !filter.maxPing || isNaN(+filter.maxPing) ? null : +filter.maxPing;
 	const query = filter.search.trim().toLowerCase();
 
+	return {
+		query,
+		maxPlayers,
+		minPlayers,
+		maxSlots,
+		minSlots,
+	};
+});
+
+const filterServer = (server: IServer) => {
+	const { maxPlayers, maxSlots, minPlayers, minSlots, query } =
+		normalizedFilters.value;
+
+	if (filter.hideEmpty && server.playersCount === 0) return false;
+	if (filter.hideFull && server.playersCount === server.maxPlayersCount)
+		return false;
+
+	if (maxPlayers != null && server.playersCount > maxPlayers) return false;
+	if (minPlayers != null && server.playersCount < minPlayers) return false;
+
+	if (maxSlots != null && server.maxPlayersCount > maxSlots) return false;
+	if (minSlots != null && server.maxPlayersCount < minSlots) return false;
+
+	if (filter.hideLocked && server.passworded) return false;
+
+	// if (maxPing != null && e.ping != -1 && e.ping != null && e.ping > maxPing) return false;
+
+	return (
+		server.name.toLowerCase().includes(query) ||
+		locales.get(server.language)?.name.toLowerCase().includes(query) ||
+		server.tags.some((tag) => tag.toLowerCase().includes(query))
+	);
+};
+
+const filterItem = (serverOrGroup: IServer | ServerGroup) => {
+	if (isGroup(serverOrGroup)) {
+		const group = serverOrGroup;
+		const { query } = normalizedFilters.value;
+
+		if (filter.hideEmpty && group.playersCount === 0) return false;
+		if (filter.hideFull && group.playersCount === group.maxPlayersCount)
+			return false;
+
+		return (
+			group.name.toLowerCase().includes(query) || group.servers.some(filterItem)
+		);
+	}
+
+	return filterServer(serverOrGroup);
+};
+
+const tableData = computed(() => {
 	return servers.groupedServers
-		.filter((serverOrGroup) => {
-			if (isGroup(serverOrGroup)) {
-				const group = serverOrGroup;
-
-				if (filter.hideEmpty && group.totalPlayersCount === 0) return false;
-				if (
-					filter.hideFull &&
-					group.totalPlayersCount === group.totalMaxPlayersCount
-				)
-					return false;
-				if (
-					filter.hideLocked &&
-					group.servers.every((server) => server.passworded)
-				)
-					return false;
-
-				if (maxPlayers != null && group.totalPlayersCount > maxPlayers)
-					return false;
-				if (minPlayers != null && group.totalPlayersCount < minPlayers)
-					return false;
-
-				if (maxSlots != null && group.totalMaxPlayersCount > maxSlots)
-					return false;
-				if (minSlots != null && group.totalMaxPlayersCount < minSlots)
-					return false;
-
-				return (
-					group.name.toLowerCase().includes(query) ||
-					group.servers.some((server) => {
-						if (server.name.toLowerCase().includes(query)) {
-							return true;
-						}
-						if (
-							locales.get(server.language)?.name.toLowerCase().includes(query)
-						) {
-							return true;
-						}
-						if (server.tags.some((tag) => tag.toLowerCase().includes(query))) {
-							return true;
-						}
-						return false;
-					})
-				);
+		.filter(filterItem)
+		.sort(sortItems)
+		.flatMap((serverOrGroup) => {
+			if (
+				isGroup(serverOrGroup) &&
+				expandedState.expandedState.get(serverOrGroup.id)
+			) {
+				return [
+					serverOrGroup,
+					...serverOrGroup.servers.filter(filterServer).sort(sortItems),
+				];
 			}
-			const server = serverOrGroup;
-			if (filter.hideFull && server.maxPlayersCount == server.playersCount)
-				return false;
-			if (filter.hideEmpty && server.playersCount == 0) return false;
-			if (filter.hideLocked && server.passworded) return false;
-
-			if (maxPlayers != null && server.playersCount > maxPlayers) return false;
-			if (minPlayers != null && server.playersCount < minPlayers) return false;
-
-			if (maxSlots != null && server.maxPlayersCount > maxSlots) return false;
-			if (minSlots != null && server.maxPlayersCount < minSlots) return false;
-
-			// if (maxPing != null && e.ping != -1 && e.ping != null && e.ping > maxPing) return false;
-
-			return (
-				server.name.toLowerCase().includes(query) ||
-				locales.get(server.language)?.name.toLowerCase().includes(query) ||
-				server.tags.some((tag) => tag.toLowerCase().includes(query))
-			);
-		})
-		.sort((a: OnlineServer | ServerGroup, b: OnlineServer | ServerGroup) => {
-			const isAGroup = isGroup(a);
-			const isBGroup = isGroup(b);
-			if (isAGroup !== isBGroup) {
-				return isAGroup ? -1 : 1;
-			}
-
-			if (settings.data.promotedOnTop && a.promoted != b.promoted) {
-				return a.promoted ? -1 : 1;
-			}
-
-			if (!sortBy.value) {
-				return 0;
-			}
-
-			// if (a[sortBy.value] > b[sortBy.value]) {
-			// 	return -1 * sortDirection.value;
-			// }
-
-			// if (a[sortBy.value] < b[sortBy.value]) {
-			// 	return 1 * sortDirection.value;
-			// }
-
-			return 0;
-		});
+			return [serverOrGroup];
+		}) as (ServerGroup | IServer)[];
 });
 </script>
 
@@ -152,7 +156,7 @@ const sortedData = computed(() => {
 				<th
 					v-for="header in headers"
 					@click="
-						changeSortBy(header.id);
+						changeSortBy(header.id as SortByProperty);
 						playClickSound();
 					"
 					:class="{ active: sortBy === header.id, [header.id]: true }"
@@ -166,7 +170,7 @@ const sortedData = computed(() => {
 		</thead>
 		<tbody>
 			<servers-element
-				v-for="serverOrGroup in sortedData"
+				v-for="serverOrGroup in tableData"
 				:key="
 					isGroup(serverOrGroup) ? serverOrGroup.id : serverOrGroup.publicId
 				"

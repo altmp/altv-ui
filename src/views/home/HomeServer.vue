@@ -6,7 +6,7 @@ import type { IHistoryServer } from "@/types/IHistoryServer";
 import { useServersStore } from "@/stores/servers";
 import { useLocalization } from "@/stores/localization";
 import { ModalType, useModalStore } from "@/stores/modal";
-import type { OnlineServer } from "@/types/IServer";
+import type { IServer } from "@/types/IServer";
 import Star from "@/components/icons/Star.vue";
 import { useVersionStore } from "@/stores/version";
 import { playMoveSound } from "@/utils/playSound";

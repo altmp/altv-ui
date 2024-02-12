@@ -1,36 +1,27 @@
 <script setup lang="ts">
 import Tooltip from "@/components/container/Tooltip.vue";
 import Private from "@/components/icons/Private.vue";
-import Check from "@/components/icons/Check.vue";
 import Promoted from "@/components/icons/Promoted.vue";
-import type { OnlineServer } from "@/types/IServer";
+import type { IServer } from "@/types/IServer";
 import { useLocalization } from "@/stores/localization";
-import { type ServerGroup, isGroup } from "@/stores/servers";
+import Verified from "@/components/icons/Verified.vue";
 
-defineProps<{
-	item: ServerGroup | OnlineServer;
+const props = defineProps<{
+	server: IServer;
 }>();
 const { t } = useLocalization();
 </script>
 
 <template>
-	<div v-if="isGroup(item)" class="server-icons">
-		<tooltip :text="t('SERVER_VERIFIED')" v-if="item.verified">
-			<check />
+	<div class="server-icons">
+		<tooltip :text="t('SERVER_LOCKED')" v-if="server.passworded">
+			<private style="height: 1.9vmin; width: 1.9vmin" />
 		</tooltip>
-		<tooltip :text="t('SERVER_PROMOTED')" v-if="item.promoted">
-			<promoted />
+		<tooltip :text="t('SERVER_VERIFIED')" v-if="server.verified">
+			<verified style="height: 1.9vmin; width: 1.9vmin" />
 		</tooltip>
-	</div>
-	<div v-else class="server-icons">
-		<tooltip :text="t('SERVER_LOCKED')" v-if="item.passworded">
-			<private />
-		</tooltip>
-		<tooltip :text="t('SERVER_VERIFIED')" v-if="item.verified">
-			<check />
-		</tooltip>
-		<tooltip :text="t('SERVER_PROMOTED')" v-if="item.promoted">
-			<promoted />
+		<tooltip :text="t('SERVER_PROMOTED')" v-if="server.promoted">
+			<promoted style="height: 1.9vmin; width: 1.9vmin" />
 		</tooltip>
 	</div>
 </template>

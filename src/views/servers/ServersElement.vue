@@ -4,19 +4,23 @@ import LanguageFlag from "../../components/LanguageFlag.vue";
 import PlayerCount from "../../components/PlayerCount.vue";
 import Tooltip from "@/components/container/Tooltip.vue";
 import Star from "@/components/icons/Star.vue";
-import type { OnlineServer } from "@/types/IServer";
+import type { IServer } from "@/types/IServer";
 import ServerIcons from "@/components/ServerIcons.vue";
 import { ModalType, useModalStore } from "@/stores/modal";
 import { useServersStore, type ServerGroup, isGroup } from "@/stores/servers";
 import { useLocalization } from "@/stores/localization";
-import ArrowDownIcon from "@/components/icons/ArrowDown.vue";
+import ChevronUp from "@/components/icons/ChevronUp.vue";
+import Verified from "@/components/icons/Verified.vue";
+import Promoted from "@/components/icons/Promoted.vue";
+import { useExpandedStateStore } from "@/stores/expandedState";
 
 const modal = useModalStore();
 const servers = useServersStore();
+const expandedState = useExpandedStateStore();
 const { t } = useLocalization();
 
 const props = defineProps<{
-	item: OnlineServer | ServerGroup;
+	item: IServer | ServerGroup;
 }>();
 
 const favorite = computed(() => {
@@ -27,20 +31,43 @@ const favorite = computed(() => {
 </script>
 
 <template>
-	<tr v-if="isGroup(item)" class="server">
+	<tr
+		v-if="isGroup(item)"
+		class="server group"
+		:data-expanded="expandedState.expandedState.get(item.id) ? '' : undefined"
+		@click="expandedState.toggleRow(item.id)"
+	>
 		<td>
 			<div class="name__row">
-				<ArrowDownIcon style="width: 20px; height: 20px" />
-				<span>{{ item.name }}</span>
-				<server-icons :item="item" />
+				<div style="display: flex; gap: 0 0.4rem; align-items: center">
+					<ChevronUp
+						class="group__chevron"
+						style="
+							width: 2.2vmin;
+							height: 2.2vmin;
+							stroke-width: 1.5;
+							color: rgba(255, 255, 255, 0.6);
+						"
+					/>
+					<span>{{ item.name }}</span>
+				</div>
+
+				<div class="group-icons">
+					<tooltip :text="t('SERVER_VERIFIED')" v-if="item.verified">
+						<verified style="width: 1.9vmin; height: 1.9vmin" />
+					</tooltip>
+					<tooltip :text="t('SERVER_PROMOTED')" v-if="item.promoted">
+						<promoted style="width: 1.9vmin; height: 1.9vmin" />
+					</tooltip>
+				</div>
 			</div>
 		</td>
 		<td>
 			<player-count
 				:online="true"
 				dir="ltr"
-				:players="item.totalPlayersCount"
-				:max-players="item.totalMaxPlayersCount"
+				:players="item.playersCount"
+				:max-players="item.maxPlayersCount"
 			></player-count>
 		</td>
 		<td></td>
@@ -49,6 +76,7 @@ const favorite = computed(() => {
 	<tr
 		v-else
 		class="server"
+		:data-group-item="item.group !== null ? '' : undefined"
 		@click="modal.open(ModalType.Connect, { server: item })"
 	>
 		<td class="name">
@@ -63,7 +91,7 @@ const favorite = computed(() => {
 					</Tooltip>
 					<span>{{ item.name }}</span>
 				</div>
-				<server-icons :item="item" />
+				<server-icons :server="item" />
 			</div>
 			<div class="tags">
 				<span v-for="tag in item.tags.filter(Boolean)" class="tags__element">{{
@@ -97,8 +125,54 @@ const favorite = computed(() => {
 </template>
 
 <style lang="scss" scoped>
+.group-icons {
+	display: flex;
+	gap: u(16);
+	flex-shrink: 0;
+
+	&:empty {
+		display: none !important;
+	}
+}
+
+.group {
+	background-color: rgb(255, 255, 255, 0.06);
+
+	& > td:first-child {
+		padding-left: 3vmin;
+	}
+
+	&:hover {
+		background-color: rgb(255, 255, 255, 0.1);
+	}
+	.group__chevron {
+		transition: rotate 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+		rotate: 90deg;
+	}
+
+	&[data-expanded] {
+		.group__chevron {
+			rotate: 180deg;
+		}
+	}
+}
+
 .server {
+	&[data-group-item] {
+		.name::before {
+			content: "";
+			display: block;
+			height: 100%;
+			width: 6px;
+			position: absolute;
+			inset: 0;
+			background-color: rgb(255, 255, 255, 0.06);
+		}
+	}
+
 	.name {
+		position: relative;
+
 		&__row {
 			display: flex;
 			justify-content: space-between;
