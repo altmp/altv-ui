@@ -61,6 +61,11 @@ const favorite = computed(() => {
 					</tooltip>
 				</div>
 			</div>
+			<div class="tags" style="padding-left: 2.5vmin">
+				<span v-for="tag in item.tags.filter(Boolean)" class="tags__element">{{
+					tag
+				}}</span>
+			</div>
 		</td>
 		<td>
 			<player-count
@@ -136,14 +141,12 @@ const favorite = computed(() => {
 }
 
 .group {
-	background-color: rgb(255, 255, 255, 0.06);
-
 	& > td:first-child {
-		padding-left: 3vmin;
+		padding-left: 1.75vmin;
 	}
 
 	&:hover {
-		background-color: rgb(255, 255, 255, 0.1);
+		background-color: rgb(255, 255, 255, 0.06);
 	}
 	.group__chevron {
 		transition: rotate 0.15s cubic-bezier(0.4, 0, 0.2, 1);
@@ -157,17 +160,43 @@ const favorite = computed(() => {
 	}
 }
 
+.tags {
+	margin-top: u(12);
+	display: flex;
+	gap: u(4);
+	overflow-x: hidden;
+	flex-wrap: wrap;
+
+	&:empty {
+		display: none;
+	}
+
+	&__element {
+		padding: u(6);
+		font-size: u(12);
+		line-height: u(12);
+		color: #ffffff;
+		background: rgba(255, 255, 255, 0.1);
+		border-radius: u(4);
+		font-weight: 500; // 600 in figma, figma is bad with scaling font weight for some reason
+		white-space: nowrap;
+	}
+}
+
 .server {
 	&[data-group-item] {
 		.name::before {
 			content: "";
 			display: block;
 			height: 100%;
-			width: 6px;
+			width: 10px;
 			position: absolute;
 			inset: 0;
 			background-color: rgb(255, 255, 255, 0.06);
 		}
+		// .name {
+		// 	padding-left: 5.6vmin;
+		// }
 	}
 
 	.name {
@@ -197,29 +226,6 @@ const favorite = computed(() => {
 				margin-left: u(8);
 			}
 			display: inline-block;
-		}
-
-		.tags {
-			margin-top: u(12);
-			display: flex;
-			gap: u(4);
-			overflow-x: hidden;
-			flex-wrap: wrap;
-
-			&:empty {
-				display: none;
-			}
-
-			&__element {
-				padding: u(6);
-				font-size: u(12);
-				line-height: u(12);
-				color: #ffffff;
-				background: rgba(255, 255, 255, 0.1);
-				border-radius: u(4);
-				font-weight: 500; // 600 in figma, figma is bad with scaling font weight for some reason
-				white-space: nowrap;
-			}
 		}
 	}
 
