@@ -13,6 +13,7 @@ export type ServerGroup = {
   maxPlayersCount: number;
   verified: boolean;
   promoted: boolean;
+  tags: string[];
 };
 
 export interface IServerData {
@@ -48,8 +49,21 @@ export enum ServerDataType {
   Data,
 }
 
+const getTop3TagsFromGroup = (groupServers: IServer[]) => {
+  const map = new Map<string, number>();
+  for (const server of groupServers) {
+    for (const tag of server.tags) {
+      map.set(tag, (map.get(tag) ?? 0) + 1);
+    }
+  }
+  return Array.from(map.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map((e) => e[0]);
+};
+
 export const isGroup = (
-  serverOrGroup: IServer | ServerGroup,
+  serverOrGroup: IServer | ServerGroup
 ): serverOrGroup is ServerGroup => {
   return "servers" in serverOrGroup;
 };
@@ -69,7 +83,7 @@ const groupServers = (servers: IServer[]) => {
       continue;
     }
     const groupIndex = groups.findIndex(
-      (group) => group.id === server.group?.id,
+      (group) => group.id === server.group?.id
     );
     if (groupIndex === -1) {
       groups.push({
@@ -87,14 +101,15 @@ const groupServers = (servers: IServer[]) => {
       ...group,
       playersCount: group.servers.reduce(
         (acc, server) => acc + server.playersCount,
-        0,
+        0
       ),
       maxPlayersCount: group.servers.reduce(
         (acc, server) => acc + server.maxPlayersCount,
-        0,
+        0
       ),
       promoted: group.servers.some((server) => server.promoted),
       verified: group.servers.every((server) => server.verified),
+      tags: getTop3TagsFromGroup(group.servers),
     })),
     ...serversWithoutGroups,
   ];
@@ -127,8 +142,10 @@ export const useServersStore = useInitializableStore(
           ? "http://194.104.146.133:9999"
           : "https://api.alt-mp.com";
       },
-      getServer: (state) => (id: string): IServer | undefined =>
-        state.servers[state.serversLookup[id]] ?? state.privateServers[id],
+      getServer:
+        (state) =>
+        (id: string): IServer | undefined =>
+          state.servers[state.serversLookup[id]] ?? state.privateServers[id],
     },
     actions: {
       deleteServerData(id: string, type: ServerDataType) {
@@ -168,7 +185,7 @@ export const useServersStore = useInitializableStore(
           const res = await fetch(
             `${this.apiUrl}/servers${
               version.branch != "internal" ? "?branch=" + version.branch : ""
-            }`,
+            }`
           );
           if (!res.ok) {
             this.serversError = await res.text();
@@ -176,7 +193,7 @@ export const useServersStore = useInitializableStore(
           }
           this.servers = (await res.json()) as IServer[];
           this.serversLookup = Object.fromEntries(
-            this.servers.map((server, index) => [server.publicId, index]),
+            this.servers.map((server, index) => [server.publicId, index])
           );
 
           const knownIds = this.servers.map((server) => server.publicId);
@@ -190,11 +207,11 @@ export const useServersStore = useInitializableStore(
                 fetch(`${this.apiUrl}/servers/${e.id}`).then((e) =>
                   e.status === 200 ? e.json() : null
                 )
-              ),
+              )
             )
           ).filter((e) => e != null);
           this.privateServers = Object.fromEntries(
-            servers.map((e) => [e.publicId, e]),
+            servers.map((e) => [e.publicId, e])
           );
 
           this.groupedServers = groupServers(this.servers);
@@ -251,5 +268,5 @@ export const useServersStore = useInitializableStore(
         // });
       },
     },
-  }),
+  })
 );
