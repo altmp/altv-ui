@@ -10,25 +10,34 @@ import emojiSoundFile from '@/assets/sounds/emoji.mp3';
 import {useSettingsStore} from "@/stores/settings";
 
 let audioContext: AudioContext;
+let audioBufferCache: Map<string, AudioBuffer> = new Map();
 
 async function loadAudioBuffer(url: string) {
-    audioContext ??= new window.AudioContext;
+  if (audioBufferCache.has(url)) {
+    return audioBufferCache.get(url) ?? null;
+  }
 
-    const response = await fetch(url);
-    const arrayBuffer = await response.arrayBuffer();
-    return await audioContext.decodeAudioData(arrayBuffer);
+  audioContext ??= new window.AudioContext();
+
+  const response = await fetch(url);
+  const arrayBuffer = await response.arrayBuffer();
+  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+  audioBufferCache.set(url, audioBuffer);
+
+  return audioBuffer;
 }
 
 async function playSound(soundUrl: string) {
-    const audioBuffer = await loadAudioBuffer(soundUrl);
-    const sourceNode = audioContext.createBufferSource();
-    sourceNode.buffer = audioBuffer;
-    const settings = useSettingsStore();
-    const gainNode = audioContext.createGain();
-    gainNode.connect(audioContext.destination);
-    gainNode.gain.value = settings.data.uiVolume / 100 * 0.8;
-    sourceNode.connect(gainNode);
-    sourceNode.start();
+  const audioBuffer = await loadAudioBuffer(soundUrl);
+  const sourceNode = audioContext.createBufferSource();
+  sourceNode.buffer = audioBuffer;
+  const settings = useSettingsStore();
+  const gainNode = audioContext.createGain();
+  gainNode.connect(audioContext.destination);
+  gainNode.gain.value = (settings.data.uiVolume / 100) * 0.8;
+  sourceNode.connect(gainNode);
+  sourceNode.start();
 }
 
 export function playMoveSound() {
