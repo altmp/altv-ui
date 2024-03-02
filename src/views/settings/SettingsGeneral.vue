@@ -35,6 +35,10 @@ const speedLimit = ref(stringifySpeed(settings.data.downloadSpeedLimit));
 // });
 
 function saveSpeedLimit() {
+    if (!(/^\d+$/.test(speedLimit.value))) {
+        speedLimit.value = '';
+        return;
+    }
     const value = parseSpeed(speedLimit.value);
     settings.data.downloadSpeedLimit = value;
     settings.save('downloadSpeedLimit');
