@@ -96,7 +96,7 @@ const { t } = locale;
 
     <div class="menu__group">
         <h3>{{ t('DOWNLOAD_SPEED_LIMIT') }}</h3>
-        <alt-input v-model="speedLimit" :disabled="connection.inProgress" :placeholder="t('UNLIMITED')" @keydown.enter="saveSpeedLimit" @blur="saveSpeedLimit"></alt-input>
+        <alt-input v-model="speedLimit" :disabled="connection.inProgress" :placeholder="t('UNLIMITED')" @keydown.enter="saveSpeedLimit" @blur="saveSpeedLimit" :pattern="/\D/g"></alt-input>
     </div>
 
     <div class="menu__group">
