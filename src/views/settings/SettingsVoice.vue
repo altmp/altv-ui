@@ -44,7 +44,7 @@ const {t} = useLocalization();
                 :label="t('INPUT_VOLUME')"></alt-slider>
     <alt-slider v-model="settings.data.voiceVolume" @change="settings.save('voiceVolume')"
                 :label="t('OUTPUT_VOLUME')" max="200"></alt-slider>
-    <alt-checkbox v-model="settings.data.voiceNormalization" @change="settings.save('voiceNormalization')"
+    <alt-checkbox v-model="settings.data.voiceInputNormalization" @change="settings.save('voiceInputNormalization')"
                   :label="t('VOICE_NORMALIZATION')"></alt-checkbox>
     <alt-checkbox v-model="settings.data.voiceNoiseSuppression" @change="settings.save('voiceNoiseSuppression')"
                   :label="t('NOISE_SUPPRESSION')"></alt-checkbox>
