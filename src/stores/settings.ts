@@ -22,7 +22,7 @@ export const useSettingsStore = useInitializableStore(defineStore('settings', {
                 voiceInputSensitivity: 0,
                 voiceActivationKey: 0x4e,
                 voiceInputVolume: 100,
-                voiceNormalization: true,
+                voiceInputNormalization: true,
                 voiceVolume: 100,
                 uiVolume: 100,
                 useExternalConsole: false,
