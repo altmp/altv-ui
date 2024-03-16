@@ -30,8 +30,8 @@ export interface ServersStore {
   groupedServers: (ServerGroup | IServer)[];
   serversLookup: Record<string, number>;
   privateServers: Record<string, IServer>;
-  serversError: string | null;
-  serversLoading: boolean;
+  isLoading: boolean;
+  isError: boolean;
   lastReload: number;
   serverData: IServerData[];
   favorite: IHistoryServer[];
@@ -121,12 +121,12 @@ export const useServersStore = useInitializableStore(
   defineStore("servers", {
     state: (): ServersStore => {
       return {
+        isError: false,
         servers: [],
         groupedServers: [],
         serversLookup: {},
         privateServers: {},
-        serversError: null,
-        serversLoading: false,
+        isLoading: false,
         lastReload: 0,
         serverData: [],
         favorite: [],
@@ -175,20 +175,22 @@ export const useServersStore = useInitializableStore(
         }
       },
       async reload() {
-        if (this.serversLoading) return;
+        if (this.isLoading) return;
         const version = useVersionStore();
 
         try {
-          this.serversError = null;
-          this.serversLoading = true;
+          this.isError = false;
+          this.isLoading = true;
 
-          const res = await fetch(
-            `${this.apiUrl}/servers${
-              version.branch != "internal" ? "?branch=" + version.branch : ""
-            }`
-          );
+          const url = new URL("/servers", this.apiUrl);
+          if (version.branch !== "internal") {
+            url.searchParams.set("branch", version.branch);
+          }
+
+          const res = await fetch(url);
+          
           if (!res.ok) {
-            this.serversError = await res.text();
+            this.isError = true;
             return;
           }
           this.servers = (await res.json()) as IServer[];
@@ -218,9 +220,9 @@ export const useServersStore = useInitializableStore(
 
           this.lastReload = Date.now();
         } catch (e) {
-          this.serversError = String(e);
+          this.isError = true;
         } finally {
-          this.serversLoading = false;
+          this.isLoading = false;
         }
       },
       init() {
