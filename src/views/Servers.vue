@@ -71,10 +71,10 @@ const filters = t("FILTERS");
 
 		<div class="table">
 			<div class="table__wrapper">
-				<div class="table__center" v-if="servers.serversLoading">
+				<div class="table__center" v-if="servers.isLoading">
 					<loader />
 				</div>
-				<div class="table__center" v-else-if="servers.serversError != null">
+				<div class="table__center" v-else-if="servers.isError">
 					<svg
 						width="24"
 						height="24"
@@ -88,9 +88,7 @@ const filters = t("FILTERS");
 						/>
 					</svg>
 					<div class="msg">
-						Ошибка загрузки списка серверов<template v-if="servers.serversError"
-							>:<br />{{ t(servers.serversError) }}</template
-						>
+						{{ t("MASTERLIST_RESPONSE_ERROR") }}
 					</div>
 				</div>
 				<servers-table v-else />
