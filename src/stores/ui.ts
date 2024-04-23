@@ -1,7 +1,5 @@
 import {defineStore} from "pinia";
 import {useInitializableStore} from "@/stores/storeInitializer";
-import {useRoute, useRouter} from "vue-router";
-import {watch} from "vue";
 
 export const useUIStore = useInitializableStore(defineStore('ui', {
     state: () => {
@@ -11,7 +9,6 @@ export const useUIStore = useInitializableStore(defineStore('ui', {
             earlyAuth: false,
             startupProgress: -1,
             highlightElevent: false as string | false,
-            watermarkPosition: 'bottomright',
             netgraph: {
                 active: false,
                 fps: 0,
@@ -38,9 +35,6 @@ export const useUIStore = useInitializableStore(defineStore('ui', {
             });
             alt.on('ui:ready', () => {
                 this.ready = true;
-            });
-            alt.on('ui:setWatermarkPosition', (idx: number) => {
-                this.watermarkPosition = ['bottomright', 'topright', 'topleft', 'topcenter', 'bottomcenter'][idx] ?? 'bottomright';
             });
             alt.on('ui:updateNetgraph', (active: boolean, fps: number, rtt: number, tx: number, rx: number) => {
                 this.netgraph.active = active;
