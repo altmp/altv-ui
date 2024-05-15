@@ -25,6 +25,10 @@ const connection = useConnectionStateStore();
                 <td>RX:</td>
                 <td>{{ (ui.netgraph.rx / 1024).toFixed(2) }} Kbps</td>
             </tr>
+            <tr>
+                <td>PPS:</td>
+                <td>{{ ui.netgraph.pps }}</td>
+            </tr>
         </table>
     </section>
 </template>

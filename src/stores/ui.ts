@@ -18,6 +18,7 @@ export const useUIStore = useInitializableStore(defineStore('ui', {
                 rtt: 0,
                 tx: 0,
                 rx: 0,
+                pps: 0,
             }
         }
     },
@@ -42,12 +43,13 @@ export const useUIStore = useInitializableStore(defineStore('ui', {
             alt.on('ui:setWatermarkPosition', (idx: number) => {
                 this.watermarkPosition = ['bottomright', 'topright', 'topleft', 'topcenter', 'bottomcenter'][idx] ?? 'bottomright';
             });
-            alt.on('ui:updateNetgraph', (active: boolean, fps: number, rtt: number, tx: number, rx: number) => {
+            alt.on('ui:updateNetgraph', (active: boolean, fps: number, rtt: number, tx: number, rx: number, pps: number) => {
                 this.netgraph.active = active;
                 this.netgraph.fps = fps;
                 this.netgraph.rtt = rtt;
                 this.netgraph.tx = tx;
                 this.netgraph.rx = rx;
+                this.netgraph.pps = pps;
             });
             alt.on('ui:startupProgress', (min: number, max: number) => {
                 if (this.ready) return;
