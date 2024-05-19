@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {RouterView} from 'vue-router';
 import SideNavigation from '@/components/persist/SideNavigation.vue';
-import Watermark from "@/components/persist/Watermark.vue";
 import DialogContainer from "@/components/container/DialogContainer.vue";
 import Console from "@/components/persist/console/Console.vue";
 import {useUIStore} from "@/stores/ui";
@@ -97,7 +96,7 @@ onUnmounted(() => document.removeEventListener('keyup', handler));
 
 <template>
     <div id="loading" :data-ready="ui.ready" v-if="!version.earlyLoad">
-        <logo class="logo" custom-logo :logoRef="(el) => logo = el" />
+        <logo class="logo" custom-logo :logoRef="(el: HTMLDivElement) => logo = el" />
         <div class="progress">
             <div class="progress__bar" dir="ltr">
                 <div class="progress__fill progress__fill--indeterminate"></div>
@@ -115,7 +114,6 @@ onUnmounted(() => document.removeEventListener('keyup', handler));
     </router-view>
     <dialog-container />
     <netgraph v-if="ui.netgraph.active && ui.ready" />
-    <watermark />
     <console />
     <div id="early-auth-overlay" :data-enabled="ui.earlyAuth"></div>
     <div id="loading-overlay" :data-enabled="version.earlyLoad ? !ui.ready : !version.initialized"></div>
