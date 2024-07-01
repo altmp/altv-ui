@@ -10,7 +10,7 @@ import {useSettingsStore} from "@/stores/settings";
 const app = createApp(App);
 const pinia = createPinia();
 
-const importLocales = import.meta.glob("@/locales/langs/*.json", { eager: true });
+const importLocales = import.meta.glob("@/locales/i18n/altvui/*.json", { eager: true });
 
 async function main() {
     app.use(router)
