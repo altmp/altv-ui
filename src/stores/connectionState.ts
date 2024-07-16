@@ -78,6 +78,9 @@ export const useConnectionStateStore = useInitializableStore(defineStore('connec
             const settings = useSettingsStore();
             const version = useVersionStore();
             return !state.inProgress && (settings.data.debug || version.branch === 'internal' || (!state.wasConnected && !state.connected && state.disconnected))
+        },
+        uiNavigationControlsInactive(state) {
+            return state.connected || state.inProgress;
         }
     },
     actions: {

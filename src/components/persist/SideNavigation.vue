@@ -75,7 +75,7 @@ function exit() {
 
             <router-link
                     :to="{ name: 'home' }"
-                    :class="{ disabled: !connection.newConnectionPossible }"
+                    :class="{ disabled: connection.uiNavigationControlsInactive }"
                     tabindex="-1"
                     @click="clickItem" @mouseenter="playHoverSound">
                 <tooltip :text="t('HOME')" position="right">
@@ -84,7 +84,7 @@ function exit() {
             </router-link>
 
             <router-link :to="{ name: 'server-list' }"
-                         :class="{ highlighted: ui.highlightElevent == 'servers', disabled: !connection.newConnectionPossible }"
+                         :class="{ highlighted: ui.highlightElevent == 'servers', disabled: connection.uiNavigationControlsInactive }"
                          v-if="version.branch === 'release' || version.branch === 'internal'"
                          tabindex="-1"
                          @click="clickItem" @mouseenter="playHoverSound">
@@ -94,7 +94,7 @@ function exit() {
             </router-link>
 
             <a @click="() => {modal.open(ModalType.DirectConnect, {}, true); clickItem()}"
-               :class="{ highlighted: ui.highlightElevent == 'direct-connect', disabled: !connection.newConnectionPossible }"
+               :class="{ highlighted: ui.highlightElevent == 'direct-connect', disabled: connection.uiNavigationControlsInactive }"
                tabindex="-1"
                @mouseenter="playHoverSound">
                 <tooltip :text="t('DIRECT_CONNECT')" position="right">
