@@ -21,7 +21,6 @@ export interface VersionStore {
     branch: string;
     debug: boolean;
     lastIp: string;
-    earlyLoad: boolean;
     manifest: IManifest | null;
     rss: Parser.Output<any> | null;
     initialized: boolean;
@@ -35,7 +34,6 @@ export const useVersionStore = useInitializableStore(defineStore('version', {
             branch: '',
             debug: false,
             lastIp: '',
-            earlyLoad: false,
             manifest: null,
             rss: null,
             initialized: false,
@@ -50,12 +48,11 @@ export const useVersionStore = useInitializableStore(defineStore('version', {
             const date = new Date();
             this.orange = date.getDate() == 1 && date.getMonth() == 3;
 
-            alt.on('version:update', async (version: string, branch: string, lastIp: string, debug: boolean, earlyLoad: boolean) => {
+            alt.on('version:update', async (version: string, branch: string, lastIp: string, debug: boolean) => {
                 this.version = version;
                 this.branch = branch;
                 this.lastIp = lastIp;
                 this.debug = debug;
-                this.earlyLoad = earlyLoad;
             });
 
             alt.on('version:setManifest', async (manifest?: string) => {

@@ -95,15 +95,6 @@ onUnmounted(() => document.removeEventListener('keyup', handler));
 </script>
 
 <template>
-    <div id="loading" :data-ready="ui.ready" v-if="!version.earlyLoad">
-        <logo class="logo" custom-logo :logoRef="(el: HTMLDivElement) => logo = el" />
-        <div class="progress">
-            <div class="progress__bar" dir="ltr">
-                <div class="progress__fill progress__fill--indeterminate"></div>
-                <div class="progress__fill" :style="{ width: ui.startupProgress * 100 + '%' }"></div>
-            </div>
-        </div>
-    </div>
     <router-view :dir="locale.dir" v-slot="{ Component }">
         <transition name="fade" :duration="200">
             <div id="page" dir="ltr" v-if="ui.ready && (ui.opened || !connection.connected)">
@@ -116,7 +107,7 @@ onUnmounted(() => document.removeEventListener('keyup', handler));
     <netgraph v-if="ui.netgraph.active && ui.ready" />
     <console />
     <div id="early-auth-overlay" :data-enabled="ui.earlyAuth"></div>
-    <div id="loading-overlay" :data-enabled="version.earlyLoad ? !ui.ready : !version.initialized"></div>
+    <div id="loading-overlay" :data-enabled="!ui.ready"></div>
 </template>
 
 <style lang="scss">
