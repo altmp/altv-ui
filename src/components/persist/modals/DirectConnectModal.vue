@@ -29,7 +29,7 @@ function connect() {
     modal.close();
 }
 
-watch(() => !connection.newConnectionPossible, (value) => {
+watch(() => connection.uiNavigationControlsInactive, (value) => {
     if (value) modal.close()
 }, { immediate: true })
 </script>
