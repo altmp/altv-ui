@@ -15,6 +15,7 @@ export const useSettingsStore = useInitializableStore(defineStore('settings', {
                 debug: false,
                 disableRtl: false,
                 promotedOnTop: true,
+                audioFrameLimiter: true,
                 voiceEnabled: true,
                 voiceActivation: false,
                 voiceNoiseSuppression: false,
