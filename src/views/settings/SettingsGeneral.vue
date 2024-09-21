@@ -109,6 +109,7 @@ const { t } = locale;
         <alt-checkbox v-model="settings.data.discordRichPresence" @change="settings.save('discordRichPresence')" :label="t('DISCORD_RICH_PRESENCE')"></alt-checkbox>
         <alt-checkbox v-model="settings.data.netgraphEnabled" @change="settings.save('netgraphEnabled')" :label="t('NETGRAPH')"></alt-checkbox>
         <alt-checkbox v-model="settings.data.useExternalConsole" @change="settings.save('useExternalConsole')" :label="t('USE_EXTERNAL_CONSOLE')"></alt-checkbox>
+        <alt-checkbox v-model="settings.data.audioFrameLimiter" @change="settings.save('audioFrameLimiter')" :label="t('AUDIO_FRAME_LIMITER')" />
     </div>
 
     <alt-button v-if="settings.data.launcherSkin !== ''" color="gray" @click="resetSkin">{{ t('RESTORE_DEFAULT_SKIN') }}</alt-button>
