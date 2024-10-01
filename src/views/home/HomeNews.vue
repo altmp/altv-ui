@@ -29,27 +29,23 @@ export const isDiscordTimestampType = (
 };
 
 const discordTimestampFormatMap: Readonly<
-	Record<DiscordTimestampType, (timestamp: number) => string>
+	Record<DiscordTimestampType, (moment: moment.Moment) => string>
 > = Object.freeze({
-	[DiscordTimestampType.ShortTime]: (timestamp: number) =>
-		moment.unix(timestamp).format("h:mm A"),
-	[DiscordTimestampType.LongTime]: (timestamp: number) =>
-		moment.unix(timestamp).format("h:mm:ss A"),
-	[DiscordTimestampType.ShortDate]: (timestamp: number) =>
-		moment.unix(timestamp).format("MM/DD/YY"),
-	[DiscordTimestampType.LongDate]: (timestamp: number) =>
-		moment.unix(timestamp).format("MMMM DD, YYYY"),
-	[DiscordTimestampType.ShortDateTime]: (timestamp: number) =>
-		moment.unix(timestamp).format("MM/DD/YY h:mm A"),
-	[DiscordTimestampType.LongDateTime]: (timestamp: number) =>
-		moment.unix(timestamp).format("dddd, MMMM DD, YYYY h:mm A"),
-	[DiscordTimestampType.RelativeTime]: (timestamp: number) =>
-		moment.unix(timestamp).fromNow(),
+	[DiscordTimestampType.ShortTime]: (moment: moment.Moment) =>
+		moment.format("h:mm A"),
+	[DiscordTimestampType.LongTime]: (moment: moment.Moment) =>
+		moment.format("h:mm:ss A"),
+	[DiscordTimestampType.ShortDate]: (moment: moment.Moment) =>
+		moment.format("MM/DD/YY"),
+	[DiscordTimestampType.LongDate]: (moment: moment.Moment) =>
+		moment.format("MMMM DD, YYYY"),
+	[DiscordTimestampType.ShortDateTime]: (moment: moment.Moment) =>
+		moment.format("MM/DD/YY h:mm A"),
+	[DiscordTimestampType.LongDateTime]: (moment: moment.Moment) =>
+		moment.format("dddd, MMMM DD, YYYY h:mm A"),
+	[DiscordTimestampType.RelativeTime]: (moment: moment.Moment) =>
+		moment.fromNow(),
 });
-export const formatDiscordTimestamp = (
-	timestamp: number,
-	type: DiscordTimestampType
-): string => discordTimestampFormatMap[type](timestamp);
 </script>
 
 <script setup lang="ts">
@@ -116,7 +112,9 @@ const hook = () => {
 		const timestamp = parseInt(el.textContent);
 		if (isNaN(timestamp)) return;
 
-		el.textContent = formatDiscordTimestamp(timestamp, type);
+		el.textContent = discordTimestampFormatMap[type](
+			moment.unix(timestamp).locale(locale.currentLocale.intlCode || "en")
+		);
 		el.classList.add("timestamp");
 		return;
 	}
