@@ -31,7 +31,7 @@ watch(
 	() => locale.dir,
 	(value) => {
 		document.dir = value;
-	}
+	},
 );
 
 watch(
@@ -56,7 +56,7 @@ watch(
 		}
 
 		document.body.setAttribute("style", style);
-	}
+	},
 );
 
 watch(
@@ -69,7 +69,7 @@ watch(
 	(value) => {
 		alt.emit("ui:open", value);
 	},
-	{ immediate: true }
+	{ immediate: true },
 );
 
 const logo = ref<HTMLDivElement>();
@@ -134,17 +134,17 @@ provide(
 		maxEntries: 300,
 		maxMessageLength: 10000,
 		maxMessageNewlines: 50,
-	})
+	}),
 );
 provide(
 	ConsoleHistoryContextInjectionKey,
-	createConsoleHistoryContext({ maxLength: 50 })
+	createConsoleHistoryContext({ maxLength: 50 }),
 );
 provide(
 	ConsoleTimeFormatContextInjectionKey,
 	createConsoleTimeFormatContext({
 		cacheTime: 10000,
-	})
+	}),
 );
 </script>
 
@@ -174,7 +174,9 @@ provide(
 
 #page {
 	height: 100vh;
-	background: var(--background-dark) no-repeat center, $back_black;
+	background:
+		var(--background-dark) no-repeat center,
+		$back_black;
 	background-size: cover;
 	display: grid;
 	grid-template-columns: u(96) auto;
@@ -182,7 +184,9 @@ provide(
 }
 
 #loading {
-	background: var(--background) no-repeat center, $back_black;
+	background:
+		var(--background) no-repeat center,
+		$back_black;
 	background-size: cover;
 	position: absolute;
 	z-index: 200;
@@ -277,7 +281,9 @@ provide(
 	left: 0;
 	width: 100vw;
 	height: 100vh;
-	background: var(--background-dark) no-repeat center, $back_black;
+	background:
+		var(--background-dark) no-repeat center,
+		$back_black;
 	background-size: cover;
 	opacity: 0;
 	pointer-events: none;

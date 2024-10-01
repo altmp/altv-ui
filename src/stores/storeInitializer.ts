@@ -25,7 +25,7 @@ const useStoreInitializer = defineStore("initializerStore", {
 export function useInitializableStore<
 	Id extends string,
 	S extends StateTree,
-	A extends _ActionsTree
+	A extends _ActionsTree,
 >(storeDefinition: StoreDefinition<Id, S, _GettersTree<S>, A>) {
 	const obj = function () {
 		const store = storeDefinition();

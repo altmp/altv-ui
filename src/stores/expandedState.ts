@@ -5,15 +5,15 @@ import { reactive } from "vue";
 type ExpandedState = Map<string, boolean>;
 
 export const useExpandedStateStore = defineStore(
-  "server-table-expanded-state",
-  () => {
-    const expandedState = reactive<ExpandedState>(new Map());
-    const toggleRow = (rowId: string) => {
-      const isExpanded = expandedState.get(rowId) || false;
-      expandedState.set(rowId, !isExpanded);
-      return !isExpanded;
-    };
+	"server-table-expanded-state",
+	() => {
+		const expandedState = reactive<ExpandedState>(new Map());
+		const toggleRow = (rowId: string) => {
+			const isExpanded = expandedState.get(rowId) || false;
+			expandedState.set(rowId, !isExpanded);
+			return !isExpanded;
+		};
 
-    return { expandedState, toggleRow };
-  },
+		return { expandedState, toggleRow };
+	},
 );

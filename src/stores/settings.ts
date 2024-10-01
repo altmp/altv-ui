@@ -91,16 +91,16 @@ export const useSettingsStore = useInitializableStore(
 					() => this.micTest,
 					() => {
 						alt.emit("settings:micTest:toggle", this.micTest);
-					}
+					},
 				);
 			},
 			save(key: keyof (typeof this.$state)["data"]) {
 				alt.emit(
 					"settings:change",
 					key,
-					JSON.parse(JSON.stringify(this.data[key]))
+					JSON.parse(JSON.stringify(this.data[key])),
 				);
 			},
 		},
-	})
+	}),
 );

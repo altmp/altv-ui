@@ -18,10 +18,10 @@ const props = defineProps<{
 }>();
 
 const { formatTime, timeFormat } = injectContext(
-	ConsoleTimeFormatContextInjectionKey
+	ConsoleTimeFormatContextInjectionKey,
 );
 const formattedTime = computed(() =>
-	formatTime(props.item.time, timeFormat.value)
+	formatTime(props.item.time, timeFormat.value),
 );
 </script>
 
