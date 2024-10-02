@@ -1,101 +1,125 @@
-@import 'util';
-@import 'palette';
+@import "util";
+@import "palette";
 //noinspection CssUnknownTarget
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;700;800;900&display=swap");
 
 @font-face {
-  font-family: 'JetBrains Mono';
-  src: url('../assets/fonts/JetBrainsMono-Light.ttf');
-  font-weight: 300;
-  font-style: normal;
+	font-family: "JetBrains Mono";
+	src: url("../assets/fonts/JetBrainsMono-Light.ttf");
+	font-weight: 300;
+	font-style: normal;
 }
 
-:root { font-size: 10px; }
-@media only screen and (min-width: 1800px) { :root { font-size: 16px; } }
-@media only screen and (min-width: 2300px) and (min-height: 1200px) { :root { font-size: 24px; } }
-@media only screen and (min-width: 3800px) and (min-height: 1900px) { :root { font-size: 32px; } }
+:root {
+	font-size: 10px;
+}
+@media only screen and (min-width: 1800px) {
+	:root {
+		font-size: 16px;
+	}
+}
+@media only screen and (min-width: 2300px) and (min-height: 1200px) {
+	:root {
+		font-size: 24px;
+	}
+}
+@media only screen and (min-width: 3800px) and (min-height: 1900px) {
+	:root {
+		font-size: 32px;
+	}
+}
 
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
-  position: relative;
-  font-weight: normal;
-  user-select: none;
-  -webkit-user-drag: none;
-  outline: none;
+	box-sizing: border-box;
+	position: relative;
+	font-weight: normal;
+	user-select: none;
+	-webkit-user-drag: none;
+	outline: none;
 }
 
 body {
-  min-height: 100vh;
-  margin: 0;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-  Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  font-size: u(16);
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: $text_light;
-  overflow: hidden;
-  --primary-color-light: 8, 174, 65;
-  --primary-color: 0, 137, 53;
-  --background: url(@/assets/img/background.png);
-  --background-dark: url(@/assets/img/background.png);
+	min-height: 100vh;
+	margin: 0;
+	font-family:
+		Inter,
+		-apple-system,
+		BlinkMacSystemFont,
+		"Segoe UI",
+		Roboto,
+		Oxygen,
+		Ubuntu,
+		Cantarell,
+		"Fira Sans",
+		"Droid Sans",
+		"Helvetica Neue",
+		sans-serif;
+	font-size: u(16);
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: $text_light;
+	overflow: hidden;
+	--primary-color-light: 8, 174, 65;
+	--primary-color: 0, 137, 53;
+	--background: url(@/assets/img/background.png);
+	--background-dark: url(@/assets/img/background.png);
 }
 
 body.orange {
-  --primary-color: 240, 150, 54;
-  --primary-color-light: 240, 150, 54;
+	--primary-color: 240, 150, 54;
+	--primary-color-light: 240, 150, 54;
 }
 
 h1 {
-  color: $text_light;
-  font-size: u(48);
-  font-weight: 500;
-  line-height: 1.2;
-  font-family: 'Inter', sans-serif;
-  letter-spacing: -0.0625rem;
-  margin: 0;
+	color: $text_light;
+	font-size: u(48);
+	font-weight: 500;
+	line-height: 1.2;
+	font-family: "Inter", sans-serif;
+	letter-spacing: -0.0625rem;
+	margin: 0;
 }
 
 h2 {
-  color: $text_light;
-  font-size: u(32);
-  font-weight: 500;
-  line-height: 1.2;
-  font-family: 'Inter', sans-serif;
-  letter-spacing: -0.0625rem;
-  margin: 0;
+	color: $text_light;
+	font-size: u(32);
+	font-weight: 500;
+	line-height: 1.2;
+	font-family: "Inter", sans-serif;
+	letter-spacing: -0.0625rem;
+	margin: 0;
 }
 
 h3 {
-  font-size: u(18);
-  color: rgba($text_light, 0.5);
-  font-weight: 500;
-  line-height: 1em;
-  letter-spacing: -0.02rem;
-  margin: 0;
+	font-size: u(18);
+	color: rgba($text_light, 0.5);
+	font-weight: 500;
+	line-height: 1em;
+	letter-spacing: -0.02rem;
+	margin: 0;
 }
 
 h4 {
-  margin: 0;
+	margin: 0;
 }
 
 input {
-  font: inherit;
+	font: inherit;
 }
 
-
 .fade-enter-from {
-  opacity: 0;
+	opacity: 0;
 }
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.2s ease-in-out;
+	transition: opacity 0.2s ease-in-out;
 }
 
 .fade-enter,
 .fade-leave-to {
-  opacity: 0;
+	opacity: 0;
 }

@@ -9,7 +9,7 @@ In-game user interface of alt:V multiplayer.
 #### Connection
 
 | Event                                       | Arguments                                                     | Description                                                                                                |
-|:--------------------------------------------|---------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
+| :------------------------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | `connection:idle`                           |                                                               | Close connection UI                                                                                        |
 | `connection:setServer`                      | `serverName: string`                                          | Set target joining server name                                                                             |
 | `connection:setCacheKeys`                   | `resourceCacheKey?: string, dataCacheKey?: string`            | Set current server cache keys                                                                              |
@@ -34,7 +34,7 @@ In-game user interface of alt:V multiplayer.
 #### Console
 
 | Event                      | Arguments                              | Description                                                                                |
-|:---------------------------|----------------------------------------|--------------------------------------------------------------------------------------------|
+| :------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------ |
 | `console:push`             | `color: number, data: string`          | Pushes log to the console buffer                                                           |
 | `console:end`              | `resource?: string, logType?: LogType` | Flushes log buffer. For log types see [LogType](src/stores/console.ts)                     |
 | `console:reset`            |                                        | Resets log buffer                                                                          |
@@ -42,20 +42,19 @@ In-game user interface of alt:V multiplayer.
 | `console:open`             | `state?: boolean`                      | Changes console open state. Sets the state if the argument is provided, toggles otherwise. |
 | `console:forceTransparent` |                                        | Forces the console into the semi-transparent state.                                        |
 
-
 #### Servers
 
-| Event                     | Arguments                        | Description                                                                     |
-|:--------------------------|----------------------------------|---------------------------------------------------------------------------------|
-| `servers:recent:update`   | `servers: IHistoryServer[]`      | Updates list of recent servers                                                  |
-| `servers:favorite:update` | `servers: IHistoryServer[]`      | Updates list of favorite servers                                                |
-| `serverData:update`       | `data: IServerData[]`            | Updates server cache (storage) data                                             |
-| `serverData:updateOne`    | `data: IServerData`              | Updates server cache (storage) data for one server                              | 
+| Event                     | Arguments                   | Description                                        |
+| :------------------------ | --------------------------- | -------------------------------------------------- |
+| `servers:recent:update`   | `servers: IHistoryServer[]` | Updates list of recent servers                     |
+| `servers:favorite:update` | `servers: IHistoryServer[]` | Updates list of favorite servers                   |
+| `serverData:update`       | `data: IServerData[]`       | Updates server cache (storage) data                |
+| `serverData:updateOne`    | `data: IServerData`         | Updates server cache (storage) data for one server |
 
 #### Misc
 
 | Event                           | Arguments                                                                               | Description                                                                                                                                                |
-|:--------------------------------|-----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| :------------------------------ | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `settings:update`               | `newData: Record<string, any>`                                                          | Updates settings data. New data is applied on top, only keys that exist in the newData get updated. Keys that are not specified in newData are not deleted |
 | `settings:devices:update`       | `devicesData: Record<string, string>`                                                   | Updates available input audio devices. Key is unique device identifier, value is device name                                                               |
 | `settings:currentVolume:update` | `value: number`                                                                         | Sets current mic volume (level). Value is 0-100, it is used for preview in settings UI                                                                     |
@@ -73,35 +72,35 @@ In-game user interface of alt:V multiplayer.
 ### UI -> Core
 
 #### Connection
+
 | Event                  | Arguments                                                                                                                           | Description                                                                                            |
-|:-----------------------|-------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|
+| :--------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | `connection:connect`   | `host: string, port: number, cdnUrl: string, earlyAuthUrl: string, password: string, id: string, name: string, applyTheme: boolean` | Connect to the server                                                                                  |
 | `connection:abort`     |                                                                                                                                     | Abort connection                                                                                       |
 | `connection:accept`    | `permissions: string[]`                                                                                                             | Accept the connection (permission request). `permissions` only contains selected optional permissions. |
 | `connection:deny`      |                                                                                                                                     | Deny the connection (permission request)                                                               |
 | `connection:reconnect` |                                                                                                                                     | Reconnect to server (debug only)                                                                       |
 
-
 #### Console
 
 | Event                 | Arguments         | Description                            |
-|:----------------------|-------------------|----------------------------------------|
+| :-------------------- | ----------------- | -------------------------------------- |
 | `console:execute`     | `command: string` | Fires when user has executed a command |
 | `console:openLogFile` | ``                | Open current log file                  |
 | `console:setState`    | `state: boolean`  | Force console closed/opened state      |
 
 #### Servers
 
-| Event                     | Arguments                  | Description                                                                      |
-|:--------------------------|----------------------------|----------------------------------------------------------------------------------|
-| `servers:favorite:add`    | `id: string, name: strnig` | Add server to favorites                                                          |
-| `servers:favorite:remove` | `id: string`               | Remove server from favorites                                                     |
-| `serverData:delete`       | `id: string, type: number` | Delete server cache. `id` is masterlist id. Type 0 - resources, type 1 - data    |
+| Event                     | Arguments                  | Description                                                                   |
+| :------------------------ | -------------------------- | ----------------------------------------------------------------------------- |
+| `servers:favorite:add`    | `id: string, name: strnig` | Add server to favorites                                                       |
+| `servers:favorite:remove` | `id: string`               | Remove server from favorites                                                  |
+| `serverData:delete`       | `id: string, type: number` | Delete server cache. `id` is masterlist id. Type 0 - resources, type 1 - data |
 
 #### Misc
 
 | Event                           | Arguments                 | Description                                                  |
-|:--------------------------------|---------------------------|--------------------------------------------------------------|
+| :------------------------------ | ------------------------- | ------------------------------------------------------------ |
 | `ui:resetSkin`                  |                           | Resets UI skin                                               |
 | `settings:change`               | `key: string, value: any` | Fires when user has changed a setting value                  |
 | `settings:devices:reload`       |                           | Requests audio devices from core (`settings:devices:update`) |
@@ -138,6 +137,7 @@ In-game user interface of alt:V multiplayer.
 If RSS feed `title` is an empty string, localized LATEST_NEWS key will be used instead.<br>
 
 ### Used RSS feed item properties
+
 - `title` - shown at the top of the post, optional
 - `link` - opened in browser when user clicks on the post, optional
 - `pubDate` - shown as a localized date at the bottom
@@ -151,53 +151,66 @@ If RSS feed `title` is an empty string, localized LATEST_NEWS key will be used i
 #### Special elements
 
 #### Spoiler
+
 ```html
 <span data-spoiler>content</span>
 ```
+
 Acts as a Discord spoiler (hidden until user clicks on it)
 
 #### Localized string
+
 ```html
 <span data-localized="localization argument">LOCALIZATION_KEY</span>
 <span data-localized>LOCALIZATION_KEY</span>
 ```
+
 Shows localized string, optionally providing an argument (`{0}` in the localization will be replaced with the content of `data-localized`).
 <br>Allowed in both `description` and `dc:creator` fields.
 
 #### Timestamp
+
 ```html
 <span data-timestamp="F">1675455031</span>
 ```
+
 Acts as a Discord timestamp, shows timestamp in user's timezone. Span content is a unix timestamp (in seconds), attribute value is Discord timestamp style ([docs](https://discord.com/developers/docs/reference#message-formatting-timestamp-styles)). If attribute value is not specified (just `data-dimestamp`) then default style `f` is used.
 
-
 #### Mention
+
 ```html
 <span data-mention="255, 0, 0">@someone</span>
 ```
+
 Displays Discord-style mention. Attribute value is RGB color values 0-255 separated with comma. If no value is specified (just `data-mention`), then Discord's default mention color is used.
 
 #### Emoji
+
 ```html
-<img data-emoji src="https://emoji/icon/url.png" alt="emojiname">
+<img data-emoji src="https://emoji/icon/url.png" alt="emojiname" />
 ```
+
 Display image as a small (1.375em in height) inline element
 <br>Allowed in both `description` and `dc:creator` fields.
 
 #### Quote
+
 ```html
 <blockquote>quote content</blockquote>
 ```
+
 Displays Discord-style quote.
 
-
 #### Inline code
+
 ```html
 <code>Inline code</code>
 ```
+
 Displays Discord-style code line. (\`code\`)
 
 #### Code block
+
 ```html
 <pre>
     <code>
@@ -206,14 +219,17 @@ Displays Discord-style code line. (\`code\`)
     </code>
 </pre>
 ```
+
 Displays Discord-style code block (\`\`\`code\`\`\`, any `code` element enclosed in `pre`)
 
 #### Images row
+
 ```html
 <span data-images>
-    <img src="https://image/one/url.png" alt="image one">
-    <img src="https://image/two/url.png" alt="image two">
-    <img src="https://image/three/url.png" alt="image three">
+	<img src="https://image/one/url.png" alt="image one" />
+	<img src="https://image/two/url.png" alt="image two" />
+	<img src="https://image/three/url.png" alt="image three" />
 </span>
 ```
+
 Displays horizontally scrolled image row (scrolled only if overflowed). Recommended for media display.

@@ -78,7 +78,7 @@ function startResize(vertical: boolean, horizontal: boolean) {
 			const percent = clamp(
 				(window.innerWidth - event.clientX) / window.innerWidth,
 				0.2,
-				0.9
+				0.9,
 			);
 			consoleRef.value!.style.width = percent * 100 + "%";
 			lastWidth = percent;
@@ -111,10 +111,10 @@ function startResize(vertical: boolean, horizontal: boolean) {
 }
 
 const consoleVisible = computed(
-	() => consoleContext.open.value || consoleContext.transparent.value
+	() => consoleContext.open.value || consoleContext.transparent.value,
 );
 const consoleActuallyTransparent = computed(
-	() => consoleContext.transparent.value && !consoleContext.open.value
+	() => consoleContext.transparent.value && !consoleContext.open.value,
 );
 </script>
 

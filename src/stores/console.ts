@@ -52,14 +52,14 @@ const htmlEntities = Object.freeze({
 function stripHtml(string: string): string {
 	return string.replace(
 		/[&<>"']/g,
-		(match) => htmlEntities[match as keyof typeof htmlEntities]
+		(match) => htmlEntities[match as keyof typeof htmlEntities],
 	);
 }
 
 function convertLinksToHTML(string: string): string {
 	return string.replace(
 		/https?:\/\/[^\s/$.?#].[^\s]*/g,
-		'<a href="$&" target="_blank">$&</a>'
+		'<a href="$&" target="_blank">$&</a>',
 	)!;
 }
 
@@ -143,7 +143,7 @@ export interface ConsoleContext {
 }
 
 export const ConsoleContextInjectionKey = Symbol(
-	"ConsoleContext"
+	"ConsoleContext",
 ) as InjectionKey<ConsoleContext>;
 
 export function createConsoleContext(options: {
@@ -196,7 +196,7 @@ export function createConsoleContext(options: {
 			const lastNewlineIndex = nthIndexOf(
 				content,
 				"\n",
-				incomingEntry.availableNewlinesCount
+				incomingEntry.availableNewlinesCount,
 			);
 			content = content.slice(0, lastNewlineIndex + 1);
 		}
@@ -233,7 +233,7 @@ export function createConsoleContext(options: {
 		incomingEntry.htmlBuffer = convertLinksToHTML(incomingEntry.htmlBuffer);
 		if (incomingEntry.availableCharactersCount < 0) {
 			incomingEntry.htmlBuffer += `... ${Math.abs(
-				incomingEntry.availableCharactersCount
+				incomingEntry.availableCharactersCount,
 			)} chars more ...`;
 		}
 
@@ -331,7 +331,7 @@ export interface ConsoleTimeFormatContext {
 }
 
 export const ConsoleTimeFormatContextInjectionKey = Symbol(
-	"ConsoleTimeFormatContext"
+	"ConsoleTimeFormatContext",
 ) as InjectionKey<ConsoleTimeFormatContext>;
 
 export const createConsoleTimeFormatContext = (options: {
@@ -376,7 +376,7 @@ export const useConsoleHistoryIndex = () => {
 	const moveHistoryIndex = (mod: number) => {
 		const newIndex = Math.min(
 			Math.max(historyIndex.value + mod, -1),
-			consoleHistory.entires.value.length - 1
+			consoleHistory.entires.value.length - 1,
 		);
 
 		historyIndex.value = newIndex;
@@ -391,7 +391,7 @@ export interface ConsoleHistoryContext {
 }
 
 export const ConsoleHistoryContextInjectionKey = Symbol(
-	"ConsoleHistoryContext"
+	"ConsoleHistoryContext",
 ) as InjectionKey<ConsoleHistoryContext>;
 
 export function createConsoleHistoryContext(options: {

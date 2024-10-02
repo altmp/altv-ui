@@ -153,7 +153,7 @@ alt.viewOn("console:execute", (value: string) => {
 		log(
 			"Unhandled exception: error\n  at [anonymous] test.js\n  at [anonymous] test.js",
 			"test",
-			LogType.Error
+			LogType.Error,
 		);
 		log("info", "test", LogType.Info);
 		log("debug", "test", LogType.Debug);
@@ -292,7 +292,7 @@ async function updateSkinIndex() {
 			'      "fileName": "4d8befc1a41c033e4a136c28d7cff537.bin"\n' +
 			"    }\n" +
 			"  ]\n" +
-			"}"
+			"}",
 	);
 }
 

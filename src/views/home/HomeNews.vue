@@ -23,7 +23,7 @@ type DiscordTimestampType =
 
 const DiscordTimestampTypes = Object.values(DiscordTimestampType);
 export const isDiscordTimestampType = (
-	type: string
+	type: string,
 ): type is DiscordTimestampType => {
 	return DiscordTimestampTypes.includes(type as DiscordTimestampType);
 };
@@ -113,7 +113,7 @@ const hook = () => {
 		if (isNaN(timestamp)) return;
 
 		el.textContent = discordTimestampFormatMap[type](
-			moment.unix(timestamp).locale(locale.currentLocale.intlCode || "en")
+			moment.unix(timestamp).locale(locale.currentLocale.intlCode || "en"),
 		);
 		el.classList.add("timestamp");
 		return;
@@ -144,7 +144,7 @@ const hook = () => {
 			const mod = event.deltaY > 0 ? 1 : -1;
 			const rect = el.getBoundingClientRect();
 			let index = Array.from(el.children).findIndex(
-				(e) => e.getBoundingClientRect().left + 6 >= rect.left
+				(e) => e.getBoundingClientRect().left + 6 >= rect.left,
 			);
 			index += mod;
 			if (index < 0) index = 0;
@@ -211,7 +211,9 @@ function openLink(link: string) {
 		flex-direction: column;
 		gap: u(24);
 		overflow: hidden;
-		transition: opacity 0.2s ease-in-out, outline-color 0.2s ease-in-out,
+		transition:
+			opacity 0.2s ease-in-out,
+			outline-color 0.2s ease-in-out,
 			transform 0.2s ease;
 		cursor: pointer;
 		padding: u(24);
