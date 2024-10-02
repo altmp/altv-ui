@@ -8,7 +8,7 @@ import {
 import { DynamicScrollerItem } from "vue-virtual-scroller";
 import { copyText } from "@/utils/copy";
 import Copy from "@/components/icons/Copy.vue";
-import { computed } from "vue";
+import { computed, toRef, toRefs } from "vue";
 import { injectContext } from "@/utils/injectContext";
 
 const props = defineProps<{
@@ -17,12 +17,10 @@ const props = defineProps<{
 	active: boolean;
 }>();
 
-const { formatTime, timeFormat } = injectContext(
+const { useFormattedTime } = injectContext(
 	ConsoleTimeFormatContextInjectionKey,
 );
-const formattedTime = computed(() =>
-	formatTime(props.item.time, timeFormat.value),
-);
+const formattedTime = useFormattedTime(computed(() => props.item.time));
 </script>
 
 <template>

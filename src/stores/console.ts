@@ -12,6 +12,7 @@ import {
 } from "vue";
 import { putTime } from "@/utils/put-time";
 import { useSettingsStore } from "./settings";
+import { useLocalization } from "./localization";
 
 export const enum LogType {
 	Info,
@@ -327,7 +328,7 @@ export function createConsoleContext(options: {
 
 export interface ConsoleTimeFormatContext {
 	timeFormat: ComputedRef<string>;
-	formatTime: (timestamp: number, format: string) => string;
+	useFormattedTime: (timestamp: Ref<number>) => ComputedRef<string>;
 }
 
 export const ConsoleTimeFormatContextInjectionKey = Symbol(
@@ -341,21 +342,22 @@ export const createConsoleTimeFormatContext = (options: {
 	cacheTime: number;
 }) => {
 	const settings = useSettingsStore();
+	const localization = useLocalization();
 
 	const formattedTimeCache = new Map<number, string>();
 	const timeFormat = computed(() => settings.data.logTimeFormat);
 
-	watch(timeFormat, () => {
+	watch([timeFormat, localization.currentLocale], () => {
 		formattedTimeCache.clear();
 	});
 
-	const formatTime = (timestamp: number, format: string): string => {
+	const formatTime = (timestamp: number, format: string, locale?: string) => {
 		const cachedTime = formattedTimeCache.get(timestamp);
 		if (cachedTime) {
 			return cachedTime;
 		}
 
-		const formattedTime = putTime(new Date(timestamp * 1000), format);
+		const formattedTime = putTime(new Date(timestamp * 1000), format, locale);
 		formattedTimeCache.set(timestamp, formattedTime);
 		setTimeout(() => {
 			formattedTimeCache.delete(timestamp);
@@ -363,9 +365,19 @@ export const createConsoleTimeFormatContext = (options: {
 		return formattedTime;
 	};
 
+	const useFormattedTime = (timestamp: Ref<number>) => {
+		return computed(() =>
+			formatTime(
+				timestamp.value,
+				timeFormat.value,
+				localization.currentLocale.intlCode,
+			),
+		);
+	};
+
 	return {
 		timeFormat,
-		formatTime,
+		useFormattedTime,
 	};
 };
 

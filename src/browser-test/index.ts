@@ -79,7 +79,7 @@ const defaultSettings = {
 	name: "Player",
 	promotedOnTop: true,
 	voiceEnabled: true,
-	voiceInputDevice: 0,
+	voiceInputDevice: "default",
 	voiceActivation: false,
 	voiceInputSensitivity: 0,
 	voiceActivationKey: 78,
