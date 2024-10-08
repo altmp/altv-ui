@@ -7,7 +7,6 @@ export const useUIStore = useInitializableStore(defineStore('ui', {
             opened: true,
             ready: false,
             earlyAuth: false,
-            startupProgress: -1,
             highlightElevent: false as string | false,
             netgraph: {
                 active: false,
@@ -42,10 +41,6 @@ export const useUIStore = useInitializableStore(defineStore('ui', {
                 this.netgraph.rtt = rtt;
                 this.netgraph.tx = tx;
                 this.netgraph.rx = rx;
-            });
-            alt.on('ui:startupProgress', (min: number, max: number) => {
-                if (this.ready) return;
-                this.startupProgress = min / max * 0.93;
             });
             alt.on('ui:setEarlyAuthState', (state: boolean) => {
                 this.earlyAuth = state;

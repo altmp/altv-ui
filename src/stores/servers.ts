@@ -139,7 +139,7 @@ export const useServersStore = useInitializableStore(
       apiUrl: (state) => {
         const settings = useSettingsStore();
         return settings.data.region == "asia"
-          ? "http://194.104.146.133:9999"
+          ? "http://194.104.146.133/api/"
           : "https://api.alt-mp.com";
       },
       getServer:
