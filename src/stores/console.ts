@@ -3,10 +3,12 @@ import {useInitializableStore} from "@/stores/storeInitializer";
 import {nthIndexOf} from "@/utils/nthIndexOf";
 
 export enum LogType {
-    Info,
+    Undefined,
+	Internal,
+	Debug,
+	Info,
     Warning,
-    Error,
-    Debug,
+    Error
 }
 
 export interface LogEntry {
