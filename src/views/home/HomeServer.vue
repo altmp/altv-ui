@@ -20,12 +20,13 @@ const props = defineProps({
 });
 
 const fullData = computed(() =>
-	props.server.id != null ? servers.getServer(props.server.id) : undefined
+	props.server.id != null ? servers.getServer(props.server.id) : undefined,
 );
 
 const name = computed(() => fullData.value?.name ?? props.server.name);
 const invalidBranch = computed(
-	() => version.branch != "internal" && version.branch != fullData.value?.branch
+	() =>
+		version.branch != "internal" && version.branch != fullData.value?.branch,
 );
 
 function open() {
@@ -39,7 +40,7 @@ function open() {
 		modal.open(
 			ModalType.DirectConnect,
 			{ address: "@" + props.server.id },
-			true
+			true,
 		);
 	}
 }

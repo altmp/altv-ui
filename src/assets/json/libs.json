@@ -1,163 +1,163 @@
 [
-  {
-    "name": "ENet",
-    "description": "Reliable UDP networking library",
-    "source": "https://github.com/altmp/enet",
-    "licence": "MIT",
-    "licenceLink": "https://github.com/altmp/enet/blob/master/LICENSE"
-  },
-  {
-    "name": "Opus",
-    "description": "Modern audio compression for the internet",
-    "source": "https://github.com/altmp/opus",
-    "licence": "BSD",
-    "licenceLink": "https://opus-codec.org/license/"
-  },
-  {
-    "name": "RNNoise",
-    "description": "Recurrent neural network for audio noise reduction",
-    "source": "https://github.com/altmp/rnnoise-cmake",
-    "licence": "Custom",
-    "licenceLink": "https://github.com/altmp/rnnoise-cmake/blob/master/COPYING"
-  },
-  {
-    "name": "CEF",
-    "description": "A simple framework for embedding Chromium-based browsers in other applications",
-    "source": "https://bitbucket.org/chromiumembedded/cef/src/master/",
-    "licence": "Custom",
-    "licenceLink": "https://bitbucket.org/chromiumembedded/cef/src/master/LICENSE.txt"
-  },
-  {
-    "name": "libcurl",
-    "description": "The multiprotocol file transfer library",
-    "source": "https://github.com/curl/curl",
-    "licence": "Custom",
-    "licenceLink": "https://github.com/curl/curl/blob/master/COPYING"
-  },
-  {
-    "name": "DirectXTK",
-    "description": "A collection of helper classes for writing DirectX 11.x code in C++",
-    "source": "https://github.com/microsoft/DirectXTK",
-    "licence": "MIT",
-    "licenceLink": "https://github.com/microsoft/DirectXTK/blob/master/LICENSE"
-  },
-  {
-    "name": "Discord GameSDK",
-    "description": "Discord integration library",
-    "source": "https://discordapp.com/developers/docs/game-sdk/sdk-starter-guide",
-    "licence": "Custom",
-    "licenceLink": "https://discordapp.com/developers/docs/legal"
-  },
-  {
-    "name": "nlohmann json",
-    "description": "JSON for Modern C++",
-    "source": "https://github.com/nlohmann/json",
-    "licence": "MIT",
-    "licenceLink": "https://github.com/nlohmann/json/blob/develop/LICENSE.MIT"
-  },
-  {
-    "name": "miniz",
-    "description": "Single C source file zlib-replacement library",
-    "source": "https://github.com/richgel999/miniz",
-    "licence": "Custom",
-    "licenceLink": "https://github.com/richgel999/miniz/blob/master/LICENSE"
-  },
-  {
-    "name": "v8",
-    "description": "Google's open source JavaScript engine",
-    "source": "https://chromium.googlesource.com/v8/v8.git",
-    "licence": "Multiple",
-    "licenceLink": "https://chromium.googlesource.com/v8/v8.git/+/refs/heads/master/LICENSE"
-  },
-  {
-    "name": ".NET runtime",
-    "description": "Framework providing a platform for running and executing .NET applications",
-    "source": "https://github.com/dotnet/runtime/",
-    "licence": "MIT",
-    "licenceLink": "https://github.com/dotnet/runtime/blob/main/LICENSE.TXT"
-  },
-  {
-    "name": "xxHash",
-    "description": "Extremely fast non-cryptographic hash algorithm",
-    "source": "https://github.com/Cyan4973/xxHash",
-    "licence": "BSD",
-    "licenceLink": "https://github.com/Cyan4973/xxHash/blob/dev/LICENSE"
-  },
-  {
-    "name": "Boost.Beast",
-    "description": "HTTP and WebSocket built on Boost.Asio in C++11",
-    "source": "https://github.com/boostorg/beast",
-    "licence": "Custom",
-    "licenceLink": "https://github.com/boostorg/beast/blob/develop/LICENSE_1_0.txt"
-  },
-  {
-    "name": "Vue.js",
-    "description": "Progressive, incrementally-adoptable JavaScript framework",
-    "source": "https://github.com/vuejs/vue",
-    "licence": "MIT",
-    "licenceLink": "https://github.com/vuejs/vue/blob/dev/LICENSE"
-  },
-  {
-    "name": "Fluent UI Icons",
-    "description": "Icon collection",
-    "source": "https://github.com/microsoft/fluentui-system-icons",
-    "licence": "MIT",
-    "licenceLink": "https://github.com/microsoft/fluentui-system-icons/blob/master/LICENSE"
-  },
-  {
-    "name": "alt-config",
-    "description": "Lightweight configuration library for C++",
-    "source": "https://github.com/altmp/alt-config",
-    "licence": "MIT",
-    "licenceLink": "https://github.com/altmp/alt-config/blob/master/LICENSE"
-  },
-  {
-    "name": "alt-log",
-    "description": "Lightweight c++17/c++11 single-header logging solution",
-    "source": "https://github.com/vadzz-dev/alt-log",
-    "licence": "MIT",
-    "licenceLink": "https://github.com/vadzz-dev/alt-log/blob/master/LICENSE"
-  },
-  {
-    "name": "IXWebSocket",
-    "description": "C++ library for WebSocket client and server development",
-    "source": "https://github.com/machinezone/IXWebSocket",
-    "licence": "BSD 3-Clause",
-    "licenceLink": "https://github.com/machinezone/IXWebSocket/blob/master/LICENSE.txt"
-  },
-  {
-    "name": "RmlUi",
-    "description": "Performant C++ user interface library",
-    "source": "https://github.com/mikke89/RmlUi",
-    "licence": "MIT",
-    "licenceLink": "https://github.com/mikke89/RmlUi/blob/master/LICENSE.txt"
-  },
-  {
-    "name": "MinHook",
-    "description": "The Minimalistic x86/x64 API Hooking Library for Windows",
-    "source": "https://github.com/TsudaKageyu/minhook",
-    "licence": "BSD 3-Clause",
-    "licenceLink": "https://github.com/TsudaKageyu/minhook/blob/master/LICENSE.txt"
-  },
-  {
-    "name": "TOML++",
-    "description": "TOML config parser and serializer for C++",
-    "source": "https://marzer.github.io/tomlplusplus/",
-    "licence": "MIT",
-    "licenceLink": "https://github.com/marzer/tomlplusplus/blob/master/LICENSE"
-  },
-  {
-    "name": "PicoSHA2",
-    "description": "A C++ SHA256 hash generator",
-    "source": "https://github.com/okdshin/PicoSHA2/tree/master/",
-    "licence": "MIT",
-    "licenceLink": "https://github.com/okdshin/PicoSHA2/blob/master/LICENSE"
-  },
-  {
-    "name": "BASS",
-    "description": "Audio library",
-    "source": "https://www.un4seen.com/",
-    "licence": "Custom",
-    "licenceLink": "https://www.un4seen.com/"
-  }
+	{
+		"name": "ENet",
+		"description": "Reliable UDP networking library",
+		"source": "https://github.com/altmp/enet",
+		"licence": "MIT",
+		"licenceLink": "https://github.com/altmp/enet/blob/master/LICENSE"
+	},
+	{
+		"name": "Opus",
+		"description": "Modern audio compression for the internet",
+		"source": "https://github.com/altmp/opus",
+		"licence": "BSD",
+		"licenceLink": "https://opus-codec.org/license/"
+	},
+	{
+		"name": "RNNoise",
+		"description": "Recurrent neural network for audio noise reduction",
+		"source": "https://github.com/altmp/rnnoise-cmake",
+		"licence": "Custom",
+		"licenceLink": "https://github.com/altmp/rnnoise-cmake/blob/master/COPYING"
+	},
+	{
+		"name": "CEF",
+		"description": "A simple framework for embedding Chromium-based browsers in other applications",
+		"source": "https://bitbucket.org/chromiumembedded/cef/src/master/",
+		"licence": "Custom",
+		"licenceLink": "https://bitbucket.org/chromiumembedded/cef/src/master/LICENSE.txt"
+	},
+	{
+		"name": "libcurl",
+		"description": "The multiprotocol file transfer library",
+		"source": "https://github.com/curl/curl",
+		"licence": "Custom",
+		"licenceLink": "https://github.com/curl/curl/blob/master/COPYING"
+	},
+	{
+		"name": "DirectXTK",
+		"description": "A collection of helper classes for writing DirectX 11.x code in C++",
+		"source": "https://github.com/microsoft/DirectXTK",
+		"licence": "MIT",
+		"licenceLink": "https://github.com/microsoft/DirectXTK/blob/master/LICENSE"
+	},
+	{
+		"name": "Discord GameSDK",
+		"description": "Discord integration library",
+		"source": "https://discordapp.com/developers/docs/game-sdk/sdk-starter-guide",
+		"licence": "Custom",
+		"licenceLink": "https://discordapp.com/developers/docs/legal"
+	},
+	{
+		"name": "nlohmann json",
+		"description": "JSON for Modern C++",
+		"source": "https://github.com/nlohmann/json",
+		"licence": "MIT",
+		"licenceLink": "https://github.com/nlohmann/json/blob/develop/LICENSE.MIT"
+	},
+	{
+		"name": "miniz",
+		"description": "Single C source file zlib-replacement library",
+		"source": "https://github.com/richgel999/miniz",
+		"licence": "Custom",
+		"licenceLink": "https://github.com/richgel999/miniz/blob/master/LICENSE"
+	},
+	{
+		"name": "v8",
+		"description": "Google's open source JavaScript engine",
+		"source": "https://chromium.googlesource.com/v8/v8.git",
+		"licence": "Multiple",
+		"licenceLink": "https://chromium.googlesource.com/v8/v8.git/+/refs/heads/master/LICENSE"
+	},
+	{
+		"name": ".NET runtime",
+		"description": "Framework providing a platform for running and executing .NET applications",
+		"source": "https://github.com/dotnet/runtime/",
+		"licence": "MIT",
+		"licenceLink": "https://github.com/dotnet/runtime/blob/main/LICENSE.TXT"
+	},
+	{
+		"name": "xxHash",
+		"description": "Extremely fast non-cryptographic hash algorithm",
+		"source": "https://github.com/Cyan4973/xxHash",
+		"licence": "BSD",
+		"licenceLink": "https://github.com/Cyan4973/xxHash/blob/dev/LICENSE"
+	},
+	{
+		"name": "Boost.Beast",
+		"description": "HTTP and WebSocket built on Boost.Asio in C++11",
+		"source": "https://github.com/boostorg/beast",
+		"licence": "Custom",
+		"licenceLink": "https://github.com/boostorg/beast/blob/develop/LICENSE_1_0.txt"
+	},
+	{
+		"name": "Vue.js",
+		"description": "Progressive, incrementally-adoptable JavaScript framework",
+		"source": "https://github.com/vuejs/vue",
+		"licence": "MIT",
+		"licenceLink": "https://github.com/vuejs/vue/blob/dev/LICENSE"
+	},
+	{
+		"name": "Fluent UI Icons",
+		"description": "Icon collection",
+		"source": "https://github.com/microsoft/fluentui-system-icons",
+		"licence": "MIT",
+		"licenceLink": "https://github.com/microsoft/fluentui-system-icons/blob/master/LICENSE"
+	},
+	{
+		"name": "alt-config",
+		"description": "Lightweight configuration library for C++",
+		"source": "https://github.com/altmp/alt-config",
+		"licence": "MIT",
+		"licenceLink": "https://github.com/altmp/alt-config/blob/master/LICENSE"
+	},
+	{
+		"name": "alt-log",
+		"description": "Lightweight c++17/c++11 single-header logging solution",
+		"source": "https://github.com/vadzz-dev/alt-log",
+		"licence": "MIT",
+		"licenceLink": "https://github.com/vadzz-dev/alt-log/blob/master/LICENSE"
+	},
+	{
+		"name": "IXWebSocket",
+		"description": "C++ library for WebSocket client and server development",
+		"source": "https://github.com/machinezone/IXWebSocket",
+		"licence": "BSD 3-Clause",
+		"licenceLink": "https://github.com/machinezone/IXWebSocket/blob/master/LICENSE.txt"
+	},
+	{
+		"name": "RmlUi",
+		"description": "Performant C++ user interface library",
+		"source": "https://github.com/mikke89/RmlUi",
+		"licence": "MIT",
+		"licenceLink": "https://github.com/mikke89/RmlUi/blob/master/LICENSE.txt"
+	},
+	{
+		"name": "MinHook",
+		"description": "The Minimalistic x86/x64 API Hooking Library for Windows",
+		"source": "https://github.com/TsudaKageyu/minhook",
+		"licence": "BSD 3-Clause",
+		"licenceLink": "https://github.com/TsudaKageyu/minhook/blob/master/LICENSE.txt"
+	},
+	{
+		"name": "TOML++",
+		"description": "TOML config parser and serializer for C++",
+		"source": "https://marzer.github.io/tomlplusplus/",
+		"licence": "MIT",
+		"licenceLink": "https://github.com/marzer/tomlplusplus/blob/master/LICENSE"
+	},
+	{
+		"name": "PicoSHA2",
+		"description": "A C++ SHA256 hash generator",
+		"source": "https://github.com/okdshin/PicoSHA2/tree/master/",
+		"licence": "MIT",
+		"licenceLink": "https://github.com/okdshin/PicoSHA2/blob/master/LICENSE"
+	},
+	{
+		"name": "BASS",
+		"description": "Audio library",
+		"source": "https://www.un4seen.com/",
+		"licence": "Custom",
+		"licenceLink": "https://www.un4seen.com/"
+	}
 ]

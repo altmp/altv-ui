@@ -1,106 +1,106 @@
 [
-  {
-    "name": "Tuxick",
-    "role": "Developer and Founder"
-  },
-  {
-    "name": "VadZz",
-    "role": "Developer",
-    "picture": "https://avatars.githubusercontent.com/u/15704718?s=128"
-  },
-  {
-    "name": "Heron",
-    "role": "Developer and C# module developer"
-  },
-  {
-    "name": "Vektor",
-    "role": "Developer"
-  },
-  {
-    "name": "zziger",
-    "role": "Developer and C# module maintainer",
-    "picture": "https://avatars.githubusercontent.com/u/27638710?s=128"
-  },
-  {
-    "name": "DurtyFree",
-    "role": "Public Relations"
-  },
-  {
-    "name": "DasChaos",
-    "role": "Public Relations"
-  },
-  {
-    "name": "fronty!",
-    "role": "Designer",
-    "picture": "https://avatars.githubusercontent.com/u/23662478?s=128"
-  },
-  {
-    "name": "C0kkie",
-    "role": "JS module, typings and docs maintainer"
-  },
-  {
-    "name": "Doxoh",
-    "role": "C# module maintainer"
-  },
-  {
-    "name": "Unnvaldr",
-    "role": "Typings and docs maintainer",
-    "picture": "https://avatars.githubusercontent.com/u/7252614?s=128"
-  },
-  {
-    "name": "YANN",
-    "role": "Contributor"
-  },
-  {
-    "name": "FadeInOut",
-    "role": "Contributor"
-  },
-  {
-    "name": "deluvas1911",
-    "role": "Contributor"
-  },
-  {
-    "name": ".json",
-    "role": "Quality Assurance",
-    "picture": "https://avatars.githubusercontent.com/u/60060712?s=128"
-  },
-  {
-    "name": "xshady",
-    "role": "Quality Assurance",
-    "picture": "https://avatars.githubusercontent.com/u/54737754?s=128"
-  },
-  {
-    "name": "LeonMrBonnie",
-    "role": "Former Developer and JS module maintainer",
-    "hoverRole": "JS module v2 supremacy"
-  },
-  {
-    "name": "Hazard",
-    "role": "Former Developer"
-  },
-  {
-    "name": "gamiee",
-    "role": "Former Developer",
-    "picture": "https://avatars1.githubusercontent.com/u/1665373?s=128"
-  },
-  {
-    "name": "Stuyk",
-    "role": "Former Public Relations"
-  },
-  {
-    "name": "TheBloodyScreen",
-    "role": "Former Public Relations"
-  },
-  {
-    "name": "Dzeknjak",
-    "role": "Former Public Relations"
-  },
-  {
-    "name": "drake",
-    "role": "Former Lua module developer"
-  },
-  {
-    "name": "ouli",
-    "role": "Former Quality Assurance"
-  }
+	{
+		"name": "Tuxick",
+		"role": "Developer and Founder"
+	},
+	{
+		"name": "VadZz",
+		"role": "Developer",
+		"picture": "https://avatars.githubusercontent.com/u/15704718?s=128"
+	},
+	{
+		"name": "Heron",
+		"role": "Developer and C# module developer"
+	},
+	{
+		"name": "Vektor",
+		"role": "Developer"
+	},
+	{
+		"name": "zziger",
+		"role": "Developer and C# module maintainer",
+		"picture": "https://avatars.githubusercontent.com/u/27638710?s=128"
+	},
+	{
+		"name": "DurtyFree",
+		"role": "Public Relations"
+	},
+	{
+		"name": "DasChaos",
+		"role": "Public Relations"
+	},
+	{
+		"name": "fronty!",
+		"role": "Designer",
+		"picture": "https://avatars.githubusercontent.com/u/23662478?s=128"
+	},
+	{
+		"name": "C0kkie",
+		"role": "JS module, typings and docs maintainer"
+	},
+	{
+		"name": "Doxoh",
+		"role": "C# module maintainer"
+	},
+	{
+		"name": "Unnvaldr",
+		"role": "Typings and docs maintainer",
+		"picture": "https://avatars.githubusercontent.com/u/7252614?s=128"
+	},
+	{
+		"name": "YANN",
+		"role": "Contributor"
+	},
+	{
+		"name": "FadeInOut",
+		"role": "Contributor"
+	},
+	{
+		"name": "deluvas1911",
+		"role": "Contributor"
+	},
+	{
+		"name": ".json",
+		"role": "Quality Assurance",
+		"picture": "https://avatars.githubusercontent.com/u/60060712?s=128"
+	},
+	{
+		"name": "xshady",
+		"role": "Quality Assurance",
+		"picture": "https://avatars.githubusercontent.com/u/54737754?s=128"
+	},
+	{
+		"name": "LeonMrBonnie",
+		"role": "Former Developer and JS module maintainer",
+		"hoverRole": "JS module v2 supremacy"
+	},
+	{
+		"name": "Hazard",
+		"role": "Former Developer"
+	},
+	{
+		"name": "gamiee",
+		"role": "Former Developer",
+		"picture": "https://avatars1.githubusercontent.com/u/1665373?s=128"
+	},
+	{
+		"name": "Stuyk",
+		"role": "Former Public Relations"
+	},
+	{
+		"name": "TheBloodyScreen",
+		"role": "Former Public Relations"
+	},
+	{
+		"name": "Dzeknjak",
+		"role": "Former Public Relations"
+	},
+	{
+		"name": "drake",
+		"role": "Former Lua module developer"
+	},
+	{
+		"name": "ouli",
+		"role": "Former Quality Assurance"
+	}
 ]

@@ -40,7 +40,7 @@ const filters = t("FILTERS");
 					style="letter-spacing: 0.05em"
 					:data-kanji="
 						!!filters.match(
-							/[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/
+							/[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/,
 						)
 					"
 				>
@@ -113,7 +113,9 @@ const filters = t("FILTERS");
 		cursor: pointer;
 		flex-shrink: 0;
 		fill: rgba(#f1f2f2, 0.32);
-		transition: fill 0.1s ease, rotate 0.5s ease;
+		transition:
+			fill 0.1s ease,
+			rotate 0.5s ease;
 		rotate: 360deg;
 
 		&:hover {
