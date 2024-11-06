@@ -23,7 +23,7 @@ import {
 const ui = useUIStore();
 const connection = useConnectionStateStore();
 const locale = useLocalization();
-const settings = useSettingsStore();
+useSettingsStore();
 const version = useVersionStore();
 const modal = useModalStore();
 

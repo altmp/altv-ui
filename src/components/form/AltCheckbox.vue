@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { playHoverSound, playClickSound } from "@/utils/playSound";
 
-const props = defineProps({
+defineProps({
 	modelValue: {
 		type: Boolean,
 	},

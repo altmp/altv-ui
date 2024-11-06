@@ -4,7 +4,7 @@ import AltButton from "@/components/AltButton.vue";
 import { useLocalization } from "@/stores/localization";
 import AltInput from "@/components/form/AltInput.vue";
 import { useSettingsStore } from "@/stores/settings";
-import { nextTick, onMounted, onUpdated, ref, watch } from "vue";
+import { nextTick, onMounted, ref } from "vue";
 
 const settings = useSettingsStore();
 const modal = useModalStore();
@@ -42,7 +42,7 @@ function save() {
 		</div>
 		<div class="modal__actions">
 			<div class="modal__buttons">
-				<alt-button color="primary" @click="save">{{ t("SAVE") }}</alt-button>
+				<alt-button color="green" @click="save">{{ t("SAVE") }}</alt-button>
 			</div>
 		</div>
 	</div>

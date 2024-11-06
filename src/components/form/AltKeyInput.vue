@@ -15,7 +15,7 @@ const emit = defineEmits(["update:modelValue", "change"]);
 
 watch(
 	() => active.value,
-	(newActive, oldActive, onCleanup) => {
+	(newActive, _oldActive, onCleanup) => {
 		if (!newActive) return;
 		const domHandler = (event: KeyboardEvent) => {
 			event.preventDefault();

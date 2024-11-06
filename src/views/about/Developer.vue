@@ -1,17 +1,6 @@
 <script setup lang="ts">
 import BlockContainer from "@/components/container/BlockContainer.vue";
-import devsJson from "@/assets/json/devs.json";
-import libsJson from "@/assets/json/libs.json";
-import emojis from "@/assets/json/emojis.json";
-import { useVersionStore } from "@/stores/version";
-import { useLocalization } from "@/stores/localization";
-import sanitizeHtml from "sanitize-html";
-import { effect, onMounted, onUnmounted, ref } from "vue";
-import {
-	playEmojiSound,
-	playHoverSound,
-	playMoveSound,
-} from "@/utils/playSound";
+import { onMounted, onUnmounted, ref } from "vue";
 import type { IDeveloper } from "@/types/IDeveloper";
 
 const props = defineProps<{
@@ -27,8 +16,6 @@ function getImage(username: string) {
 	)?.default;
 }
 
-const version = useVersionStore();
-const { t } = useLocalization();
 const hoverText = ref<boolean>(false);
 
 let hovered = false;
@@ -44,7 +31,7 @@ function mousemove(e: MouseEvent) {
 	e.stopPropagation();
 }
 
-function mousemoveGlobal(e: MouseEvent) {
+function mousemoveGlobal(_e: MouseEvent) {
 	hovered = false;
 	if (hoverText.value) hoverText.value = false;
 }

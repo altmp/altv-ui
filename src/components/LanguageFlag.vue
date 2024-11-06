@@ -3,7 +3,7 @@ import { useLocalization } from "@/stores/localization";
 
 const locale = useLocalization();
 
-const props = defineProps({
+defineProps({
 	language: {
 		type: String,
 		required: true,

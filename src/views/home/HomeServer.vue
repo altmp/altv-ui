@@ -1,17 +1,13 @@
 <script lang="ts" setup>
-import type { ComputedRef, PropType } from "vue";
+import type { PropType } from "vue";
 import { computed } from "vue";
 import BlockContainer from "@/components/container/BlockContainer.vue";
 import type { IHistoryServer } from "@/types/IHistoryServer";
 import { useServersStore } from "@/stores/servers";
 import { useLocalization } from "@/stores/localization";
 import { ModalType, useModalStore } from "@/stores/modal";
-import type { IServer } from "@/types/IServer";
-import Star from "@/components/icons/Star.vue";
-import { useVersionStore } from "@/stores/version";
 import { playMoveSound } from "@/utils/playSound";
 
-const version = useVersionStore();
 const servers = useServersStore();
 const modal = useModalStore();
 const { t } = useLocalization();
@@ -24,10 +20,6 @@ const fullData = computed(() =>
 );
 
 const name = computed(() => fullData.value?.name ?? props.server.name);
-const invalidBranch = computed(
-	() =>
-		version.branch != "internal" && version.branch != fullData.value?.branch,
-);
 
 function open() {
 	playMoveSound();

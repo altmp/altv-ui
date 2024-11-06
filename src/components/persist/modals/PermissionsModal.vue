@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { getModalProps, ModalType, useModalStore } from "@/stores/modal";
-import { reactive, ref } from "vue";
+import { ref } from "vue";
 import AltButton from "@/components/AltButton.vue";
 import AltCheckbox from "@/components/form/AltCheckbox.vue";
 import { useLocalization } from "@/stores/localization";
-import Tooltip from "@/components/container/Tooltip.vue";
 import { playHoverSound, playClickSound } from "@/utils/playSound";
 
 const modal = useModalStore();

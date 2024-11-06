@@ -1,12 +1,5 @@
 <script setup lang="ts">
-import { defineEmits, onMounted, ref, watch } from "vue";
-import {
-	playHoverSound,
-	playSliderEnterSound,
-	playSliderLeaveSound,
-	playSliderSound,
-} from "@/utils/playSound";
-import { clamp } from "@/utils/clamp";
+import { defineEmits, ref } from "vue";
 
 const props = defineProps<{ value: number; label: string }>();
 

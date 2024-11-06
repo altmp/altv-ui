@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useVersionStore } from "@/stores/version";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 
 const colors: Record<string, string> = {
 	release: "#008935",
@@ -19,7 +19,16 @@ const color = computed(() => colors[version.branch] ?? colors.release);
 </script>
 
 <template>
-	<div :ref="logoRef ?? (() => {})" v-bind="$attrs">
+	<div
+		:ref="
+			(el) => {
+				if (logoRef) {
+					logoRef(el as HTMLDivElement);
+				}
+			}
+		"
+		v-bind="$attrs"
+	>
 		<template v-if="!customLogo">
 			<svg
 				width="49"

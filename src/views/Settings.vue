@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { useSettingsStore } from "@/stores/settings";
 import SettingsServerData from "@/views/settings/SettingsServerData.vue";
 import SettingsVoice from "@/views/settings/SettingsVoice.vue";
 import SettingsGeneral from "@/views/settings/SettingsGeneral.vue";
@@ -7,7 +6,6 @@ import { useServersStore } from "@/stores/servers";
 import { useLocalization } from "@/stores/localization";
 import { computed } from "vue";
 
-const settings = useSettingsStore();
 const serverData = useServersStore();
 
 const servers = computed(() => serverData.serverData);

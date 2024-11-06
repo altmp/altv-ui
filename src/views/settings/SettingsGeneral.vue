@@ -9,13 +9,11 @@ import AltButton from "@/components/AltButton.vue";
 import AltSlider from "@/components/form/AltSlider.vue";
 import { useUIStore } from "@/stores/ui";
 import { useConnectionStateStore } from "@/stores/connectionState";
-import { useServersStore } from "@/stores/servers";
 
 const settings = useSettingsStore();
 const locale = useLocalization();
 const ui = useUIStore();
 const connection = useConnectionStateStore();
-const servers = useServersStore();
 
 function stringifySpeed(speed: number) {
 	if (!speed) return "";
@@ -55,7 +53,7 @@ const regions = [
 ];
 watch(
 	() => ui.ready && (ui.opened || !connection.connected),
-	(value, oldValue, onCleanup) => {
+	(value, _oldValue, onCleanup) => {
 		alt.emit("settings:currentVolume:toggle", value);
 		onCleanup(() => alt.emit("settings:currentVolume:toggle", false));
 	},
@@ -64,7 +62,7 @@ watch(
 
 watch(
 	() => ui.ready && (ui.opened || !connection.connected),
-	(value, oldValue, onCleanup) => {
+	(_value, _oldValue, onCleanup) => {
 		alt.emit("settings:devices:reload");
 		const interval = setInterval(
 			() => alt.emit("settings:devices:reload"),
@@ -77,7 +75,7 @@ watch(
 
 watch(
 	() => ui.ready && (ui.opened || !connection.connected),
-	(value, oldValue, onCleanup) => {
+	(value, _oldValue, onCleanup) => {
 		if (!value) settings.toggleMicTest(false);
 		onCleanup(() => settings.toggleMicTest(false));
 	},

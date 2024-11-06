@@ -1,10 +1,8 @@
-import { fileURLToPath, URL } from "url";
-
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { viteSingleFile } from "vite-plugin-singlefile";
 
-// https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [
 		vue(),
@@ -16,6 +14,16 @@ export default defineConfig({
 				additionalData: `
           @import "@/assets/_util.scss";
         `,
+			},
+		},
+	},
+	server: {
+		proxy: {
+			"/cdn": {
+				target: "https://cdn.alt-mp.com",
+				changeOrigin: true,
+				rewrite: (path) => path.replace(/^\/cdn/, ""),
+				secure: false,
 			},
 		},
 	},

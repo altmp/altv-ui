@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { useUIStore } from "@/stores/ui";
-import { useConnectionStateStore } from "@/stores/connectionState";
 
 const ui = useUIStore();
-const connection = useConnectionStateStore();
 </script>
 
 <template>

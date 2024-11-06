@@ -1,8 +1,4 @@
-import { useLocalization } from "@/stores/localization";
-
 export function formatBytes(bytes: number): string {
-	const { t } = useLocalization();
-
 	if (bytes === 0) {
 		return "0 Bytes";
 	} else if (bytes === 1) {

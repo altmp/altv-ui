@@ -3,7 +3,7 @@ import { getModalProps, ModalType, useModalStore } from "@/stores/modal";
 import AltButton from "@/components/AltButton.vue";
 import { formatBytes } from "@/utils/formatBytes";
 import { useConnectionStateStore } from "@/stores/connectionState";
-import { computed, watch } from "vue";
+import { computed } from "vue";
 import { useLocalization } from "@/stores/localization";
 import { ServerDataType, useServersStore } from "@/stores/servers";
 
