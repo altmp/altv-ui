@@ -6,17 +6,11 @@ import {
 } from "@/stores/connectionState";
 import { computed, ref, watch } from "vue";
 import { formatBytes } from "@/utils/formatBytes";
-import { useSettingsStore } from "@/stores/settings";
 import { useLocalization } from "@/stores/localization";
-import { useVersionStore } from "@/stores/version";
-import { ModalType, useModalStore } from "@/stores/modal";
 import { useRouter } from "vue-router";
 import AltInput from "@/components/form/AltInput.vue";
 
 const connectionState = useConnectionStateStore();
-const settings = useSettingsStore();
-const version = useVersionStore();
-const modal = useModalStore();
 const router = useRouter();
 const { t, tArgsFromStrCtx } = useLocalization();
 

@@ -6,7 +6,7 @@ import type { IServer } from "@/types/IServer";
 import { useLocalization } from "@/stores/localization";
 import Verified from "@/components/icons/Verified.vue";
 
-const props = defineProps<{
+defineProps<{
 	server: IServer;
 }>();
 const { t } = useLocalization();

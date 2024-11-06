@@ -8,7 +8,7 @@ import {
 import { DynamicScrollerItem } from "vue-virtual-scroller";
 import { copyText } from "@/utils/copy";
 import Copy from "@/components/icons/Copy.vue";
-import { computed, toRef, toRefs } from "vue";
+import { computed } from "vue";
 import { injectContext } from "@/utils/injectContext";
 
 const props = defineProps<{

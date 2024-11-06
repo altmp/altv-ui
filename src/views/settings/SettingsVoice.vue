@@ -1,20 +1,13 @@
 <script lang="ts" setup>
 import { useSettingsStore } from "@/stores/settings";
-
 import AltSlider from "../../components/form/AltSlider.vue";
 import AltCheckbox from "../../components/form/AltCheckbox.vue";
 import AltKeyInput from "../../components/form/AltKeyInput.vue";
 import { useLocalization } from "@/stores/localization";
-import { watch } from "vue";
-import { useUIStore } from "@/stores/ui";
-import { useConnectionStateStore } from "@/stores/connectionState";
 import VolumeDisplay from "@/components/VolumeDisplay.vue";
 import AltDropdown from "@/components/form/AltDropdown.vue";
 import AltButton from "@/components/AltButton.vue";
-import Refresh from "@/components/icons/Refresh.vue";
 
-const ui = useUIStore();
-const connection = useConnectionStateStore();
 const settings = useSettingsStore();
 const { t } = useLocalization();
 </script>

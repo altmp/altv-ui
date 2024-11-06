@@ -6,12 +6,10 @@ import { getModalProps, ModalType, useModalStore } from "@/stores/modal";
 import { useConnectionStateStore } from "@/stores/connectionState";
 import { useLocalization } from "@/stores/localization";
 import { useVersionStore } from "@/stores/version";
-import { useRouter } from "vue-router";
 
 const connection = useConnectionStateStore();
 const modal = useModalStore();
 const version = useVersionStore();
-const router = useRouter();
 const props = getModalProps<ModalType.DirectConnect>(modal);
 const { t } = useLocalization();
 
@@ -63,7 +61,7 @@ watch(
 						:placeholder="t('PASSWORD_IF_NEEDED')"
 						autocomplete="off"
 					></alt-input>
-					<alt-button color="primary" @click="connect">{{
+					<alt-button color="green" @click="connect">{{
 						t("CONNECT")
 					}}</alt-button>
 				</div>

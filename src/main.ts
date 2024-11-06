@@ -19,7 +19,6 @@ async function main() {
 	app.use(pinia);
 
 	if (import.meta.env.DEV) {
-		console.log("DEV!");
 		await import("./browser-test");
 	}
 

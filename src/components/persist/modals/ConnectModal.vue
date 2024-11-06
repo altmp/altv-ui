@@ -147,7 +147,7 @@ function connect() {
 					v-if="modalProps.server.passworded"
 					v-model="password"
 				></alt-input>
-				<alt-button color="primary" @click="connect">{{
+				<alt-button color="green" @click="connect">{{
 					t("CONNECT")
 				}}</alt-button>
 				<alt-checkbox

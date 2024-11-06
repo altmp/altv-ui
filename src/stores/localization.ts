@@ -54,7 +54,7 @@ export const useLocalization = defineStore("localization", {
 					name: "Test",
 					data: Object.fromEntries(
 						Object.entries(this.locales.get(defaultLocale)?.data ?? {}).map(
-							([k, v]) => [k, k],
+							([k, _v]) => [k, k],
 						),
 					),
 				});
@@ -63,7 +63,7 @@ export const useLocalization = defineStore("localization", {
 					name: "Long test",
 					data: Object.fromEntries(
 						Object.entries(this.locales.get(defaultLocale)?.data ?? {}).map(
-							([k, v]) => [k, "abcdefjklmnop qrstuv"],
+							([k, _v]) => [k, "abcdefjklmnop qrstuv"],
 						),
 					),
 				});

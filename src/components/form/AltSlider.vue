@@ -6,7 +6,6 @@ import {
 	playSliderLeaveSound,
 	playSliderSound,
 } from "@/utils/playSound";
-import { clamp } from "@/utils/clamp";
 
 const props = defineProps({
 	modelValue: {

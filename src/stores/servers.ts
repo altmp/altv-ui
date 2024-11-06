@@ -136,7 +136,7 @@ export const useServersStore = useInitializableStore(
 		getters: {
 			favoriteIds: (state): Set<string> =>
 				new Set<string>(state.favorite.filter((e) => e.id).map((e) => e.id!)),
-			apiUrl: (state) => {
+			apiUrl: (_state) => {
 				const settings = useSettingsStore();
 				return settings.data.region == "asia"
 					? "http://194.104.146.133/api/"
@@ -145,7 +145,7 @@ export const useServersStore = useInitializableStore(
 			getServer:
 				(state) =>
 				(id: string): IServer | undefined =>
-					state.servers[state.serversLookup[id]] ?? state.privateServers[id],
+					state.servers[state.serversLookup[id]!] ?? state.privateServers[id],
 		},
 		actions: {
 			deleteServerData(id: string, type: ServerDataType) {
@@ -154,9 +154,9 @@ export const useServersStore = useInitializableStore(
 				if (idx == -1) return;
 				if (
 					(type == ServerDataType.Resources &&
-						this.serverData[idx].dataSize == 0) ||
+						this.serverData[idx]!.dataSize == 0) ||
 					(type == ServerDataType.Data &&
-						this.serverData[idx].resourcesSize == 0)
+						this.serverData[idx]!.resourcesSize == 0)
 				) {
 					this.serverData.splice(idx, 1);
 				}

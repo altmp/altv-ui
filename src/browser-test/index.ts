@@ -2,8 +2,8 @@
 
 import alt from "./alt";
 import { LogType } from "@/stores/console";
-import type { IHistoryServer } from "@/types/IHistoryServer";
-import type { IManifest } from "@/stores/version";
+// import type { IHistoryServer } from "@/types/IHistoryServer";
+// import type { IManifest } from "@/stores/version";
 
 if (!("alt" in window)) {
 	// @ts-ignore
@@ -260,7 +260,7 @@ async function updateManifest() {
 
 	alt.viewEmit("version:setManifest", skin ? JSON.stringify(manifest) : null);
 	try {
-		const res = await fetch("http://cdn.alt-mp.com/rss/news-short.rss");
+		const res = await fetch("/cdn/rss/news-short.rss");
 		const rss = await res.text();
 		alt.viewEmit("version:setRss", rss);
 	} catch (e) {
@@ -271,30 +271,30 @@ async function updateManifest() {
 	}
 }
 
-async function updateSkinIndex() {
-	alt.viewEmit(
-		"servers:skinIndex",
-		"{\n" +
-			'  "indexEntries": [\n' +
-			"    {\n" +
-			'      "serverId": "0330ffff0c5e97e277d038a707701024",\n' +
-			'      "xxHash64": "8937df75b8bebe03",\n' +
-			'      "fileName": "0330ffff0c5e97e277d038a707701024.bin"\n' +
-			"    },\n" +
-			"    {\n" +
-			'      "serverId": "ddb43704e38f52865316d65a72530c7c",\n' +
-			'      "xxHash64": "4df9d8439316debe",\n' +
-			'      "fileName": "ddb43704e38f52865316d65a72530c7c.bin"\n' +
-			"    },\n" +
-			"    {\n" +
-			'      "serverId": "4d8befc1a41c033e4a136c28d7cff537",\n' +
-			'      "xxHash64": "a754eaa2f434bf5f",\n' +
-			'      "fileName": "4d8befc1a41c033e4a136c28d7cff537.bin"\n' +
-			"    }\n" +
-			"  ]\n" +
-			"}",
-	);
-}
+// async function updateSkinIndex() {
+// 	alt.viewEmit(
+// 		"servers:skinIndex",
+// 		"{\n" +
+// 			'  "indexEntries": [\n' +
+// 			"    {\n" +
+// 			'      "serverId": "0330ffff0c5e97e277d038a707701024",\n' +
+// 			'      "xxHash64": "8937df75b8bebe03",\n' +
+// 			'      "fileName": "0330ffff0c5e97e277d038a707701024.bin"\n' +
+// 			"    },\n" +
+// 			"    {\n" +
+// 			'      "serverId": "ddb43704e38f52865316d65a72530c7c",\n' +
+// 			'      "xxHash64": "4df9d8439316debe",\n' +
+// 			'      "fileName": "ddb43704e38f52865316d65a72530c7c.bin"\n' +
+// 			"    },\n" +
+// 			"    {\n" +
+// 			'      "serverId": "4d8befc1a41c033e4a136c28d7cff537",\n' +
+// 			'      "xxHash64": "a754eaa2f434bf5f",\n' +
+// 			'      "fileName": "4d8befc1a41c033e4a136c28d7cff537.bin"\n' +
+// 			"    }\n" +
+// 			"  ]\n" +
+// 			"}",
+// 	);
+// }
 
 alt.viewOn("ui:resetSkin", () => {
 	setSetting("launcherSkin", "");

@@ -39,15 +39,6 @@ function open(url: string) {
 	window.open(url);
 }
 
-const images = import.meta.glob("@/assets/avatars/*.png", { eager: true });
-
-function getImage(username: string) {
-	const filename = `${username.toLowerCase().replace(/[!.]/g, "")}.png`;
-	return (
-		Object.entries(images).find((e) => e[0].endsWith(filename))?.[1] as any
-	)?.default;
-}
-
 const version = useVersionStore();
 const { t } = useLocalization();
 

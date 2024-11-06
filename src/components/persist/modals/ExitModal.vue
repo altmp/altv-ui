@@ -2,12 +2,9 @@
 import { useModalStore } from "@/stores/modal";
 import AltButton from "@/components/AltButton.vue";
 import { useLocalization } from "@/stores/localization";
-import AltInput from "@/components/form/AltInput.vue";
-import { useSettingsStore } from "@/stores/settings";
-import { nextTick, onMounted, onUnmounted, onUpdated, ref, watch } from "vue";
+import { onMounted, onUnmounted } from "vue";
 import { playMoveSound } from "@/utils/playSound";
 
-const settings = useSettingsStore();
 const modal = useModalStore();
 const { t } = useLocalization();
 

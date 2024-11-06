@@ -67,7 +67,10 @@ function sanitize(content: string) {
 		allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img", "del"]),
 		allowedAttributes: {
 			...sanitizeHtml.defaults.allowedAttributes,
-			img: [...sanitizeHtml.defaults.allowedAttributes.img, "data-emoji"],
+			img: [
+				...(sanitizeHtml.defaults.allowedAttributes.img || []),
+				"data-emoji",
+			],
 			span: [
 				"data-timestamp",
 				"data-mention",
@@ -116,7 +119,6 @@ const hook = () => {
 			moment.unix(timestamp).locale(locale.currentLocale.intlCode || "en"),
 		);
 		el.classList.add("timestamp");
-		return;
 	}
 
 	for (let el of Array.from(value.querySelectorAll("span[data-localized]"))) {
@@ -155,7 +157,7 @@ const hook = () => {
 			)
 				return;
 			event.preventDefault();
-			el.children[index].scrollIntoView({
+			el.children[index]?.scrollIntoView({
 				block: "nearest",
 				inline: "start",
 				behavior: "smooth",

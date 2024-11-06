@@ -1,11 +1,9 @@
 <script lang="ts" setup>
 import { ModalType, useModalStore } from "@/stores/modal";
-import { useConnectionStateStore } from "@/stores/connectionState";
 import Modals from "@/components/persist/modals/Modals.vue";
 import { playClickSound } from "@/utils/playSound";
 
 const modal = useModalStore();
-const connectionState = useConnectionStateStore();
 
 function closeModal() {
 	if (modal.type == ModalType.None || !modal.closeable) return;
