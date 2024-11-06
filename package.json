@@ -3,11 +3,10 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite --port 3000",
-		"build": "vue-tsc --noEmit && vite build",
+		"build": "vue-tsc && vite build",
 		"preview": "vite preview --port 5050",
 		"fmt": "prettier --write .",
-		"test:unit": "vitest --environment jsdom",
-		"typecheck": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false"
+		"typecheck": "vue-tsc"
 	},
 	"dependencies": {
 		"moment": "2.30.1",
