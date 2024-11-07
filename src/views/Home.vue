@@ -131,9 +131,6 @@ function refreshMouseDown(e: MouseEvent) {
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-@import "@/assets/_palette.scss";
-
 .view {
 	display: grid;
 	grid-template-columns: 9fr 10fr;
@@ -162,9 +159,9 @@ function refreshMouseDown(e: MouseEvent) {
 	}
 
 	&__news {
-		@include scrollable-block(48);
 		width: 100%;
 		overflow: hidden;
+		@include scrollable-block(48);
 	}
 
 	&__header {

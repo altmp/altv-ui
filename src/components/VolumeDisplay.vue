@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineEmits, ref } from "vue";
+import { ref } from "vue";
 
 const props = defineProps<{ value: number; label: string }>();
 
@@ -18,8 +18,6 @@ const input = ref<HTMLInputElement | null>(null);
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-
 $thumbSize: 20;
 $thickness: 4;
 $margin: 16;

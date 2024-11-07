@@ -201,9 +201,6 @@ function openLink(link: string) {
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-@import "@/assets/_palette.scss";
-
 .news {
 	* {
 		unicode-bidi: unset !important;
@@ -251,20 +248,14 @@ function openLink(link: string) {
 		overflow: hidden;
 		word-break: break-word;
 
-		//[dir=rtl] & {
-		//    text-align: right;
-		//}
-
-		:deep {
-			img[data-emoji] {
-				min-width: 1.375em;
-				height: 1.375em;
-				font-weight: 500;
-				overflow: visible;
-				white-space: nowrap;
-				display: inline-block;
-				vertical-align: bottom;
-			}
+		:deep(img[data-emoji]) {
+			min-width: 1.375em;
+			height: 1.375em;
+			font-weight: 500;
+			overflow: visible;
+			white-space: nowrap;
+			display: inline-block;
+			vertical-align: bottom;
 		}
 	}
 
@@ -276,134 +267,132 @@ function openLink(link: string) {
 		font-weight: 500;
 		overflow: hidden;
 
-		:deep {
-			span[data-timestamp],
-			span[data-mention],
-			span[data-spoiler] {
+		:deep(span[data-timestamp]),
+		:deep(span[data-mention]),
+		:deep(span[data-spoiler]) {
+			display: none;
+		}
+
+		:deep(span[data-images]) {
+			width: 100%;
+			overflow: hidden;
+			overflow-x: scroll;
+			height: u(300);
+			display: flex;
+			gap: u(16);
+			margin-top: u(32);
+			padding-bottom: u(8);
+			box-sizing: content-box;
+			@include scrollbar();
+
+			img {
+				height: u(300);
+				width: auto;
+			}
+
+			&:empty {
 				display: none;
 			}
+		}
 
-			span[data-images] {
-				width: 100%;
-				overflow: hidden;
-				overflow-x: scroll;
-				height: u(300);
-				display: flex;
-				gap: u(16);
-				margin-top: u(32);
-				padding-bottom: u(8);
-				box-sizing: content-box;
-				@include scrollbar();
+		:deep(span.timestamp) {
+			background: rgba(white, 0.1);
+			border-radius: u(4);
+			padding: u(2);
+		}
 
-				img {
-					height: u(300);
-					width: auto;
-				}
+		:deep(span.mention) {
+			color: rgb(var(--color));
+			background: rgba(var(--color), 0.1);
+			border-radius: u(4);
+			font-weight: 600;
+			padding: u(2);
 
-				&:empty {
-					display: none;
-				}
+			&:hover {
+				background: rgba(var(--color), 0.3);
+			}
+		}
+
+		:deep(span.spoiler) {
+			background: #0c0c0c;
+			border-radius: u(4);
+			padding: u(2);
+			transition: background-color 0.1s ease;
+
+			> span {
+				opacity: 0;
+				transition: opacity 0.1s ease;
 			}
 
-			span.timestamp {
+			&.opened {
+				pointer-events: none;
 				background: rgba(white, 0.1);
-				border-radius: u(4);
-				padding: u(2);
-			}
-
-			span.mention {
-				color: rgb(var(--color));
-				background: rgba(var(--color), 0.1);
-				border-radius: u(4);
-				font-weight: 600;
-				padding: u(2);
-
-				&:hover {
-					background: rgba(var(--color), 0.3);
-				}
-			}
-
-			span.spoiler {
-				background: #0c0c0c;
-				border-radius: u(4);
-				padding: u(2);
-				transition: background-color 0.1s ease;
 
 				> span {
-					opacity: 0;
-					transition: opacity 0.1s ease;
-				}
-
-				&.opened {
-					pointer-events: none;
-					background: rgba(white, 0.1);
-
-					> span {
-						opacity: 1;
-					}
+					opacity: 1;
 				}
 			}
+		}
 
-			strong,
-			b {
-				font-weight: 700 !important;
-			}
+		:deep(strong),
+		:deep(b) {
+			font-weight: 700 !important;
+		}
 
-			blockquote {
-				padding: u(4) u(12);
-				margin: u(4) 0;
-				border-left: solid u(4) rgba(white, 0.3);
-				border-radius: u(2);
-			}
+		:deep(blockquote) {
+			padding: u(4) u(12);
+			margin: u(4) 0;
+			border-left: solid u(4) rgba(white, 0.3);
+			border-radius: u(2);
+		}
 
-			code {
-				margin: 0;
-				background: rgba(black, 0.3);
-				padding: u(2);
-				border-radius: u(4);
-				color: white;
-				font-weight: 300;
-				font-family: "JetBrains Mono", monospace;
-				line-height: u(20);
+		:deep(code) {
+			margin: 0;
+			background: rgba(black, 0.3);
+			padding: u(2);
+			border-radius: u(4);
+			color: white;
+			font-weight: 300;
+			font-family: "JetBrains Mono", monospace;
+			line-height: u(20);
 
-				.mention {
-					color: inherit;
-					background: unset;
-					border-radius: unset;
-					font-weight: 500;
-					padding: unset;
-				}
-			}
-
-			pre {
-				margin: 0;
-				padding: 0;
-
-				> code {
-					padding: u(12) u(8);
-					width: 100%;
-					display: block;
-					border: solid u(1) rgba(white, 0.1);
-				}
-			}
-
-			a {
-				color: $text_link;
+			.mention {
+				color: inherit;
+				background: unset;
+				border-radius: unset;
 				font-weight: 500;
+				padding: unset;
+			}
+		}
+
+		:deep(pre) {
+			margin: 0;
+			padding: 0;
+
+			> code {
+				padding: u(12) u(8);
+				width: 100%;
+				display: block;
+				border: solid u(1) rgba(white, 0.1);
+			}
+		}
+
+		:deep(a) {
+			color: $text_link;
+			font-weight: 500;
+		}
+
+		:deep(table) {
+			border-collapse: collapse;
+			td,
+			tr,
+			th {
+				border: solid u(1) rgba(white, 0.2);
+				padding: u(8);
 			}
 
-			table {
-				border-collapse: collapse;
-				td,
-				tr,
-				th {
-					border: solid u(1) rgba(white, 0.2);
-					padding: u(8);
-				}
-
-				th {
-					font-weight: 600;
-				}
+			th {
+				font-weight: 600;
 			}
 		}
 	}

@@ -27,8 +27,6 @@ const { t } = useLocalization();
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-
 .server-icons {
 	display: flex;
 	gap: u(16);

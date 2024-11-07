@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineEmits, onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import {
 	playHoverSound,
 	playSliderEnterSound,
@@ -101,8 +101,6 @@ watch(
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-
 $thumbSize: 20;
 $thickness: 4;
 $margin: 16;

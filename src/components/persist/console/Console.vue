@@ -214,8 +214,7 @@ const consoleActuallyTransparent = computed(
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-@import "@/assets/_palette.scss";
+@use "sass:color";
 
 .actions {
 	display: flex;
@@ -234,7 +233,7 @@ const consoleActuallyTransparent = computed(
 		justify-content: center;
 		align-items: center;
 		aspect-ratio: 1 / 1;
-		background: rgba(darken($back_black, 2), 1);
+		background: rgba(color.adjust($back_black, $lightness: -2%), 1);
 		border: solid u(1) rgba($text_light, 0.2);
 		border-radius: u(8);
 		fill: rgba(255, 255, 255, 0.8);
@@ -242,7 +241,7 @@ const consoleActuallyTransparent = computed(
 		cursor: pointer;
 
 		&[data-active="true"] {
-			background: rgba(lighten($back_black, 2), 1);
+			background: rgba(color.adjust($back_black, $lightness: 2%), 1);
 			border-color: rgba($text_light, 0.4);
 		}
 
@@ -301,7 +300,7 @@ const consoleActuallyTransparent = computed(
 .console {
 	height: 40vh;
 	width: 45vw;
-	background: rgba(darken($back_black, 2), 1);
+	background: rgba(color.adjust($back_black, $lightness: 2%), 1);
 	border: solid u(1) rgba($text_light, 0.2);
 	font-family: "Jetbrains Mono", monospace;
 	font-weight: 300;

@@ -16,8 +16,6 @@ const props = defineProps({
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_palette.scss";
-
 .tooltip-element {
 	position: relative;
 

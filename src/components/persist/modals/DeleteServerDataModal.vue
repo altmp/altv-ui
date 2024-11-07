@@ -65,8 +65,6 @@ function cancel() {
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_palette.scss";
-
 .modal {
 	display: flex;
 	flex-direction: column;

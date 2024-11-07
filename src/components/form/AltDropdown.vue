@@ -112,8 +112,6 @@ const current = computed(
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-
 .dropdown {
 	width: 100%;
 	height: u(50);

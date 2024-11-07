@@ -57,8 +57,6 @@ const { t } = useLocalization();
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-
 .view {
 	display: grid;
 	grid-template-columns: u(416) u(462) auto;

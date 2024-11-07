@@ -50,8 +50,6 @@ onUnmounted(() => document.removeEventListener("keyup", handler));
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_palette.scss";
-
 #close-modal {
 	position: fixed;
 	top: u(82);

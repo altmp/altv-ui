@@ -14,9 +14,6 @@ defineProps({
 </template>
 
 <style scoped lang="scss">
-@import "@/assets/_palette.scss";
-@import "@/assets/_util.scss";
-
 p.player-count__online {
 	font-weight: 500; // 600 in figma
 	font-size: u(16);

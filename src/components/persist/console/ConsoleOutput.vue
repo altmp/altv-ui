@@ -74,9 +74,6 @@ const itemSize = Math.floor((window.innerHeight / 1080) * 35);
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-@import "@/assets/_palette.scss";
-
 .console-output {
 	overflow: hidden;
 	display: flex;

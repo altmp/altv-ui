@@ -22,8 +22,6 @@ defineProps({
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-
 .lang {
 	display: flex;
 	align-items: center;

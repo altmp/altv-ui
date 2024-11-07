@@ -37,8 +37,6 @@ defineExpose({ focus });
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-
 .wrapper {
 	position: relative;
 	width: 100%;

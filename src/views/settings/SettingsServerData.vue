@@ -72,8 +72,6 @@ const { t } = useLocalization();
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-
 .server {
 	display: flex;
 	font-size: u(16);

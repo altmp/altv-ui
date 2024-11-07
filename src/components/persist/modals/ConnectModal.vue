@@ -172,9 +172,6 @@ function connect() {
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-@import "@/assets/_palette.scss";
-
 .connect {
 	height: u(400);
 	min-width: u(720);
