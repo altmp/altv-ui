@@ -85,8 +85,6 @@ function getPermissionName(id: number) {
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_palette.scss";
-
 .modal {
 	display: flex;
 	flex-direction: column;

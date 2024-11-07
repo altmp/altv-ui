@@ -20,8 +20,6 @@ defineProps({
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_palette.scss";
-
 .button {
 	padding: 0 u(16);
 	display: flex;

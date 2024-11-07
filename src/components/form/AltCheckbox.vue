@@ -35,8 +35,6 @@ function onInput(event: Event) {
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-
 .checkbox {
 	min-height: u(24);
 	display: flex;

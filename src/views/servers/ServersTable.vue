@@ -183,9 +183,6 @@ const tableData = computed(() => {
 </template>
 
 <style lang="scss">
-@import "@/assets/_util.scss";
-@import "@/assets/_palette.scss";
-
 table.servers-table {
 	width: 100%;
 	border-collapse: collapse;

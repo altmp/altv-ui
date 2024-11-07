@@ -7,29 +7,29 @@ const ui = useUIStore();
 <template>
 	<section>
 		<table class="netgraph">
-			<tr>
-				<td>FPS:</td>
-				<td>{{ ui.netgraph.fps }}</td>
-			</tr>
-			<tr>
-				<td>RTT:</td>
-				<td>{{ ui.netgraph.rtt }} ms</td>
-			</tr>
-			<tr>
-				<td>TX:</td>
-				<td>{{ (ui.netgraph.tx / 1024).toFixed(2) }} Kbps</td>
-			</tr>
-			<tr>
-				<td>RX:</td>
-				<td>{{ (ui.netgraph.rx / 1024).toFixed(2) }} Kbps</td>
-			</tr>
+			<tbody>
+				<tr>
+					<td>FPS:</td>
+					<td>{{ ui.netgraph.fps }}</td>
+				</tr>
+				<tr>
+					<td>RTT:</td>
+					<td>{{ ui.netgraph.rtt }} ms</td>
+				</tr>
+				<tr>
+					<td>TX:</td>
+					<td>{{ (ui.netgraph.tx / 1024).toFixed(2) }} Kbps</td>
+				</tr>
+				<tr>
+					<td>RX:</td>
+					<td>{{ (ui.netgraph.rx / 1024).toFixed(2) }} Kbps</td>
+				</tr>
+			</tbody>
 		</table>
 	</section>
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-
 .netgraph {
 	position: fixed;
 	left: u(40);

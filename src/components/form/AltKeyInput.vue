@@ -71,8 +71,6 @@ function getKeyName(value: number) {
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-
 div {
 	width: max-content;
 	height: u(50);

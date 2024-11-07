@@ -83,16 +83,19 @@ const formattedTime = useFormattedTime(computed(() => props.item.time));
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-@import "@/assets/_palette.scss";
+@use "sass:color";
 
 .message {
+	font-size: u(14);
+	border-top: solid u(1) rgba(white, 0.15);
+	box-sizing: border-box;
+	line-height: u(20);
 	padding: u(7) u(18) u(7) u(30);
 
 	&.error {
 		background: rgba(#eb2f06, 0.1);
-		color: lighten(#e55039, 10);
-		fill: lighten(#e55039, 10);
+		color: color.adjust(#e55039, $lightness: 10%);
+		fill: color.adjust(#e55039, $lightness: 10%);
 	}
 
 	&.warn {
@@ -103,14 +106,14 @@ const formattedTime = useFormattedTime(computed(() => props.item.time));
 
 	&.info {
 		background: rgba(#3498db, 0.1);
-		color: lighten(#3498db, 10);
-		fill: lighten(#3498db, 10);
+		color: color.adjust(#3498db, $lightness: 10%);
+		fill: color.adjust(#3498db, $lightness: 10%);
 	}
 
 	&.debug {
 		background: rgba(#9b59b6, 0.1);
-		color: lighten(#9b59b6, 20);
-		fill: lighten(#9b59b6, 20);
+		color: color.adjust(#9b59b6, $lightness: 20%);
+		fill: color.adjust(#9b59b6, $lightness: 20%);
 	}
 
 	svg {
@@ -129,6 +132,7 @@ const formattedTime = useFormattedTime(computed(() => props.item.time));
 		padding-bottom: u(10);
 		color: #b2bec3;
 		text-align: right;
+		overflow: hidden;
 
 		&,
 		* {
@@ -170,8 +174,6 @@ const formattedTime = useFormattedTime(computed(() => props.item.time));
 				fill: rgba(white, 0.85);
 			}
 		}
-
-		overflow: hidden;
 	}
 
 	.count {
@@ -201,10 +203,5 @@ const formattedTime = useFormattedTime(computed(() => props.item.time));
 	:deep(*) {
 		user-select: text;
 	}
-
-	font-size: u(14);
-	border-top: solid u(1) rgba(white, 0.15);
-	box-sizing: border-box;
-	line-height: u(20);
 }
 </style>

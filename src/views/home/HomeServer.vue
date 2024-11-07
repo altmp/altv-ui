@@ -62,9 +62,6 @@ function open() {
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-@import "@/assets/_palette.scss";
-
 .server {
 	&__name {
 		font-weight: 500;

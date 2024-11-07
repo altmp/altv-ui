@@ -140,8 +140,6 @@ watch(
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-
 .connection {
 	display: flex;
 	flex-direction: column;
@@ -213,6 +211,7 @@ watch(
 			&--bg {
 				$width: 50%;
 				width: $width;
+				animation: indeterminate-progress 1.5s infinite ease-in-out;
 
 				@keyframes indeterminate-progress {
 					0% {
@@ -222,8 +221,6 @@ watch(
 						margin-left: 101%;
 					}
 				}
-
-				animation: indeterminate-progress 1.5s infinite ease-in-out;
 			}
 
 			&--bg {

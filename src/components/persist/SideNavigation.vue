@@ -243,9 +243,6 @@ function exit() {
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-@import "@/assets/_palette.scss";
-
 .navigation {
 	border-right: #f1f2f21a u(1) solid;
 	display: flex;

@@ -71,8 +71,6 @@ watch(
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_palette.scss";
-
 .direct-connect {
 	//min-width: u(500);
 	border-radius: u(8);
