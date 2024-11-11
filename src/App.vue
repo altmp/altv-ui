@@ -169,9 +169,6 @@ provide(
 </template>
 
 <style lang="scss">
-@import "@/assets/base.scss";
-@import "@/assets/_util.scss";
-
 #page {
 	height: 100vh;
 	background:
@@ -242,6 +239,7 @@ provide(
 				$width: 50%;
 				width: $width;
 				opacity: 0.15;
+				animation: indeterminate-progress-startup 1.5s infinite ease-in-out;
 
 				@keyframes indeterminate-progress-startup {
 					0% {
@@ -252,8 +250,6 @@ provide(
 						margin-left: 101%;
 					}
 				}
-
-				animation: indeterminate-progress-startup 1.5s infinite ease-in-out;
 			}
 		}
 	}

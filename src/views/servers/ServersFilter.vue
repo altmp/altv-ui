@@ -83,9 +83,6 @@ const { t } = useLocalization();
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-@import "@/assets/_palette.scss";
-
 h3 {
 	margin-bottom: u(16);
 }
@@ -94,9 +91,6 @@ h3 {
 	display: flex;
 	flex-direction: column;
 	gap: u(32);
-
-	&__group {
-	}
 
 	&__group-checkboxes {
 		display: flex;

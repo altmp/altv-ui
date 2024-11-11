@@ -18,8 +18,6 @@ const props = defineProps<{
 </template>
 
 <style scoped lang="scss">
-@import "@/assets/_util.scss";
-
 .frame {
 	background: rgba(241, 242, 242, 0.05);
 	width: 100%;

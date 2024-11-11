@@ -98,9 +98,6 @@ const filters = t("FILTERS");
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_palette.scss";
-@import "@/assets/_util.scss";
-
 .view {
 	display: flex;
 	max-height: 100vh;
@@ -133,6 +130,7 @@ const filters = t("FILTERS");
 		display: none;
 		border-right: #f1f2f21a u(1) solid;
 		padding: u(10);
+		width: u(44);
 
 		[dir="rtl"] & {
 			border-right: none;
@@ -159,8 +157,6 @@ const filters = t("FILTERS");
 				transform: none;
 			}
 		}
-
-		width: u(44);
 	}
 
 	.menu {

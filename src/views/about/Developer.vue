@@ -66,9 +66,6 @@ onUnmounted(() => document.removeEventListener("mousemove", mousemoveGlobal));
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-@import "@/assets/_palette.scss";
-
 .developer {
 	font-size: u(16);
 	white-space: pre-wrap;

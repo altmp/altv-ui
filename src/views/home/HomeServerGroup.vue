@@ -18,9 +18,6 @@ defineProps({
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-@import "@/assets/_palette.scss";
-
 .servers {
 	display: flex;
 	flex-direction: column;

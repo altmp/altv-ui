@@ -183,9 +183,6 @@ const considerSupporting = sanitize(t("CONSIDER_SUPPORTING")).replace(
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/_util.scss";
-@import "@/assets/_palette.scss";
-
 .view {
 	display: grid;
 	grid-template-columns: 1fr;

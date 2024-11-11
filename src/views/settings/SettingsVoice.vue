@@ -84,8 +84,6 @@ const { t } = useLocalization();
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/base.scss";
-
 h3 {
 	margin-bottom: u(16);
 }
