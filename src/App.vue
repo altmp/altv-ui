@@ -2,23 +2,16 @@
 import { RouterView } from "vue-router";
 import SideNavigation from "@/components/persist/SideNavigation.vue";
 import DialogContainer from "@/components/container/DialogContainer.vue";
-import Console from "@/components/persist/console/Console.vue";
 import { useUIStore } from "@/stores/ui";
 import { useConnectionStateStore } from "@/stores/connectionState";
 import Netgraph from "@/components/persist/Netgraph.vue";
 import { useLocalization } from "@/stores/localization";
-import { onMounted, onUnmounted, provide, ref, watch } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 import { useSettingsStore } from "@/stores/settings";
 import { useVersionStore } from "@/stores/version";
 import { ModalType, useModalStore } from "@/stores/modal";
-import {
-	ConsoleContextInjectionKey,
-	ConsoleHistoryContextInjectionKey,
-	ConsoleTimeFormatContextInjectionKey,
-	createConsoleContext,
-	createConsoleHistoryContext,
-	createConsoleTimeFormatContext,
-} from "./stores/console";
+import { ConsoleOverlay } from "@/features/console";
+import { TooltipProvider } from "radix-vue";
 
 const ui = useUIStore();
 const connection = useConnectionStateStore();
@@ -127,25 +120,6 @@ function handler(event: KeyboardEvent) {
 
 onMounted(() => document.addEventListener("keyup", handler));
 onUnmounted(() => document.removeEventListener("keyup", handler));
-
-provide(
-	ConsoleContextInjectionKey,
-	createConsoleContext({
-		maxEntries: 300,
-		maxMessageLength: 10000,
-		maxMessageNewlines: 50,
-	}),
-);
-provide(
-	ConsoleHistoryContextInjectionKey,
-	createConsoleHistoryContext({ maxLength: 50 }),
-);
-provide(
-	ConsoleTimeFormatContextInjectionKey,
-	createConsoleTimeFormatContext({
-		cacheTime: 10000,
-	}),
-);
 </script>
 
 <template>
@@ -163,7 +137,9 @@ provide(
 	</router-view>
 	<dialog-container />
 	<netgraph v-if="ui.netgraph.active && ui.ready" />
-	<console />
+	<TooltipProvider>
+		<ConsoleOverlay />
+	</TooltipProvider>
 	<div id="early-auth-overlay" :data-enabled="ui.earlyAuth"></div>
 	<div id="loading-overlay" :data-enabled="!ui.ready"></div>
 </template>

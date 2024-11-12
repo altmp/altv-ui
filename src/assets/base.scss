@@ -1,6 +1,15 @@
 @use "util" as *;
 @use "palette" as *;
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.tw *::selection {
+	background-color: rgba(255, 255, 255, 0.2);	
+	color: inherit;
+}
+
 //noinspection CssUnknownTarget
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;700;800;900&display=swap");
 
@@ -12,22 +21,8 @@
 }
 
 :root {
-	font-size: 10px;
-}
-@media only screen and (min-width: 1800px) {
-	:root {
-		font-size: 16px;
-	}
-}
-@media only screen and (min-width: 2300px) and (min-height: 1200px) {
-	:root {
-		font-size: 24px;
-	}
-}
-@media only screen and (min-width: 3800px) and (min-height: 1900px) {
-	:root {
-		font-size: 32px;
-	}
+	--pixel-scale: calc(100vmin / 1080);
+	font-size: calc(16 * var(--pixel-scale));
 }
 
 *,

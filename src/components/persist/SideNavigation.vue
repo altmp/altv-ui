@@ -26,7 +26,7 @@ import {
 	useConnectionStateStore,
 } from "@/stores/connectionState";
 import Download from "@/components/icons/Download.vue";
-import { formatBytes } from "@/utils/formatBytes";
+import prettyBytes from "pretty-bytes";
 
 const modal = useModalStore();
 const version = useVersionStore();
@@ -44,8 +44,8 @@ const progress = computed(() => {
 	}
 
 	return [
-		formatBytes(connection.progressValue),
-		formatBytes(connection.progressTotal),
+		prettyBytes(connection.progressValue),
+		prettyBytes(connection.progressTotal),
 	];
 });
 

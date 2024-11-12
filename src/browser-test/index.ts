@@ -1,7 +1,7 @@
 // noinspection JSIgnoredPromiseFromCall
 
+import { LogType } from "@/stores/settings";
 import alt from "./alt";
-import { LogType } from "@/stores/console";
 // import type { IHistoryServer } from "@/types/IHistoryServer";
 // import type { IManifest } from "@/stores/version";
 
@@ -146,7 +146,16 @@ function log(msg: string, resource: string, type: LogType) {
 	alt.viewEmit("console:end", resource, type);
 }
 
-alt.viewOn("console:execute", (value: string) => {
+alt.viewOn("console:execute", async (value: string) => {
+	const match = value.match(/test(\d+)/);
+	if (match && match[1]) {
+		const count = parseInt(match[1]);
+		if (isNaN(count)) return;
+		for (let i = 0; i < count; i++) {
+			log(Math.random().toString(), "random", LogType.Info);
+			await wait(100);
+		}
+	}
 	if (value == "test") {
 		// alt.viewEmit('console:push', 'default', 'test', LogType.Default)
 		log("Resource tick was too long: 2ms", "test", LogType.Warning);

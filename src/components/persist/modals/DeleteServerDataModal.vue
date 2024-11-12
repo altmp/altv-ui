@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getModalProps, ModalType, useModalStore } from "@/stores/modal";
 import AltButton from "@/components/AltButton.vue";
-import { formatBytes } from "@/utils/formatBytes";
+import prettyBytes from "pretty-bytes";
 import { useConnectionStateStore } from "@/stores/connectionState";
 import { computed } from "vue";
 import { useLocalization } from "@/stores/localization";
@@ -49,7 +49,7 @@ function cancel() {
 					modalProps.type === ServerDataType.Resources
 						? "CONFIRM_RESOURCE_DELETE"
 						: "CONFIRM_DATA_DELETE",
-					formatBytes(modalProps.size),
+					prettyBytes(modalProps.size),
 				)
 			}}
 		</div>
