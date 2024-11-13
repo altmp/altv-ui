@@ -5,6 +5,7 @@
 		"dev": "vite --port 3000",
 		"build": "vue-tsc && vite build",
 		"preview": "vite preview --port 5050",
+		"test": "vitest",
 		"fmt": "prettier --write .",
 		"typecheck": "vue-tsc"
 	},

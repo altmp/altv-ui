@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
 	ConsoleContextInjectionKey,
-	openLogFile,
 	type ConsoleEntry,
 } from "./console";
 import {
@@ -192,6 +191,10 @@ watch(consoleContext.transparent, () => {
 		isSettingsOpen.value = false;
 	}
 });
+
+const openLogFile = () => {
+	alt.emit("console:openLogFile");
+};
 </script>
 
 <template>

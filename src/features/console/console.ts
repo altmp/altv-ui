@@ -58,13 +58,7 @@ export function convertLinksToHTML(string: string): string {
 }
 
 export function getNewlinesCount(str: string): number {
-	let count = 0;
-	for (let i = 0; i < str.length; i++) {
-		if (str[i] == "\n") {
-			++count;
-		}
-	}
-	return count;
+	return (str.match(/\n/g) || []).length;
 }
 
 export const COLORS = Object.freeze({
@@ -177,7 +171,7 @@ export function createConsoleContext(
 	};
 
 	const lastEntryId = ref(0);
-	const entries = ref<ConsoleEntry[]>([]);
+	const entries = ref<ConsoleEntry[]>(Array(maxEntries));
 
 	let queue: ConsoleEntry[] = [];
 	let incomingEntry: IncomingConsoleEntry | null = null;
@@ -267,12 +261,11 @@ export function createConsoleContext(
 
 	const intervalId = setInterval(() => {
 		if (queue.length === 0) return;
-		entries.value = [...entries.value, ...queue];
+		entries.value.push(...queue);
 		queue = [];
 
 		if (entries.value.length > maxEntries) {
-			const startIndex = entries.value.length - maxEntries;
-			entries.value = entries.value.slice(startIndex);
+			entries.value.splice(0, entries.value.length - maxEntries);
 		}
 	}, pullInterval);
 
@@ -343,7 +336,3 @@ export function createConsoleContext(
 		lastEntryId: readonly(lastEntryId),
 	};
 }
-
-export const openLogFile = () => {
-	alt.emit("console:openLogFile");
-};
