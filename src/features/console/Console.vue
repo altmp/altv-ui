@@ -9,7 +9,7 @@ import {
 	watch,
 	type ComponentPublicInstance,
 } from "vue";
-import { useVirtualizer } from "@tanstack/vue-virtual";
+import { useVirtualizer, type Range } from "@tanstack/vue-virtual";
 import ChevronUpIcon from "@/icons/chevron-up.svg?component";
 import {
 	ScrollArea,
@@ -51,21 +51,25 @@ const consoleContext = injectContext(ConsoleContextInjectionKey);
 const settings = useSettingsStore();
 
 const entries = computed<readonly ConsoleEntry[]>(() => {
-	return Array.from(consoleContext.entries.value).filter((entry) => {
+	const result: ConsoleEntry[] = [];
+
+	for (let i = 0; i < consoleContext.entries.value.size; i++) {
+		const entry = consoleContext.entries.value.get(i)!;
 		if (
 			settings.data.hiddenLogTypes.length &&
 			settings.data.hiddenLogTypes.includes(entry.type)
 		) {
-			return false;
+			continue;
 		}
 		if (
 			settings.data.hiddenLogResources.length > 0 &&
 			settings.data.hiddenLogResources.includes(entry.resource)
 		) {
-			return false;
+			continue;
 		}
-		return true;
-	});
+		result.push(entry);
+	}
+	return result;
 });
 
 const textarea = ref<HTMLTextAreaElement | null>(null);
@@ -84,6 +88,22 @@ watch(
 
 const viewport = ref<InstanceType<typeof ScrollAreaViewport> | null>(null);
 
+/**
+ * Improved version of the defaultRangeExtractor function from @tanstack/virtual-core which allocates the memory once, instead of resizing an empty array.
+ * 
+ * @see https://github.com/TanStack/virtual/blob/47ecdc7522c6c2d0d480224dbfb97cf4edb1745b/packages/virtual-core/src/index.ts#L49-L60
+ */
+const rangeExtractor = (range: Range): number[] => {
+	const start = Math.max(range.startIndex - range.overscan, 0)
+	const end = Math.min(range.endIndex + range.overscan, range.count - 1)
+
+	const arr = new Array<number>(end - start + 1)
+	for (let i = 0; i < arr.length; i++) {
+		arr[i] = i + start
+	}
+	return arr;
+}
+
 const { measureElement, getMeasurementsCache, setMeasurementsCache } =
 	injectContext(ConsoleMeasurementsContextInjectionKey);
 
@@ -99,6 +119,7 @@ const virtualizer = useVirtualizer({
 	paddingStart: 2,
 	paddingEnd: 2,
 	measureElement,
+	rangeExtractor,
 	initialMeasurementsCache: getMeasurementsCache(),
 });
 

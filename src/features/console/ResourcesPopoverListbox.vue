@@ -18,17 +18,18 @@ const consoleContext = injectContext(ConsoleContextInjectionKey);
 const settings = useSettingsStore();
 
 const resources = computed(() => {
-	console.log(consoleContext.entries.value);
-	return Array.from(
-		new Set(
-			Array.from(consoleContext.entries.value).map((entry) => entry.resource),
-		),
-	);
+	const entries = consoleContext.entries.value;
+	if (entries.size === 0) return [];
+	const set = new Set<string>();
+	for (let i = 0; i < entries.size; i++) {
+		const entry = entries.get(i)!;
+		set.add(entry.resource);
+	}
+	return Array.from(set);
 });
 
 const search = ref("");
 const filteredResources = computed(() => {
-	console.log(resources.value);
 	return resources.value.filter((resource) =>
 		resource.toLowerCase().includes(search.value.toLowerCase()),
 	);
