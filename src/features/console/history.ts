@@ -8,7 +8,7 @@ import {
 } from "vue";
 
 export interface ConsoleHistoryContext {
-	entires: DeepReadonly<Ref<string[]>>;
+	entries: DeepReadonly<Ref<string[]>>;
 	addEntry: (entry: string) => void;
 }
 
@@ -33,7 +33,7 @@ export function createConsoleHistoryContext(options: {
 	};
 
 	return {
-		entires: readonly(entries),
+		entries: readonly(entries),
 		addEntry,
 	};
 }
@@ -45,7 +45,7 @@ export const useConsoleHistoryIndex = () => {
 	const moveHistoryIndex = (mod: number) => {
 		const newIndex = Math.min(
 			Math.max(historyIndex.value + mod, -1),
-			consoleHistory.entires.value.length - 1,
+			consoleHistory.entries.value.length - 1,
 		);
 
 		historyIndex.value = newIndex;

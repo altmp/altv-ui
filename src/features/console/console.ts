@@ -3,11 +3,14 @@ import {
 	onScopeDispose,
 	readonly,
 	ref,
+	shallowRef,
+	triggerRef,
 	watch,
-	type DeepReadonly,
 	type InjectionKey,
 	type Ref,
+	type ShallowRef,
 } from "vue";
+import { RingBuffer } from "./ring-buffer";
 
 export const logTypeByName = Object.freeze({
 	info: LogType.Info,
@@ -144,7 +147,7 @@ export interface ConsoleContextOptions {
 export interface ConsoleContext {
 	open: Ref<boolean>;
 	transparent: Ref<boolean>;
-	entries: DeepReadonly<Ref<Array<ConsoleEntry>>>;
+	entries: ShallowRef<RingBuffer<ConsoleEntry>>;
 	execute: (command: string) => void;
 	clear: () => void;
 	options: ConsoleContextOptions;
@@ -155,23 +158,16 @@ export const ConsoleContextInjectionKey = Symbol(
 	"ConsoleContext",
 ) as InjectionKey<ConsoleContext>;
 
-const defaultConsoleContextOptions: ConsoleContextOptions = Object.freeze({
-	maxEntries: 300,
-	maxMessageLength: 10000,
-	maxMessageNewlines: 50,
-	pullInterval: 16,
-});
-
 export function createConsoleContext(
-	options: Partial<ConsoleContextOptions> = {},
+	options: ConsoleContextOptions,
 ): ConsoleContext {
-	const { maxEntries, maxMessageLength, maxMessageNewlines, pullInterval } = {
-		...defaultConsoleContextOptions,
-		...options,
-	};
+	const { maxEntries, maxMessageLength, maxMessageNewlines, pullInterval } =
+		options;
 
 	const lastEntryId = ref(0);
-	const entries = ref<ConsoleEntry[]>(Array(maxEntries));
+	const entries = shallowRef(new RingBuffer(maxEntries)) as ShallowRef<
+		RingBuffer<ConsoleEntry>
+	>;
 
 	let queue: ConsoleEntry[] = [];
 	let incomingEntry: IncomingConsoleEntry | null = null;
@@ -224,7 +220,7 @@ export function createConsoleContext(
 
 		const time = new Date();
 
-		const lastEntry = queue.length > 0 ? queue.at(-1) : entries.value.at(-1);
+		const lastEntry = queue.length > 0 ? queue.at(-1) : entries.value.get(-1);
 		if (
 			lastEntry &&
 			lastEntry.type === type &&
@@ -261,12 +257,9 @@ export function createConsoleContext(
 
 	const intervalId = setInterval(() => {
 		if (queue.length === 0) return;
-		entries.value.push(...queue);
+		entries.value.add(...queue);
+		triggerRef(entries);
 		queue = [];
-
-		if (entries.value.length > maxEntries) {
-			entries.value.splice(0, entries.value.length - maxEntries);
-		}
 	}, pullInterval);
 
 	const execute = (command: string) => {
@@ -276,7 +269,8 @@ export function createConsoleContext(
 	};
 
 	const clear = () => {
-		entries.value = [];
+		entries.value.clear();
+		triggerRef(entries);
 		queue = [];
 	};
 
@@ -324,15 +318,12 @@ export function createConsoleContext(
 	});
 
 	return {
-		entries: readonly(entries),
+		entries,
 		execute,
 		clear,
 		open,
 		transparent,
-		options: {
-			...defaultConsoleContextOptions,
-			...options,
-		},
+		options,
 		lastEntryId: readonly(lastEntryId),
 	};
 }

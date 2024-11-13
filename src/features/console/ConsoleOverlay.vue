@@ -13,12 +13,17 @@ import {
 	createConsoleHistoryContext,
 } from "./history";
 import {
-	ConsoleElementMeasurementsContextInjectionKey,
-	createConsoleElementMeasurementsContext,
+	ConsoleMeasurementsContextInjectionKey,
+	createConsoleMeasurementsContext,
 } from "./measurements";
 import { useSettingsStore } from "@/stores/settings";
 
-const consoleContext = createConsoleContext();
+const consoleContext = createConsoleContext({
+	maxEntries: 300,
+	maxMessageLength: 10000,
+	maxMessageNewlines: 50,
+	pullInterval: 16,
+});
 provide(ConsoleContextInjectionKey, consoleContext);
 
 provide(
@@ -39,13 +44,9 @@ const consoleWidth = computed<number>({
 	},
 });
 
-const consoleElemenetMeasurementsContext =
-	createConsoleElementMeasurementsContext(consoleContext);
+const measurementsContext = createConsoleMeasurementsContext(consoleContext);
 
-provide(
-	ConsoleElementMeasurementsContextInjectionKey,
-	consoleElemenetMeasurementsContext,
-);
+provide(ConsoleMeasurementsContextInjectionKey, measurementsContext);
 </script>
 
 <template>
@@ -72,6 +73,7 @@ provide(
 				@resize="
 					(newWidth) => {
 						consoleWidth = newWidth;
+						measurementsContext.clearMeasurementsCache();
 					}
 				"
 				class="rounded-md shadow-lg"

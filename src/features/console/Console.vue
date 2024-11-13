@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import {
-	ConsoleContextInjectionKey,
-	type ConsoleEntry,
-} from "./console";
+import { ConsoleContextInjectionKey, type ConsoleEntry } from "./console";
 import {
 	computed,
 	nextTick,
@@ -44,7 +41,7 @@ import {
 	useConsoleHistoryIndex,
 } from "./history";
 import { Id } from "@/components/ui/id";
-import { ConsoleElementMeasurementsContextInjectionKey } from "./measurements";
+import { ConsoleMeasurementsContextInjectionKey } from "./measurements";
 import ConsoleTransparentIcon from "@/icons/console-transparent.svg?component";
 import ConsoleSolidIcon from "@/icons/console-solid.svg?component";
 import { injectContext } from "@/utils/injectContext";
@@ -54,7 +51,7 @@ const consoleContext = injectContext(ConsoleContextInjectionKey);
 const settings = useSettingsStore();
 
 const entries = computed<readonly ConsoleEntry[]>(() => {
-	return consoleContext.entries.value.filter((entry) => {
+	return Array.from(consoleContext.entries.value).filter((entry) => {
 		if (
 			settings.data.hiddenLogTypes.length &&
 			settings.data.hiddenLogTypes.includes(entry.type)
@@ -88,7 +85,7 @@ watch(
 const viewport = ref<InstanceType<typeof ScrollAreaViewport> | null>(null);
 
 const { measureElement, getMeasurementsCache, setMeasurementsCache } =
-	injectContext(ConsoleElementMeasurementsContextInjectionKey);
+	injectContext(ConsoleMeasurementsContextInjectionKey);
 
 const virtualizer = useVirtualizer({
 	get count() {
@@ -162,7 +159,7 @@ const command = computed({
 	get: () =>
 		historyIndex.value === -1
 			? _command.value
-			: consoleHistory.entires.value[historyIndex.value]!,
+			: consoleHistory.entries.value[historyIndex.value]!,
 	set: (newValue) => {
 		historyIndex.value = -1;
 		_command.value = newValue;

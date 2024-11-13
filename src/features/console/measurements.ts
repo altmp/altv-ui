@@ -2,21 +2,21 @@ import { watch, type InjectionKey } from "vue";
 import type { ConsoleContext } from "./console";
 import type { VirtualItem } from "@tanstack/vue-virtual";
 
-interface ConsoleElementMeasurementsContext {
+export interface ConsoleMeasurementsContext {
 	measureElement: (element: Element) => number;
 	getMeasurementsCache: () => VirtualItem[];
 	setMeasurementsCache: (cache: VirtualItem[]) => void;
 	clearMeasurementsCache: () => void;
 }
 
-export const ConsoleElementMeasurementsContextInjectionKey = Symbol(
-	"ConsoleElementMeasurementsContext",
-) as InjectionKey<ConsoleElementMeasurementsContext>;
+export const ConsoleMeasurementsContextInjectionKey = Symbol(
+	"ConsoleMeasurementsContext",
+) as InjectionKey<ConsoleMeasurementsContext>;
 
-export function createConsoleElementMeasurementsContext(
+export function createConsoleMeasurementsContext(
 	consoleContext: ConsoleContext,
-): ConsoleElementMeasurementsContext {
-	const { options, lastEntryId, entries } = consoleContext;
+): ConsoleMeasurementsContext {
+	const { lastEntryId, entries } = consoleContext;
 
 	/**
 	 * We keep the cached virtual items in this context to not recompute them on every console open.
@@ -33,8 +33,8 @@ export function createConsoleElementMeasurementsContext(
 	watch(
 		entries,
 		() => {
-			const invisibleEntriesCount = lastEntryId.value - entries.value.length;
-			if (invisibleEntriesCount > lastClearedCacheId + options.maxEntries) {
+			const invisibleEntriesCount = lastEntryId.value - entries.value.size;
+			if (invisibleEntriesCount > lastClearedCacheId + entries.value.capacity) {
 				for (const id of measurementsCache.keys()) {
 					if (id < invisibleEntriesCount) {
 						entryHeightMap.delete(id);
@@ -60,6 +60,10 @@ export function createConsoleElementMeasurementsContext(
 		measurementsCache = [];
 		entryHeightMap.clear();
 	};
+
+	window.addEventListener("resize", () => {
+		clearMeasurementsCache();
+	});
 
 	return {
 		measureElement,

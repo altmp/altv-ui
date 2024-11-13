@@ -14,17 +14,21 @@ import { ConsoleContextInjectionKey } from "./console";
 import { injectContext } from "@/utils/injectContext";
 import { useSettingsStore } from "@/stores/settings";
 
-const console = injectContext(ConsoleContextInjectionKey);
+const consoleContext = injectContext(ConsoleContextInjectionKey);
 const settings = useSettingsStore();
 
 const resources = computed(() => {
+	console.log(consoleContext.entries.value);
 	return Array.from(
-		new Set(console.entries.value.map((entry) => entry.resource)),
+		new Set(
+			Array.from(consoleContext.entries.value).map((entry) => entry.resource),
+		),
 	);
 });
 
 const search = ref("");
 const filteredResources = computed(() => {
+	console.log(resources.value);
 	return resources.value.filter((resource) =>
 		resource.toLowerCase().includes(search.value.toLowerCase()),
 	);
