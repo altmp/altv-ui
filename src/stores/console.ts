@@ -14,11 +14,13 @@ import { putTime } from "@/utils/put-time";
 import { useSettingsStore } from "./settings";
 import { useLocalization } from "./localization";
 
-export const enum LogType {
-	Info,
-	Warning,
-	Error,
-	Debug,
+export enum LogType {
+    Undefined,
+	  Internal,
+	  Debug,
+	  Info,
+    Warning,
+    Error
 }
 
 export const logTypeByName = {
