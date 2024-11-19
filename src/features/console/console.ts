@@ -64,7 +64,7 @@ export function getNewlinesCount(str: string): number {
 	return (str.match(/\n/g) || []).length;
 }
 
-export const COLORS = Object.freeze({
+const COLORS = Object.freeze({
 	BLACK: "#1e1e1e",
 	LBLACK: "#666666",
 	RED: "#bd3f39",
@@ -89,7 +89,10 @@ const whiteColorIndex = colorByIndex.indexOf(COLORS.WHITE);
 export interface ConsoleEntry {
 	id: number;
 	type: LogType;
-	resource: string;
+	/**
+	 * If resource is undefined, then this log is from alt:V core
+	 */
+	resource?: string;
 	message: string;
 	/**
 	 * HTML representation of the message
@@ -126,22 +129,9 @@ interface IncomingConsoleEntry {
 }
 
 export interface ConsoleContextOptions {
-	/**
-	 * Maximum number of newlines in a single message
-	 */
 	maxMessageNewlines: number;
-	/**
-	 * Maximum length of a single message
-	 */
 	maxMessageLength: number;
-	/**
-	 * Maximum number of entries in the console
-	 */
 	maxEntries: number;
-	/**
-	 * Interval in milliseconds to pull new entries from the queue
-	 */
-	pullInterval: number;
 }
 
 export interface ConsoleContext {
@@ -161,7 +151,7 @@ export const ConsoleContextInjectionKey = Symbol(
 export function createConsoleContext(
 	options: ConsoleContextOptions,
 ): ConsoleContext {
-	const { maxEntries, maxMessageLength, maxMessageNewlines, pullInterval } =
+	const { maxEntries, maxMessageLength, maxMessageNewlines } =
 		options;
 
 	const lastEntryId = ref(0);
@@ -169,7 +159,6 @@ export function createConsoleContext(
 		RingBuffer<ConsoleEntry>
 	>;
 
-	let queue: ConsoleEntry[] = [];
 	let incomingEntry: IncomingConsoleEntry | null = null;
 
 	const push = (colorIndex: number, value: string) => {
@@ -184,9 +173,7 @@ export function createConsoleContext(
 
 		incomingEntry.messageBuffer += value;
 
-		if (incomingEntry.availableCharactersCount < 1) {
-			return;
-		}
+		if (incomingEntry.availableCharactersCount < 1) return;
 
 		let content = stripHtml(value);
 
@@ -206,21 +193,19 @@ export function createConsoleContext(
 		}
 		incomingEntry.availableNewlinesCount -= newlinesCount;
 
-		if (colorIndex !== whiteColorIndex) {
-			const hex = colorByIndex[colorIndex] ?? COLORS.WHITE;
-			incomingEntry.htmlBuffer += `<span style="color:${hex}">${content}</span>`;
-		} else {
+		if (colorIndex === whiteColorIndex) {
 			incomingEntry.htmlBuffer += content;
+			return;
 		}
+		const color = colorByIndex[colorIndex] ?? COLORS.WHITE;
+		incomingEntry.htmlBuffer += `<span style="color:${color}">${content}</span>`;
 	};
 
 	const end = (resource?: string, type: LogType = LogType.Info) => {
-		if (!resource) return;
 		if (incomingEntry === null) return;
 
 		const time = new Date();
-
-		const lastEntry = queue.length > 0 ? queue.at(-1) : entries.value.get(-1);
+		const lastEntry = entries.value.get(-1);
 		if (
 			lastEntry &&
 			lastEntry.type === type &&
@@ -251,16 +236,19 @@ export function createConsoleContext(
 			time,
 		};
 
-		queue.push(entry);
+		entries.value.add(entry);
 		incomingEntry = null;
 	};
 
-	const intervalId = setInterval(() => {
-		if (queue.length === 0) return;
-		entries.value.add(...queue);
-		triggerRef(entries);
-		queue = [];
-	}, pullInterval);
+	let last = lastEntryId.value;
+	const update = () => {
+		if (lastEntryId.value !== last) {
+			last = lastEntryId.value;
+			triggerRef(entries);
+		}
+		requestAnimationFrame(update);
+	};
+	requestAnimationFrame(update);
 
 	const execute = (command: string) => {
 		const trimmedCommand = command.trim();
@@ -271,7 +259,6 @@ export function createConsoleContext(
 	const clear = () => {
 		entries.value.clear();
 		triggerRef(entries);
-		queue = [];
 	};
 
 	const reset = () => {
@@ -310,7 +297,6 @@ export function createConsoleContext(
 		alt.off("console:open", setOpen);
 		alt.off("console:forceTransparent", enableTransparentMode);
 
-		clearInterval(intervalId);
 		alt.off("console:clear", clear);
 		alt.off("console:reset", reset);
 		alt.off("console:end", end);

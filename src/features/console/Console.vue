@@ -46,6 +46,7 @@ import ConsoleTransparentIcon from "@/icons/console-transparent.svg?component";
 import ConsoleSolidIcon from "@/icons/console-solid.svg?component";
 import { injectContext } from "@/utils/injectContext";
 import { LogType, useSettingsStore } from "@/stores/settings";
+import { PixelScaleContextInjectionKey } from "@/utils/pixelScale";
 
 const consoleContext = injectContext(ConsoleContextInjectionKey);
 const settings = useSettingsStore();
@@ -63,7 +64,7 @@ const entries = computed<readonly ConsoleEntry[]>(() => {
 		}
 		if (
 			settings.data.hiddenLogResources.length > 0 &&
-			settings.data.hiddenLogResources.includes(entry.resource)
+			settings.data.hiddenLogResources.includes(entry.resource || '')
 		) {
 			continue;
 		}
@@ -107,6 +108,8 @@ const rangeExtractor = (range: Range): number[] => {
 const { measureElement, getMeasurementsCache, setMeasurementsCache } =
 	injectContext(ConsoleMeasurementsContextInjectionKey);
 
+const { pixelScale } = injectContext(PixelScaleContextInjectionKey);
+
 const virtualizer = useVirtualizer({
 	get count() {
 		return entries.value.length;
@@ -114,10 +117,8 @@ const virtualizer = useVirtualizer({
 	getScrollElement: () => {
 		return viewport.value?.viewportElement || null;
 	},
-	estimateSize: () => 0,
+	estimateSize: () => 31 * pixelScale.value,
 	overscan: 4,
-	paddingStart: 2,
-	paddingEnd: 2,
 	measureElement,
 	rangeExtractor,
 	initialMeasurementsCache: getMeasurementsCache(),
@@ -323,7 +324,7 @@ const openLogFile = () => {
 				style="overflow-anchor: none"
 			>
 				<ul
-					class="relative w-full overflow-hidden"
+					class="relative w-full overflow-hidden my-0.5"
 					:style="{
 						height: `${totalSize}px`,
 					}"
@@ -334,7 +335,7 @@ const openLogFile = () => {
 						:data-id="entries[virtualItem.index]!.id"
 						:data-index="virtualItem.index"
 						:ref="handleVirtualItemRefChange"
-						class="absolute left-0 top-0 w-full border-t border-transparent [&[data-ghost]_+_&[data-ghost]]:border-stone-500 py-px"
+						class="absolute left-0 top-0 w-full border-t border-transparent [&[data-ghost]_+_&[data-ghost]]:border-stone-600 py-px"
 						:data-ghost="isGhostEntry(virtualItem.index) ? '' : undefined"
 						:style="{
 							transform: `translateY(${virtualItem.start}px)`,

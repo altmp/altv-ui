@@ -6,12 +6,13 @@ import { useUIStore } from "@/stores/ui";
 import { useConnectionStateStore } from "@/stores/connectionState";
 import Netgraph from "@/components/persist/Netgraph.vue";
 import { useLocalization } from "@/stores/localization";
-import { onMounted, onUnmounted, ref, watch } from "vue";
+import { onMounted, onUnmounted, provide, ref, watch } from "vue";
 import { useSettingsStore } from "@/stores/settings";
 import { useVersionStore } from "@/stores/version";
 import { ModalType, useModalStore } from "@/stores/modal";
 import { ConsoleOverlay } from "@/features/console";
 import { TooltipProvider } from "radix-vue";
+import { createPixelScaleContext, PixelScaleContextInjectionKey } from "./utils/pixelScale";
 
 const ui = useUIStore();
 const connection = useConnectionStateStore();
@@ -19,6 +20,8 @@ const locale = useLocalization();
 useSettingsStore();
 const version = useVersionStore();
 const modal = useModalStore();
+
+provide(PixelScaleContextInjectionKey, createPixelScaleContext())
 
 watch(
 	() => locale.dir,

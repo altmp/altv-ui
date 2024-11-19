@@ -66,6 +66,7 @@ const resetToDefault = () => {
 		<ListboxContent class="p-1">
 			<ListboxItem
 				v-for="(label, type) of logLabelByType"
+				:key="type"
 				:value="type"
 				class="relative flex w-full select-none items-center justify-between gap-2 rounded py-1.5 pl-2 pr-8 text-sm outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-white/5 data-[disabled]:opacity-50"
 			>

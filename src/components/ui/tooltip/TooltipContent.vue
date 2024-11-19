@@ -9,8 +9,9 @@ import {
 import TooltipArrow from "./TooltipArrow.vue";
 import { twMerge, type ClassNameValue } from "tailwind-merge";
 import { computed } from "vue";
-import { TooltipRootContextInjectionKey } from "./TooltipRoot.vue";
 import { injectContext } from "@/utils/injectContext";
+import { TooltipRootContextInjectionKey } from "./TooltipRoot.vue";
+import { PixelScaleContextInjectionKey } from "@/utils/pixelScale";
 
 const props = withDefaults(
 	defineProps<TooltipContentProps & { class?: ClassNameValue }>(),
@@ -20,6 +21,9 @@ const props = withDefaults(
 		collisionPadding: () => ({ right: 20, left: 20 }),
 	},
 );
+
+const { pixelScale } = injectContext(PixelScaleContextInjectionKey);
+const sideOffset = computed(() => props.sideOffset * pixelScale.value);
 
 const emit = defineEmits<TooltipContentEmits>();
 const emitsAsProps = useEmitAsProps(emit);

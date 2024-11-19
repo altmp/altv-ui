@@ -141,7 +141,7 @@ window.addEventListener("keyup", (e) => {
 	}
 });
 
-function log(msg: string, resource: string, type: LogType) {
+function log(msg: string, resource: string | undefined, type: LogType) {
 	alt.viewEmit("console:push", 14, msg);
 	alt.viewEmit("console:end", resource, type);
 }
@@ -164,8 +164,8 @@ alt.viewOn("console:execute", async (value: string) => {
 			"test",
 			LogType.Error,
 		);
-		log("info", "test", LogType.Info);
-		log("debug", "test", LogType.Debug);
+		log("info", undefined, LogType.Info);
+		log("debug", undefined, LogType.Debug);
 	} else {
 		log(value, "manual", LogType.Info);
 	}

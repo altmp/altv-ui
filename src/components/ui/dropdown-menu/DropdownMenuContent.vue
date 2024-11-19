@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { PixelScaleContextInjectionKey } from "@/utils/pixelScale";
+import { injectContext } from "@/utils/injectContext";
 import {
 	DropdownMenuContent,
 	useEmitAsProps,
@@ -13,6 +15,9 @@ const props = withDefaults(
 	defineProps<DropdownMenuContentProps & { class?: ClassNameValue }>(),
 	{ sideOffset: 4, avoidCollisions: true },
 );
+
+const { pixelScale } = injectContext(PixelScaleContextInjectionKey);
+const sideOffset = computed(() => props.sideOffset * pixelScale.value);
 
 const classes = computed(() => {
 	return twMerge(
@@ -32,6 +37,7 @@ defineOptions({ inheritAttrs: false });
 		<DropdownMenuContent
 			v-bind="{
 				...props,
+				sideOffset,
 				...emitsAsProps,
 				...$attrs,
 				class: classes,

@@ -55,6 +55,7 @@ const element = ref<HTMLElement | null>(null);
 				/>
 			</span>
 			<span
+				v-if="props.entry.resource"
 				class="rounded bg-white/10 px-1.5 text-xs font-medium text-white/75 leading-5"
 			>
 				{{ props.entry.resource }}
