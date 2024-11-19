@@ -145,7 +145,7 @@ const totalSize = computed(() => virtualizer.value.getTotalSize());
 
 const scrollToLastEntry = () => {
 	virtualizer.value.scrollToIndex(entries.value.length - 1, {
-		align: "center",
+		align: "end",
 	});
 };
 
@@ -158,13 +158,13 @@ watch(
 				virtualizer.value.scrollElement.scrollTop +
 					virtualizer.value.scrollElement.clientHeight -
 					virtualizer.value.scrollElement.scrollHeight,
-			) < 1;
+			) < 2;
 
 		if (atBottom) {
 			nextTick(scrollToLastEntry);
 		}
 	},
-	{ flush: "sync" },
+	{ flush: "pre" },
 );
 
 watch(consoleContext.open, () => nextTick(scrollToLastEntry), {
@@ -308,7 +308,7 @@ const openLogFile = () => {
 			</CollapsibleContent>
 		</CollapsibleRoot>
 		<ScrollArea
-			class="h-full w-full overflow-hidden bg-stone-900 px-1"
+			class="h-full w-full overflow-hidden bg-stone-900 px-1 py-0.5"
 			:class="{
 				'bg-opacity-50':
 					consoleContext.transparent.value && !consoleContext.open.value,
@@ -324,7 +324,7 @@ const openLogFile = () => {
 				style="overflow-anchor: none"
 			>
 				<ul
-					class="relative w-full overflow-hidden my-0.5"
+					class="relative w-full overflow-hidden"
 					:style="{
 						height: `${totalSize}px`,
 					}"
