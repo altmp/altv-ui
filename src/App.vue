@@ -12,7 +12,10 @@ import { useVersionStore } from "@/stores/version";
 import { ModalType, useModalStore } from "@/stores/modal";
 import { ConsoleOverlay } from "@/features/console";
 import { TooltipProvider } from "radix-vue";
-import { createPixelScaleContext, PixelScaleContextInjectionKey } from "./utils/pixelScale";
+import {
+	createPixelScaleContext,
+	PixelScaleContextInjectionKey,
+} from "./utils/pixelScale";
 
 const ui = useUIStore();
 const connection = useConnectionStateStore();
@@ -21,7 +24,7 @@ useSettingsStore();
 const version = useVersionStore();
 const modal = useModalStore();
 
-provide(PixelScaleContextInjectionKey, createPixelScaleContext())
+provide(PixelScaleContextInjectionKey, createPixelScaleContext());
 
 watch(
 	() => locale.dir,

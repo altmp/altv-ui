@@ -151,8 +151,7 @@ export const ConsoleContextInjectionKey = Symbol(
 export function createConsoleContext(
 	options: ConsoleContextOptions,
 ): ConsoleContext {
-	const { maxEntries, maxMessageLength, maxMessageNewlines } =
-		options;
+	const { maxEntries, maxMessageLength, maxMessageNewlines } = options;
 
 	const lastEntryId = ref(0);
 	const entries = shallowRef(new RingBuffer(maxEntries)) as ShallowRef<

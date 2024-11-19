@@ -64,7 +64,7 @@ const entries = computed<readonly ConsoleEntry[]>(() => {
 		}
 		if (
 			settings.data.hiddenLogResources.length > 0 &&
-			settings.data.hiddenLogResources.includes(entry.resource || '')
+			settings.data.hiddenLogResources.includes(entry.resource || "")
 		) {
 			continue;
 		}
@@ -91,19 +91,19 @@ const viewport = ref<InstanceType<typeof ScrollAreaViewport> | null>(null);
 
 /**
  * Improved version of the defaultRangeExtractor function from @tanstack/virtual-core which allocates the memory once, instead of resizing an empty array.
- * 
+ *
  * @see https://github.com/TanStack/virtual/blob/47ecdc7522c6c2d0d480224dbfb97cf4edb1745b/packages/virtual-core/src/index.ts#L49-L60
  */
 const rangeExtractor = (range: Range): number[] => {
-	const start = Math.max(range.startIndex - range.overscan, 0)
-	const end = Math.min(range.endIndex + range.overscan, range.count - 1)
+	const start = Math.max(range.startIndex - range.overscan, 0);
+	const end = Math.min(range.endIndex + range.overscan, range.count - 1);
 
-	const arr = new Array<number>(end - start + 1)
+	const arr = new Array<number>(end - start + 1);
 	for (let i = 0; i < arr.length; i++) {
-		arr[i] = i + start
+		arr[i] = i + start;
 	}
 	return arr;
-}
+};
 
 const { measureElement, getMeasurementsCache, setMeasurementsCache } =
 	injectContext(ConsoleMeasurementsContextInjectionKey);
