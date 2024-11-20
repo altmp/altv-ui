@@ -52,7 +52,7 @@ const visibleLogTypes = computed({
 });
 
 const resetToDefault = () => {
-	settings.hiddenLogTypes.value = [];
+	settings.data.hiddenLogTypes = [];
 	settings.save("hiddenLogTypes");
 };
 </script>
