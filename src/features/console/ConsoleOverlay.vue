@@ -22,7 +22,6 @@ const consoleContext = createConsoleContext({
 	maxEntries: 300,
 	maxMessageLength: 10000,
 	maxMessageNewlines: 50,
-	pullInterval: 16,
 });
 provide(ConsoleContextInjectionKey, consoleContext);
 

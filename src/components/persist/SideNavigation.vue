@@ -414,10 +414,7 @@ function exit() {
 
 		.disabled {
 			pointer-events: none;
-
-			svg {
-				fill: #949494 !important;
-			}
+			opacity: 0.5;
 		}
 	}
 }
