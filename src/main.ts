@@ -6,7 +6,6 @@ import App from "./App.vue";
 import router from "./router";
 import { useServersStore } from "@/stores/servers";
 import { useLocalization } from "@/stores/localization";
-import { useSettingsStore } from "@/stores/settings";
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -40,7 +39,6 @@ async function main() {
 	);
 
 	useServersStore(); // make sure it inits before loaded event
-	useSettingsStore();
 	const locale = useLocalization();
 	locale.init(locales);
 

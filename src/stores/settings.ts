@@ -5,6 +5,13 @@ import { ModalType, useModalStore } from "@/stores/modal";
 import { watch } from "vue";
 import { useServersStore } from "@/stores/servers";
 
+export const enum LogType {
+	Info,
+	Warning,
+	Error,
+	Debug,
+}
+
 export const useSettingsStore = useInitializableStore(
 	defineStore("settings", {
 		state: () => {
@@ -39,8 +46,11 @@ export const useSettingsStore = useInitializableStore(
 					launcherSkinsDisabled: [] as string[],
 					discordRichPresence: true,
 					logTimeFormat: "%H:%M:%S",
+					hiddenLogTypes: [] as LogType[],
+					hiddenLogResources: [] as string[],
+					showLogCopyButton: true,
+					showLogTime: true,
 				},
-
 				micTest: false,
 				currentVolume: 0,
 				devices: {} as Record<string, string>,

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import BlockContainer from "@/components/container/BlockContainer.vue";
-import { formatBytes } from "@/utils/formatBytes";
-import { formatTime } from "@/utils/formatTime";
+import prettyBytes from "pretty-bytes";
 import { ModalType, useModalStore } from "@/stores/modal";
 import { useLocalization } from "@/stores/localization";
 import { playErrorSound } from "@/utils/playSound";
 import { computed } from "vue";
 import { useConnectionStateStore } from "@/stores/connectionState";
+import moment from "moment";
 
 const props = defineProps<{
 	id: string;
@@ -42,13 +42,13 @@ const { t } = useLocalization();
 				{{ type === "shared" ? t("SHARED_RESOURCES", props.name) : props.name }}
 			</div>
 			<div class="server__server-usage">
-				<span>{{ t("RESOURCES_SIZE", formatBytes(props.resourcesSize)) }}</span>
+				<span>{{ t("RESOURCES_SIZE", prettyBytes(props.resourcesSize)) }}</span>
 				<span v-if="type === 'server'">{{
-					t("DATA_SIZE", formatBytes(props.dataSize))
+					t("DATA_SIZE", prettyBytes(props.dataSize))
 				}}</span>
-				<span v-if="type === 'server'">{{
-					t("LAST_VISIT", formatTime(props.lastVisit))
-				}}</span>
+				<span v-if="type === 'server'">
+					{{ t("LAST_VISIT", moment(props.lastVisit).fromNow()) }}
+				</span>
 			</div>
 		</div>
 		<div class="server__server-actions">

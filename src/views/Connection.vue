@@ -5,7 +5,7 @@ import {
 	useConnectionStateStore,
 } from "@/stores/connectionState";
 import { computed, ref, watch } from "vue";
-import { formatBytes } from "@/utils/formatBytes";
+import prettyBytes from "pretty-bytes";
 import { useLocalization } from "@/stores/localization";
 import { useRouter } from "vue-router";
 import AltInput from "@/components/form/AltInput.vue";
@@ -22,8 +22,8 @@ const progress = computed(() => {
 	}
 
 	return [
-		formatBytes(connectionState.progressValue),
-		formatBytes(connectionState.progressTotal),
+		prettyBytes(connectionState.progressValue),
+		prettyBytes(connectionState.progressTotal),
 	];
 });
 
@@ -97,9 +97,9 @@ watch(
 				:data-split="connectionState.progressSpeed != null"
 			>
 				<span>{{ progress[0] }} / {{ progress[1] }}</span>
-				<span v-if="connectionState.progressSpeed != null"
-					>{{ formatBytes(connectionState.progressSpeed) }}/s</span
-				>
+				<span v-if="connectionState.progressSpeed != null">
+					{{ prettyBytes(connectionState.progressSpeed) }}/s
+				</span>
 			</div>
 		</div>
 		<div class="connection__actions">

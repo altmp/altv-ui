@@ -217,17 +217,19 @@ const filters = t("FILTERS");
 	}
 
 	.table {
+		display: flex;
 		flex: 1;
 
 		&__wrapper {
 			height: 100%;
+			width: 100%;
 			//noinspection CssInvalidPropertyValue
 			overflow-y: overlay;
 			padding: 0;
 
 			table {
 				margin-top: u(24);
-				//margin-bottom: u(24);
+				margin-bottom: u(24);
 			}
 
 			@include scrollbar(22);
