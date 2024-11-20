@@ -4,7 +4,7 @@ import { ref } from "vue";
 import AltButton from "@/components/AltButton.vue";
 import AltCheckbox from "@/components/form/AltCheckbox.vue";
 import { useLocalization } from "@/stores/localization";
-import { playHoverSound, playClickSound } from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 
 const modal = useModalStore();
 const { t } = useLocalization();
@@ -19,7 +19,7 @@ function accept() {
 function acceptRequired() {
 	alt.emit("connection:accept", []);
 	modal.close();
-	playClickSound();
+	playSound("click");
 }
 
 function deny() {
@@ -76,7 +76,7 @@ function getPermissionName(id: number) {
 				href="#"
 				v-if="modalProps.optional.length"
 				@click="acceptRequired()"
-				@mouseenter="playHoverSound"
+				@mouseenter="playSound('hover')"
 				>{{ t("ALLOWED_REQUIRED_ONLY") }}</a
 			>
 		</div>

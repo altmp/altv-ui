@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import keys from "../../assets/json/keys.json";
 import { onMounted, onUnmounted, ref, watch } from "vue";
-import { playHoverSound, playClickSound } from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 
 defineProps({
 	modelValue: {
@@ -60,11 +60,11 @@ function getKeyName(value: number) {
 		@click.stop="
 			() => {
 				active = !active;
-				playClickSound();
+				playSound('click');
 			}
 		"
 		:class="{ active }"
-		@mouseenter="playHoverSound"
+		@mouseenter="playSound('hover')"
 	>
 		{{ active ? "..." : getKeyName(modelValue) }}
 	</div>

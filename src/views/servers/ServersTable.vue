@@ -7,11 +7,7 @@ import { useFilterStore } from "@/stores/filter";
 import { useSettingsStore } from "@/stores/settings";
 import { isGroup, useServersStore, type ServerGroup } from "@/stores/servers";
 import { useLocalization } from "@/stores/localization";
-import {
-	playHoverSound,
-	playMoveSound,
-	playClickSound,
-} from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 import type { IServer } from "@/types/IServer";
 import { useExpandedStateStore } from "@/stores/expandedState";
 
@@ -157,10 +153,10 @@ const tableData = computed(() => {
 					v-for="header in headers"
 					@click="
 						changeSortBy(header.id as SortByProperty);
-						playClickSound();
+						playSound('click');
 					"
 					:class="{ active: sortBy === header.id, [header.id]: true }"
-					@mouseenter="playHoverSound"
+					@mouseenter="playSound('hover')"
 				>
 					<span>{{ header.name }}</span>
 					<sort-desc v-if="sortBy === header.id && sortDirection === 1" />
@@ -175,8 +171,8 @@ const tableData = computed(() => {
 					isGroup(serverOrGroup) ? serverOrGroup.id : serverOrGroup.publicId
 				"
 				:item="serverOrGroup"
-				@click="playMoveSound"
-				@mouseenter="playHoverSound"
+				@click="playSound('move')"
+				@mouseenter="playSound('hover')"
 			/>
 		</tbody>
 	</table>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { playHoverSound, playClickSound } from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 
 defineProps({
 	modelValue: {
@@ -20,8 +20,8 @@ function onInput(event: Event) {
 <template>
 	<label
 		class="checkbox"
-		@mouseup="playClickSound"
-		@mouseenter="playHoverSound"
+		@mouseup="playSound('click')"
+		@mouseenter="playSound('hover')"
 	>
 		<input
 			type="checkbox"

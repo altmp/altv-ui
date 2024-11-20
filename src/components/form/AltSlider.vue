@@ -1,11 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
-import {
-	playHoverSound,
-	playSliderEnterSound,
-	playSliderLeaveSound,
-	playSliderSound,
-} from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 
 const props = defineProps({
 	modelValue: {
@@ -38,7 +33,7 @@ function update() {
 function updateSound() {
 	const step = Math.round(+(input.value?.value ?? 0) / 100 / threshold);
 	if (lastStep != step) {
-		playSliderSound();
+		playSound("slider");
 		lastStep = step;
 	}
 }
@@ -93,9 +88,9 @@ watch(
 			@input="onInputChange"
 			ref="input"
 			@wheel="onWheel"
-			@mouseenter="playHoverSound"
-			@mousedown="playSliderEnterSound"
-			@mouseup="playSliderLeaveSound"
+			@mouseenter="playSound('hover')"
+			@mousedown="playSound('sliderEnter')"
+			@mouseup="playSound('sliderLeave')"
 		/>
 	</label>
 </template>

@@ -3,7 +3,7 @@ import { useModalStore } from "@/stores/modal";
 import AltButton from "@/components/AltButton.vue";
 import { useLocalization } from "@/stores/localization";
 import { onMounted, onUnmounted } from "vue";
-import { playMoveSound } from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 
 const modal = useModalStore();
 const { t } = useLocalization();
@@ -14,7 +14,7 @@ function exit() {
 
 function handler(event: KeyboardEvent) {
 	if (event.key != "Enter") return;
-	playMoveSound();
+	playSound("move");
 	exit();
 }
 

@@ -13,13 +13,7 @@ import { useVersionStore } from "@/stores/version";
 import Tooltip from "@/components/container/Tooltip.vue";
 import { useLocalization } from "@/stores/localization";
 import { computed, ref } from "vue";
-import {
-	playEmojiSound,
-	playErrorSound,
-	playHoverSound,
-	playKarbySound,
-	playMoveSound,
-} from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 import { useUIStore } from "@/stores/ui";
 import {
 	ProgressType,
@@ -55,21 +49,21 @@ function click() {
 	if (now - lastClicked.value > 1000) clicked.value = 0;
 	lastClicked.value = now;
 	clicked.value++;
-	playEmojiSound();
+	playSound("emoji");
 	if (clicked.value == 8) {
 		active.value = true;
-		playKarbySound();
+		playSound("karby");
 		setTimeout(() => (active.value = false), 7000);
 	}
 }
 
 function clickItem() {
-	playMoveSound();
+	playSound("move");
 	ui.setNavigationHighlight(false);
 }
 function exit() {
 	modal.open(ModalType.Exit, {}, true);
-	playErrorSound();
+	playSound("error");
 }
 </script>
 
@@ -92,7 +86,7 @@ function exit() {
 				:class="{ disabled: !connection.newConnectionPossible }"
 				tabindex="-1"
 				@click="clickItem"
-				@mouseenter="playHoverSound"
+				@mouseenter="playSound('hover')"
 			>
 				<tooltip :text="t('HOME')" position="right">
 					<home />
@@ -108,7 +102,7 @@ function exit() {
 				v-if="version.branch === 'release' || version.branch === 'internal'"
 				tabindex="-1"
 				@click="clickItem"
-				@mouseenter="playHoverSound"
+				@mouseenter="playSound('hover')"
 			>
 				<tooltip :text="t('SERVERS')" position="right">
 					<server />
@@ -127,7 +121,7 @@ function exit() {
 					disabled: !connection.newConnectionPossible,
 				}"
 				tabindex="-1"
-				@mouseenter="playHoverSound"
+				@mouseenter="playSound('hover')"
 			>
 				<tooltip :text="t('DIRECT_CONNECT')" position="right">
 					<direct-connect />
@@ -141,7 +135,7 @@ function exit() {
 				v-if="connection.uiActive"
 				tabindex="-1"
 				@click="clickItem"
-				@mouseenter="playHoverSound"
+				@mouseenter="playSound('hover')"
 			>
 				<tooltip
 					:text="
@@ -215,7 +209,7 @@ function exit() {
 				:to="{ name: 'settings' }"
 				tabindex="-1"
 				@click="clickItem"
-				@mouseenter="playHoverSound"
+				@mouseenter="playSound('hover')"
 			>
 				<tooltip :text="t('SETTINGS')" position="right">
 					<settings />
@@ -226,14 +220,14 @@ function exit() {
 				:to="{ name: 'about' }"
 				tabindex="-1"
 				@click="clickItem"
-				@mouseenter="playHoverSound"
+				@mouseenter="playSound('hover')"
 			>
 				<tooltip :text="t('ABOUT')" position="right">
 					<information />
 				</tooltip>
 			</router-link>
 
-			<a @click="exit" tabindex="-1" @mouseenter="playHoverSound">
+			<a @click="exit" tabindex="-1" @mouseenter="playSound('hover')">
 				<tooltip :text="t('EXIT')" position="right">
 					<quit />
 				</tooltip>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { playHoverSound, playClickSound } from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 
 const props = defineProps<{ modelValue: string; pattern?: RegExp }>();
 const input = ref<HTMLInputElement>();
@@ -23,7 +23,11 @@ defineExpose({ focus });
 </script>
 
 <template>
-	<div class="wrapper" @mouseenter="playHoverSound" @click="playClickSound">
+	<div
+		class="wrapper"
+		@mouseenter="playSound('hover')"
+		@click="playSound('click')"
+	>
 		<div class="icon">
 			<slot></slot>
 		</div>

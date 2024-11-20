@@ -8,7 +8,7 @@ import DirectConnectModal from "@/components/persist/modals/DirectConnectModal.v
 import DeleteServerDataModal from "@/components/persist/modals/DeleteServerDataModal.vue";
 import NicknameModal from "@/components/persist/modals/NicknameModal.vue";
 import ExitModal from "@/components/persist/modals/ExitModal.vue";
-import { playHoverSound, playClickSound } from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 
 const modal = useModalStore();
 
@@ -16,7 +16,7 @@ function handler(event: KeyboardEvent) {
 	if (event.key != "Escape") return;
 	if (modal.closeable) {
 		modal.close();
-		playClickSound();
+		playSound("click");
 	}
 }
 
@@ -31,9 +31,9 @@ onUnmounted(() => document.removeEventListener("keyup", handler));
 			v-if="modal.closeable"
 			@click="
 				modal.close();
-				playClickSound();
+				playSound('click');
 			"
-			@mouseenter="playHoverSound"
+			@mouseenter="playSound('hover')"
 		>
 			<div class="button"><close /></div>
 			<div class="hint">ESC</div>

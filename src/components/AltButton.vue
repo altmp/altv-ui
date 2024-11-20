@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { PropType } from "vue";
-import { playHoverSound, playMoveSound } from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 
 defineProps({
 	color: String as PropType<"red" | "green" | "gray">,
@@ -12,8 +12,8 @@ defineProps({
 		class="button"
 		:class="color"
 		v-bind="$attrs"
-		@mouseenter="playHoverSound"
-		@click="playMoveSound"
+		@mouseenter="playSound('hover')"
+		@click="playSound('move')"
 	>
 		<slot />
 	</div>

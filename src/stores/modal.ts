@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { useInitializableStore } from "@/stores/storeInitializer";
 import { computed } from "vue";
 import type { IServer } from "@/types/IServer";
-import { playErrorSound, playMoveSound } from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 
 export enum ModalType {
 	None,
@@ -62,13 +62,13 @@ export const useModalStore = useInitializableStore(
 			init() {
 				alt.on("connection:requestPermissions", (required, optional) => {
 					this.open(ModalType.Permissions, { required, optional }, false);
-					playErrorSound();
+					playSound("error");
 				});
 
 				alt.on("exit", () => {
 					if (this.type == ModalType.Exit) return;
 					this.open(ModalType.Exit, {}, true);
-					playMoveSound();
+					playSound("move");
 				});
 
 				if (import.meta.env.DEV) {

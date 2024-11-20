@@ -1,60 +1,61 @@
-import hoverSoundFile from "@/assets/sounds/hover.mp3";
-import moveSoundFile from "@/assets/sounds/move.mp3";
-import errorSoundFile from "@/assets/sounds/error.mp3";
-import clickSoundFile from "@/assets/sounds/click.mp3";
-import sliderEnterSoundFile from "@/assets/sounds/sliderEnter.mp3";
-import sliderLeaveSoundFile from "@/assets/sounds/sliderLeave.mp3";
-import sliderSoundFile from "@/assets/sounds/slider.mp3";
-import karbySoundFile from "@/assets/sounds/karby.mp3";
-import emojiSoundFile from "@/assets/sounds/emoji.mp3";
 import { useSettingsStore } from "@/stores/settings";
 
-let audioContext: AudioContext;
+import hover from "@/assets/sounds/hover.mp3?url";
+import move from "@/assets/sounds/move.mp3?url";
+import error from "@/assets/sounds/error.mp3?url";
+import click from "@/assets/sounds/click.mp3?url";
+import sliderEnter from "@/assets/sounds/sliderEnter.mp3?url";
+import sliderLeave from "@/assets/sounds/sliderLeave.mp3?url";
+import slider from "@/assets/sounds/slider.mp3?url";
+import karby from "@/assets/sounds/karby.mp3?url";
+import emoji from "@/assets/sounds/emoji.mp3?url";
 
-async function loadAudioBuffer(url: string) {
-	audioContext ??= new window.AudioContext();
+const SOUNDS = Object.freeze({
+	hover,
+	move,
+	error,
+	click,
+	sliderEnter,
+	sliderLeave,
+	slider,
+	karby,
+	emoji,
+}) satisfies Readonly<Record<string, string>>;
 
-	const response = await fetch(url);
+type SoundKey = keyof typeof SOUNDS;
+
+let audioContext: AudioContext | null = null;
+const audioBufferCache: Map<SoundKey, AudioBuffer> = new Map();
+
+async function loadAudioBuffer(key: SoundKey): Promise<AudioBuffer> {
+	const cachedBuffer = audioBufferCache.get(key);
+	if (cachedBuffer) return cachedBuffer;
+
+	const response = await fetch(SOUNDS[key]);
+	if (!response.ok) {
+		throw new Error(`Failed to fetch audio buffer for ${key}`);
+	}
 	const arrayBuffer = await response.arrayBuffer();
-	return await audioContext.decodeAudioData(arrayBuffer);
+
+	audioContext ??= new AudioContext();
+	const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+	audioBufferCache.set(key, audioBuffer);
+	return audioBuffer;
 }
 
-async function playSound(soundUrl: string) {
-	const audioBuffer = await loadAudioBuffer(soundUrl);
+export async function playSound(soundKey: SoundKey) {
+	const settings = useSettingsStore();
+	if (settings.data.uiVolume === 0) return;
+
+	const audioBuffer = await loadAudioBuffer(soundKey);
+	audioContext ??= new AudioContext();
 	const sourceNode = audioContext.createBufferSource();
 	sourceNode.buffer = audioBuffer;
-	const settings = useSettingsStore();
+
 	const gainNode = audioContext.createGain();
 	gainNode.connect(audioContext.destination);
 	gainNode.gain.value = (settings.data.uiVolume / 100) * 0.8;
+
 	sourceNode.connect(gainNode);
 	sourceNode.start();
-}
-
-export function playMoveSound() {
-	playSound(moveSoundFile);
-}
-export function playHoverSound() {
-	playSound(hoverSoundFile);
-}
-export function playErrorSound() {
-	playSound(errorSoundFile);
-}
-export function playClickSound() {
-	playSound(clickSoundFile);
-}
-export function playSliderEnterSound() {
-	playSound(sliderEnterSoundFile);
-}
-export function playSliderLeaveSound() {
-	playSound(sliderLeaveSoundFile);
-}
-export function playSliderSound() {
-	playSound(sliderSoundFile);
-}
-export function playKarbySound() {
-	playSound(karbySoundFile);
-}
-export function playEmojiSound() {
-	playSound(emojiSoundFile);
 }

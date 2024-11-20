@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { ModalType, useModalStore } from "@/stores/modal";
 import Modals from "@/components/persist/modals/Modals.vue";
-import { playClickSound } from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 
 const modal = useModalStore();
 
 function closeModal() {
 	if (modal.type == ModalType.None || !modal.closeable) return;
 	modal.close();
-	playClickSound();
+	playSound("click");
 }
 </script>
 

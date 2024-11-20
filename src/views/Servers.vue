@@ -6,7 +6,7 @@ import Loader from "@/components/Loader.vue";
 import ServersStat from "@/views/servers/ServersStat.vue";
 import { useLocalization } from "@/stores/localization";
 import { useServersStore } from "@/stores/servers";
-import { playHoverSound, playClickSound } from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 import ChevronUp from "@/components/icons/ChevronUp.vue";
 
 const { t } = useLocalization();
@@ -54,10 +54,10 @@ const filters = t("FILTERS");
 						class="view__refresh"
 						@click="
 							reloadServers();
-							playClickSound();
+							playSound('click');
 						"
 						@mousedown="mouseDown"
-						@mouseenter="playHoverSound"
+						@mouseenter="playSound('hover')"
 					/>
 				</div>
 				<div class="menu__content">

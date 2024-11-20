@@ -9,7 +9,7 @@ import {
 	ref,
 	watchEffect,
 } from "vue";
-import { playHoverSound, playClickSound } from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 
 const open = reactive({ state: false });
 const search = ref<string>("");
@@ -69,9 +69,9 @@ const current = computed(
 		:class="{ open: open.state, disabled: props.disabled }"
 		@click.stop="
 			toggle();
-			playClickSound();
+			playSound('click');
 		"
-		@mouseenter="playHoverSound"
+		@mouseenter="playSound('hover')"
 	>
 		<div class="value">
 			<input
@@ -100,10 +100,10 @@ const current = computed(
 						$emit('update:modelValue', el.value);
 						$emit('change', el.value);
 						open.state = false;
-						playClickSound();
+						playSound('click');
 					}
 				"
-				@mouseenter="playHoverSound"
+				@mouseenter="playSound('hover')"
 			>
 				{{ el.label }}
 			</div>
