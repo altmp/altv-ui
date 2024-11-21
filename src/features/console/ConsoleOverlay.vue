@@ -17,6 +17,8 @@ import {
 	createConsoleMeasurementsContext,
 } from "./measurements";
 import { useSettingsStore } from "@/stores/settings";
+import { injectContext } from "@/utils/injectContext";
+import { PixelScaleContextInjectionKey } from "@/utils/pixelScale";
 
 const consoleContext = createConsoleContext({
 	maxEntries: 300,
@@ -46,6 +48,14 @@ const consoleWidth = computed<number>({
 const measurementsContext = createConsoleMeasurementsContext(consoleContext);
 
 provide(ConsoleMeasurementsContextInjectionKey, measurementsContext);
+
+const { pixelScale } = injectContext(PixelScaleContextInjectionKey);
+const hitAreaMargins = computed(() => ({
+	// fine is for mouse input
+	fine: 4 * pixelScale.value,
+	// coarse for touch input (we probably don't need this but it won't hurt)
+	coarse: 12 * pixelScale.value,
+}));
 </script>
 
 <template>
@@ -57,7 +67,7 @@ provide(ConsoleMeasurementsContextInjectionKey, measurementsContext);
 		<SplitterGroup id="splitter-group-1" direction="horizontal">
 			<SplitterPanel id="splitter-group-1-panel-1" :min-size="0" />
 			<SplitterResizeHandle
-				:hit-area-margins="{ fine: 2, coarse: 12 }"
+				:hit-area-margins="hitAreaMargins"
 				:disabled="
 					consoleContext.transparent.value && !consoleContext.open.value
 				"
@@ -67,7 +77,7 @@ provide(ConsoleMeasurementsContextInjectionKey, measurementsContext);
 			<SplitterPanel
 				id="splitter-group-1-panel-2"
 				:min-size="20"
-				:max-size="80"
+				:max-size="100"
 				:default-size="consoleWidth"
 				@resize="
 					(newWidth) => {
@@ -75,12 +85,13 @@ provide(ConsoleMeasurementsContextInjectionKey, measurementsContext);
 						measurementsContext.clearMeasurementsCache();
 					}
 				"
-				class="rounded-md shadow-lg"
-				:class="
-					consoleContext.open
-						? 'border border-stone-600 peer-data-[state=drag]:border-l-stone-400 peer-data-[state=hover]:border-l-stone-400'
-						: ''
-				"
+				class="rounded-md overflow-hidden"
+				:class="{
+					'border border-stone-600 bg-stone-900 shadow-lg peer-data-[state=drag]:border-l-stone-400 peer-data-[state=hover]:border-l-stone-400':
+						consoleContext.open.value,
+					'border border-white/10':
+						consoleContext.transparent.value && !consoleContext.open.value,
+				}"
 			>
 				<Console />
 			</SplitterPanel>

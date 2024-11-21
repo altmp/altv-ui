@@ -11,11 +11,6 @@ import {
 } from "vue";
 import { useVirtualizer, type Range } from "@tanstack/vue-virtual";
 import ChevronUpIcon from "@/icons/chevron-up.svg?component";
-import {
-	ScrollArea,
-	ScrollAreaScrollbar,
-	ScrollAreaViewport,
-} from "@/components/ui/scroll-area";
 import ConsoleEntryItem from "./ConsoleEntry.vue";
 import BanIcon from "@/icons/ban.svg?component";
 import VerticalDotsIcon from "@/icons/vertical-dots.svg?component";
@@ -87,7 +82,7 @@ watch(
 	{ flush: "post" },
 );
 
-const viewport = ref<InstanceType<typeof ScrollAreaViewport> | null>(null);
+const viewport = ref<HTMLElement | null>(null);
 
 /**
  * Improved version of the defaultRangeExtractor function from @tanstack/virtual-core which allocates the memory once, instead of resizing an empty array.
@@ -114,11 +109,12 @@ const virtualizer = useVirtualizer({
 	get count() {
 		return entries.value.length;
 	},
-	getScrollElement: () => {
-		return viewport.value?.viewportElement || null;
-	},
-	estimateSize: () => 31 * pixelScale.value,
+	getScrollElement: () => viewport.value,
+	estimateSize: () => Math.round(32 * pixelScale.value),
 	overscan: 4,
+	get gap() {
+		return Math.round(3 * pixelScale.value);
+	},
 	measureElement,
 	rangeExtractor,
 	initialMeasurementsCache: getMeasurementsCache(),
@@ -145,30 +141,46 @@ const totalSize = computed(() => virtualizer.value.getTotalSize());
 
 const scrollToLastEntry = () => {
 	virtualizer.value.scrollToIndex(entries.value.length - 1, {
-		align: "end",
+		// for some reason align: "end" doesn't work
+		align: "center",
 	});
 };
+
+const scrollbarWidth = ref(0);
+
+const rs = new ResizeObserver(([entry]) => {
+	if (!entry) return;
+	scrollbarWidth.value =
+		(entry.target as HTMLElement).offsetWidth - entry.target.clientWidth;
+});
+onMounted(() => {
+	if (viewport.value) {
+		rs.observe(viewport.value);
+	}
+});
+onBeforeUnmount(() => rs.disconnect());
 
 watch(
 	entries,
 	() => {
-		if (virtualizer.value.scrollElement === null) return;
+		const scrollElement = virtualizer.value.scrollElement;
+		if (scrollElement === null) return;
 		const atBottom =
 			Math.abs(
-				virtualizer.value.scrollElement.scrollTop +
-					virtualizer.value.scrollElement.clientHeight -
-					virtualizer.value.scrollElement.scrollHeight,
-			) < 2;
+				scrollElement.scrollTop +
+					scrollElement.clientHeight -
+					scrollElement.scrollHeight,
+			) < 1;
 
 		if (atBottom) {
 			nextTick(scrollToLastEntry);
 		}
 	},
-	{ flush: "pre" },
+	{ flush: "sync" },
 );
 
-watch(consoleContext.open, () => nextTick(scrollToLastEntry), {
-	flush: "sync",
+watch(consoleContext.open, () => scrollToLastEntry(), {
+	flush: "post",
 });
 
 onMounted(() => nextTick(scrollToLastEntry));
@@ -273,7 +285,6 @@ const openLogFile = () => {
 						}}
 					</TooltipContent>
 				</Tooltip>
-				<button></button>
 				<button
 					type="button"
 					:data-state="isSettingsOpen ? 'open' : 'closed'"
@@ -292,7 +303,10 @@ const openLogFile = () => {
 							class="m-px size-4.5 shrink-0 stroke-1.5 text-white/60"
 						/>
 					</DropdownMenuTrigger>
-					<DropdownMenuContent align="end" class="tw">
+					<DropdownMenuContent
+						align="end"
+						class="tw bg-stone-500 shadow-[0px_1px_0px_0px_rgba(255,255,255,0.06)_inset]"
+					>
 						<DropdownMenuItem @select="openLogFile()">
 							Open log file
 						</DropdownMenuItem>
@@ -307,8 +321,8 @@ const openLogFile = () => {
 				<ConsoleSettings />
 			</CollapsibleContent>
 		</CollapsibleRoot>
-		<ScrollArea
-			class="h-full w-full overflow-hidden bg-stone-900 px-1 py-0.5"
+		<div
+			class="h-full w-full overflow-hidden"
 			:class="{
 				'bg-opacity-50':
 					consoleContext.transparent.value && !consoleContext.open.value,
@@ -318,35 +332,36 @@ const openLogFile = () => {
 				v-if="entries.length === 0"
 				class="mx-auto size-24 h-full text-white/10"
 			/>
-			<ScrollAreaViewport
+			<div
 				ref="viewport"
-				class="h-full w-full overflow-y-auto overflow-x-hidden outline-none"
-				style="overflow-anchor: none"
+				class="console-viewport"
+				:style="{
+					paddingRight: scrollbarWidth > 0 ? '0' : undefined,
+				}"
 			>
-				<ul
+				<div
 					class="relative w-full overflow-hidden"
 					:style="{
 						height: `${totalSize}px`,
 					}"
 				>
-					<li
+					<div
 						v-for="virtualItem of virtualItems"
 						:key="entries[virtualItem.index]!.id"
 						:data-id="entries[virtualItem.index]!.id"
 						:data-index="virtualItem.index"
 						:ref="handleVirtualItemRefChange"
-						class="absolute left-0 top-0 w-full border-t border-transparent [&[data-ghost]_+_&[data-ghost]]:border-stone-600 py-px"
+						class="virtual-item"
 						:data-ghost="isGhostEntry(virtualItem.index) ? '' : undefined"
 						:style="{
 							transform: `translateY(${virtualItem.start}px)`,
 						}"
 					>
 						<ConsoleEntryItem :entry="entries[virtualItem.index]!" />
-					</li>
-				</ul>
-			</ScrollAreaViewport>
-			<ScrollAreaScrollbar :style="{ '--scrollbar-size': '0.75rem' }" />
-		</ScrollArea>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div
 			v-if="consoleContext.open.value"
 			class="flex items-start gap-1.5 bg-stone-800 p-2"
@@ -373,3 +388,41 @@ const openLogFile = () => {
 		</div>
 	</div>
 </template>
+
+<style>
+.console-viewport {
+	overflow-y: auto;
+	overflow-x: hidden;
+	width: 100%;
+	height: 100%;
+	padding: 0.25rem;
+}
+
+.console-viewport::-webkit-scrollbar {
+	width: 0.75rem;
+}
+
+.console-viewport::-webkit-scrollbar-thumb {
+	border-width: 0.1875rem;
+	border-style: solid;
+	border-color: transparent;
+	background-clip: padding-box;
+	border-radius: 9999px;
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.console-viewport::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(255, 255, 255, 0.4);
+}
+
+.virtual-item {
+	position: absolute;
+	width: -webkit-fill-available;
+	top: 0;
+	left: 0;
+}
+
+.virtual-item[data-ghost] + .virtual-item[data-ghost] {
+	border-top: 0.06275rem solid rgba(255, 255, 255, 0.1);
+}
+</style>
