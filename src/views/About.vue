@@ -7,11 +7,7 @@ import { useVersionStore } from "@/stores/version";
 import { useLocalization } from "@/stores/localization";
 import sanitizeHtml from "sanitize-html";
 import { ref } from "vue";
-import {
-	playEmojiSound,
-	playHoverSound,
-	playMoveSound,
-} from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 import type { IDeveloper } from "@/types/IDeveloper";
 import Developer from "@/views/about/Developer.vue";
 
@@ -32,7 +28,7 @@ const emoji = ref(
 
 function updateEmoji() {
 	emoji.value = emojis[Math.floor(Math.random() * Math.floor(emojis.length))];
-	playEmojiSound();
+	playSound("emoji");
 }
 
 function open(url: string) {
@@ -66,8 +62,8 @@ const considerSupporting = sanitize(t("CONSIDER_SUPPORTING")).replace(
 					href="https://discord.gg/altv"
 					target="_blank"
 					tabindex="-1"
-					@click="playMoveSound"
-					@mouseenter="playHoverSound"
+					@click="playSound('move')"
+					@mouseenter="playSound('hover')"
 				>
 					<svg
 						width="43"
@@ -86,8 +82,8 @@ const considerSupporting = sanitize(t("CONSIDER_SUPPORTING")).replace(
 					href="https://twitter.com/altvmp"
 					target="_blank"
 					tabindex="-1"
-					@click="playMoveSound"
-					@mouseenter="playHoverSound"
+					@click="playSound('move')"
+					@mouseenter="playSound('hover')"
 				>
 					<svg
 						width="39"
@@ -106,8 +102,8 @@ const considerSupporting = sanitize(t("CONSIDER_SUPPORTING")).replace(
 					href="https://patreon.com/altvmp"
 					target="_blank"
 					tabindex="-1"
-					@click="playMoveSound"
-					@mouseenter="playHoverSound"
+					@click="playSound('move')"
+					@mouseenter="playSound('hover')"
 				>
 					<svg
 						width="32"
@@ -145,8 +141,8 @@ const considerSupporting = sanitize(t("CONSIDER_SUPPORTING")).replace(
 									:href="lib.licenceLink"
 									target="_blank"
 									tabindex="-1"
-									@click.stop="playMoveSound"
-									@mouseenter="playHoverSound"
+									@click.stop="playSound('move')"
+									@mouseenter="playSound('hover')"
 									>{{ lib.licence }}</a
 								>
 							</div>

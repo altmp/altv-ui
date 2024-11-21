@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { useInitializableStore } from "@/stores/storeInitializer";
 import { useUIStore } from "@/stores/ui";
-import { playErrorSound } from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 import { useRouter } from "vue-router";
 import { useSettingsStore } from "@/stores/settings";
 import { useVersionStore } from "@/stores/version";
@@ -285,7 +285,7 @@ export const useConnectionStateStore = useInitializableStore(
 					this.cancelAction = null;
 					this.showReconnect = true;
 					this.connectedCacheKeys = [];
-					playErrorSound();
+					playSound("error");
 
 					if (!ui.opened) router.push("/connection");
 				});
@@ -300,7 +300,7 @@ export const useConnectionStateStore = useInitializableStore(
 					this.showReconnect = true;
 					this.showReconnectPassword = message === "WRONG_PASSWORD";
 					this.connectedCacheKeys = [];
-					playErrorSound();
+					playSound("error");
 
 					if (!ui.opened) router.push("/connection");
 				});

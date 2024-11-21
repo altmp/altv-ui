@@ -6,7 +6,7 @@ import type { IHistoryServer } from "@/types/IHistoryServer";
 import { useServersStore } from "@/stores/servers";
 import { useLocalization } from "@/stores/localization";
 import { ModalType, useModalStore } from "@/stores/modal";
-import { playMoveSound } from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 
 const servers = useServersStore();
 const modal = useModalStore();
@@ -22,7 +22,7 @@ const fullData = computed(() =>
 const name = computed(() => fullData.value?.name ?? props.server.name);
 
 function open() {
-	playMoveSound();
+	playSound("move");
 
 	if (fullData.value) {
 		modal.open(ModalType.Connect, { server: fullData.value }, true);

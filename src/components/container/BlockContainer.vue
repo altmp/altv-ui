@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { playMoveSound, playHoverSound } from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 
 const props = defineProps<{
 	"data-noninteractive"?: boolean;
@@ -10,8 +10,10 @@ const props = defineProps<{
 	<div
 		class="frame"
 		v-bind="$attrs"
-		@click="props['data-noninteractive'] ? null : playMoveSound"
-		@mouseenter="props['data-noninteractive'] ? null : playHoverSound"
+		@click="() => (props['data-noninteractive'] ? null : playSound('move'))"
+		@mouseenter="
+			() => (props['data-noninteractive'] ? null : playSound('hover'))
+		"
 	>
 		<slot></slot>
 	</div>

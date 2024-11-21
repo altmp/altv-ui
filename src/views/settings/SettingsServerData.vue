@@ -3,7 +3,7 @@ import BlockContainer from "@/components/container/BlockContainer.vue";
 import prettyBytes from "pretty-bytes";
 import { ModalType, useModalStore } from "@/stores/modal";
 import { useLocalization } from "@/stores/localization";
-import { playErrorSound } from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 import { computed } from "vue";
 import { useConnectionStateStore } from "@/stores/connectionState";
 import moment from "moment";
@@ -29,7 +29,7 @@ function deleteData(type: number) {
 		size: type === 0 ? props.resourcesSize : props.dataSize,
 		name: props.name,
 	});
-	playErrorSound();
+	playSound("error");
 }
 
 const { t } = useLocalization();

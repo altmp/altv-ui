@@ -12,11 +12,7 @@ import { useConnectionStateStore } from "@/stores/connectionState";
 import { useLocalization } from "@/stores/localization";
 import AltCheckbox from "@/components/form/AltCheckbox.vue";
 import { useSettingsStore } from "@/stores/settings";
-import {
-	playHoverSound,
-	playMoveSound,
-	playClickSound,
-} from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 
 const settings = useSettingsStore();
 const connection = useConnectionStateStore();
@@ -99,10 +95,10 @@ function connect() {
 					@click="
 						() => {
 							servers.toggleFavorite(modalProps.server.publicId);
-							playClickSound();
+							playSound('click');
 						}
 					"
-					@mouseenter="playHoverSound"
+					@mouseenter="playSound('hover')"
 				>
 					<star-outline v-if="!favorite" /><star v-if="favorite" />
 				</div>
@@ -127,8 +123,8 @@ function connect() {
 						<a
 							:href="websiteUrl"
 							target="_blank"
-							@click="playMoveSound"
-							@mouseenter="playHoverSound"
+							@click="playSound('move')"
+							@mouseenter="playSound('hover')"
 							>{{ modalProps.server.website }}</a
 						>
 					</div>

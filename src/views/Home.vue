@@ -10,7 +10,7 @@ import Localized from "@/components/Localized.vue";
 import DirectConnect from "@/components/icons/DirectConnect.vue";
 import Server from "@/components/icons/Server.vue";
 import { useUIStore } from "@/stores/ui";
-import { playClickSound, playHoverSound } from "@/utils/playSound";
+import { playSound } from "@/utils/playSound";
 import Refresh from "@/components/icons/Refresh.vue";
 
 const servers = useServersStore();
@@ -71,11 +71,11 @@ function refreshMouseDown(e: MouseEvent) {
 							<refresh
 								class="view__refresh"
 								@click="
-									playClickSound();
+									playSound('click');
 									servers.reload();
 								"
 								@mousedown="refreshMouseDown"
-								@mouseenter="playHoverSound"
+								@mouseenter="playSound('hover')"
 							/>
 						</div>
 
@@ -87,7 +87,7 @@ function refreshMouseDown(e: MouseEvent) {
 											><span
 												@click="
 													ui.setNavigationHighlight('servers');
-													playClickSound();
+													playSound('click');
 												"
 												><server /></span
 										></template>
@@ -95,7 +95,7 @@ function refreshMouseDown(e: MouseEvent) {
 											><span
 												@click="
 													ui.setNavigationHighlight('direct-connect');
-													playClickSound();
+													playSound('click');
 												"
 												><direct-connect /></span
 										></template>
