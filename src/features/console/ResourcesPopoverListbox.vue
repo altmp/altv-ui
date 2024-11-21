@@ -18,7 +18,7 @@ const resources = computed(() => {
 		const entry = entries.get(i)!;
 		set.add(entry.resource || "");
 	}
-	return Array.from(set);
+	return Array.from(set).sort();
 });
 
 const visibleResources = computed({
