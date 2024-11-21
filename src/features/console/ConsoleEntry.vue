@@ -39,15 +39,13 @@ const element = ref<HTMLElement | null>(null);
 <template>
 	<div
 		ref="element"
-		class="rounded py-1"
+		class="rounded py-1 !select-text"
 		:class="[
 			MESSAGE_BACKGROUND[props.entry.type],
 			props.entry.count > 1 ? 'px-2' : 'pl-7 pr-2',
 		]"
 	>
-		<div
-			class="float-right top-0 text-right whitespace-nowrap leading-5 flex gap-1"
-		>
+		<div class="float-right top-0 text-right whitespace-nowrap flex gap-1">
 			<span class="size-5 inline-block" v-if="settings.data.showLogCopyButton">
 				<ConsoleEntryCopyButton
 					:entry-element="element"
@@ -83,7 +81,7 @@ const element = ref<HTMLElement | null>(null);
 		/>
 
 		<span
-			class="whitespace-pre-wrap leading-5 !select-text font-mono text-sm"
+			class="whitespace-pre-wrap leading-5 !select-text *:select-text font-mono text-sm [&>a:hover]:underline [&>a]:underline-offset-2"
 			:class="MESSAGE_COLOR[props.entry.type]"
 			v-html="props.entry.html"
 		/>
