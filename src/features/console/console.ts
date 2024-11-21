@@ -204,16 +204,23 @@ export function createConsoleContext(
 		if (incomingEntry === null) return;
 
 		const time = new Date();
-		const lastEntry = entries.value.get(-1);
+		const lastEntry = entries.value.get(entries.value.size - 1);
 		if (
 			lastEntry &&
 			lastEntry.type === type &&
 			lastEntry.resource === resource &&
 			lastEntry.message === incomingEntry.messageBuffer
 		) {
-			lastEntry.count++;
-			lastEntry.time = time;
-
+			entries.value.set(entries.value.size - 1, {
+				id: lastEntry.id,
+				type: lastEntry.type,
+				resource: lastEntry.resource,
+				message: lastEntry.message,
+				html: lastEntry.html,
+				count: ++lastEntry.count,
+				time,
+			});
+			triggerRef(entries);
 			incomingEntry = null;
 			return;
 		}
@@ -235,19 +242,10 @@ export function createConsoleContext(
 			time,
 		};
 
-		entries.value.add(entry);
+		entries.value.push(entry);
+		triggerRef(entries);
 		incomingEntry = null;
 	};
-
-	let last = lastEntryId.value;
-	const update = () => {
-		if (lastEntryId.value !== last) {
-			last = lastEntryId.value;
-			triggerRef(entries);
-		}
-		requestAnimationFrame(update);
-	};
-	requestAnimationFrame(update);
 
 	const execute = (command: string) => {
 		const trimmedCommand = command.trim();

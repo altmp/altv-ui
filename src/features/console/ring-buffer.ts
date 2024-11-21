@@ -19,7 +19,7 @@ export class RingBuffer<T> implements Iterable<T> {
 		return this._position;
 	}
 
-	public add(...items: T[]): void {
+	public push(...items: T[]): void {
 		const capacity = this._buffer.length;
 		for (let i = 0; i < items.length; i++) {
 			const index = (this._position + this._size + i) % capacity;
@@ -31,10 +31,14 @@ export class RingBuffer<T> implements Iterable<T> {
 		this._size = Math.min(this.size + items.length, capacity);
 	}
 
-	public get(index: number): T | undefined {
-		if (index < 0) {
-			index = this._size + index;
+	public set(index: number, item: T): void {
+		if (index < 0 || index >= this._size) {
+			throw new Error("Index out of bounds");
 		}
+		this._buffer[(this._position + index) % this._buffer.length] = item;
+	}
+
+	public get(index: number): T | undefined {
 		if (index < 0 || index >= this._size) {
 			return undefined;
 		}
