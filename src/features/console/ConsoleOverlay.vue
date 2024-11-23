@@ -31,8 +31,10 @@ provide(
 	ConsoleHistoryContextInjectionKey,
 	createConsoleHistoryContext({ maxLength: 50 }),
 );
-
-provide(ConsoleTimeFormatContextInjectionKey, createConsoleTimeFormatContext());
+provide(
+	ConsoleTimeFormatContextInjectionKey,
+	createConsoleTimeFormatContext(consoleContext),
+);
 
 const settings = useSettingsStore();
 

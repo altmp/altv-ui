@@ -1,6 +1,7 @@
 import { putTime } from "@/features/console/put-time";
 import { useSettingsStore } from "@/stores/settings";
 import { computed, watch, type ComputedRef, type InjectionKey } from "vue";
+import type { ConsoleContext } from "./console";
 
 export interface ConsoleTimeFormatContext {
 	useFormattedTime: (time: Date) => ComputedRef<string>;
@@ -10,56 +11,57 @@ export const ConsoleTimeFormatContextInjectionKey = Symbol(
 	"ConsoleTimeFormatContext",
 ) as InjectionKey<ConsoleTimeFormatContext>;
 
-class Removable<T> {
-	public readonly timeoutId: ReturnType<typeof setTimeout>;
-
-	constructor(
-		private _value: T,
-		private readonly remove: () => void,
-		ttl: number,
-	) {
-		this.timeoutId = setTimeout(() => this.remove(), ttl);
-	}
-
-	get value(): T {
-		return this._value;
-	}
-}
-
-export function createConsoleTimeFormatContext(): ConsoleTimeFormatContext {
+export function createConsoleTimeFormatContext(
+	consoleContext: ConsoleContext,
+): ConsoleTimeFormatContext {
+	const { entries, lastEntryId } = consoleContext;
 	const settings = useSettingsStore();
-	const formattedTimeCache = new Map<number, Removable<string>>();
 
+	/**
+	 * Seconds since epoch to formatted time string cache.
+	 * 1732362366 => "12:03:56"
+	 */
+	const timeFormatCache = new Map<number, string>();
 	watch(
 		() => settings.data.logTimeFormat,
-		() => {
-			for (const value of formattedTimeCache.values()) {
-				clearTimeout(value.timeoutId);
-			}
-			formattedTimeCache.clear();
-		},
+		() => timeFormatCache.clear(),
 	);
 
-	const formatTime = (date: Date, format: string): string => {
+	const MAX_CACHE_SIZE = 60;
+	let lastClearedEntryId = 0;
+	watch(entries, () => {
+		const invisibleEntriesCount = lastEntryId.value - entries.value.size;
+		if (
+			invisibleEntriesCount > lastClearedEntryId + entries.value.capacity &&
+			timeFormatCache.size > MAX_CACHE_SIZE
+		) {
+			const highestInvisibleEntryTimestamp =
+				entries.value.get(0)!.time.getTime() / 1000 - 1;
+
+			const iter = timeFormatCache.keys();
+			while (true) {
+				const result = iter.next();
+				if (result.done || result.value > highestInvisibleEntryTimestamp) break;
+				timeFormatCache.delete(result.value);
+			}
+
+			lastClearedEntryId = invisibleEntriesCount;
+		}
+	});
+
+	const putTimeWithCache = (date: Date, format: string): string => {
 		const timestamp = Math.floor(date.getTime() / 1000);
 
-		const existingEntry = formattedTimeCache.get(timestamp);
-		if (existingEntry) return existingEntry.value;
+		const cachedTime = timeFormatCache.get(timestamp);
+		if (cachedTime) return cachedTime;
 
 		const formattedTime = putTime(date, format);
-		formattedTimeCache.set(
-			timestamp,
-			new Removable(
-				formattedTime,
-				() => formattedTimeCache.delete(timestamp),
-				10000,
-			),
-		);
+		timeFormatCache.set(timestamp, formattedTime);
 		return formattedTime;
 	};
 
 	return {
 		useFormattedTime: (time: Date) =>
-			computed(() => formatTime(time, settings.data.logTimeFormat)),
+			computed(() => putTimeWithCache(time, settings.data.logTimeFormat)),
 	};
 }
