@@ -353,3 +353,7 @@ document.addEventListener("mouseup", (e) => {
 // endregion
 
 export default {};
+
+alt.viewOn("copy", (text: string) => {
+	navigator.clipboard.writeText(text);
+});

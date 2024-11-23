@@ -1,32 +1,35 @@
 <script setup lang="ts">
 import CopyIcon from "@/icons/copy.svg?component";
 import CheckIcon from "@/icons/check.svg?component";
-import { useClipboard, useElementHover } from "@vueuse/core";
+import { useElementHover } from "@vueuse/core";
+import { ref } from "vue";
 
 const props = defineProps<{ entryElement: HTMLElement | null; text: string }>();
 
-const { copy, copied } = useClipboard({
-	source: props.text,
-	copiedDuring: 1200,
-});
-const isHovered = useElementHover(() => props.entryElement);
+const copied = ref(false);
+const copy = () => {
+	if (copied.value) return;
+	alt.emit("copy", props.text);
+	copied.value = true;
+	setTimeout(() => {
+		copied.value = false;
+	}, 1200);
+};
+
+const isEntryHovered = useElementHover(() => props.entryElement);
 </script>
 
 <template>
-	<button
-		v-if="isHovered"
-		type="button"
-		@click="copy()"
-		class="group/copy-button p-0.5"
-	>
+	<button @click="copy()" class="group/copy-button size-5">
 		<Transition
+			v-if="isEntryHovered || copied"
 			enterActiveClass="animate-in zoom-in-0 fade-in-0"
 			leaveActiveClass="animate-out zoom-out-0 fade-out-0"
 			mode="out-in"
 		>
 			<component
 				:is="copied ? CheckIcon : CopyIcon"
-				class="m-px size-3.5 shrink-0 stroke-1.25 text-white/50 transition-colors group-hover/copy-button:text-white/60"
+				class="size-3.5 stroke-1.25 text-white/50 text-center group-hover/copy-button:text-white/60 inline-block"
 			/>
 		</Transition>
 	</button>
