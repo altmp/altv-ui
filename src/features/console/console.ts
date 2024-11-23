@@ -12,6 +12,13 @@ import {
 } from "vue";
 import { RingBuffer } from "./ring-buffer";
 
+const useAltListener = (event: string, listener: (...args: any[]) => void) => {
+	alt.on(event, listener);
+	onScopeDispose(() => {
+		alt.off(event, listener);
+	});
+};
+
 export const logTypeByName = Object.freeze({
 	info: LogType.Info,
 	warning: LogType.Warning,
@@ -154,13 +161,14 @@ export function createConsoleContext(
 	const { maxEntries, maxMessageLength, maxMessageNewlines } = options;
 
 	const lastEntryId = ref(0);
+	const queue: ConsoleEntry[] = [];
 	const entries = shallowRef(new RingBuffer(maxEntries)) as ShallowRef<
 		RingBuffer<ConsoleEntry>
 	>;
 
 	let incomingEntry: IncomingConsoleEntry | null = null;
 
-	const push = (colorIndex: number, value: string) => {
+	useAltListener("console:push", (colorIndex: number, value: string) => {
 		if (incomingEntry === null) {
 			incomingEntry = {
 				messageBuffer: "",
@@ -198,54 +206,84 @@ export function createConsoleContext(
 		}
 		const color = colorByIndex[colorIndex] ?? COLORS.WHITE;
 		incomingEntry.htmlBuffer += `<span style="color:${color}">${content}</span>`;
-	};
+	});
 
-	const end = (resource?: string, type: LogType = LogType.Info) => {
-		if (incomingEntry === null) return;
+	useAltListener(
+		"console:end",
+		(resource?: string, type: LogType = LogType.Info) => {
+			if (incomingEntry === null) return;
 
-		const time = new Date();
-		const lastEntry = entries.value.get(entries.value.size - 1);
-		if (
-			lastEntry &&
-			lastEntry.type === type &&
-			lastEntry.resource === resource &&
-			lastEntry.message === incomingEntry.messageBuffer
-		) {
-			entries.value.set(entries.value.size - 1, {
-				id: lastEntry.id,
-				type: lastEntry.type,
-				resource: lastEntry.resource,
-				message: lastEntry.message,
-				html: lastEntry.html,
-				count: ++lastEntry.count,
+			const time = new Date();
+			const lastEntry = queue.length
+				? queue[queue.length - 1]
+				: entries.value.get(entries.value.size - 1);
+			if (
+				lastEntry &&
+				lastEntry.type === type &&
+				lastEntry.resource === resource &&
+				lastEntry.message === incomingEntry.messageBuffer
+			) {
+				if (queue.length) {
+					lastEntry.count++;
+					lastEntry.time = time;
+				} else {
+					// Vue's shallowRef requires replacing the object to ensure reactivity
+					entries.value.set(entries.value.size - 1, {
+						id: lastEntry.id,
+						type: lastEntry.type,
+						resource: lastEntry.resource,
+						message: lastEntry.message,
+						html: lastEntry.html,
+						count: ++lastEntry.count,
+						time,
+					});
+				}
+
+				incomingEntry = null;
+				return;
+			}
+
+			incomingEntry.htmlBuffer = convertLinksToHTML(incomingEntry.htmlBuffer);
+			if (incomingEntry.availableCharactersCount < 0) {
+				incomingEntry.htmlBuffer += `... ${Math.abs(
+					incomingEntry.availableCharactersCount,
+				)} chars more ...`;
+			}
+
+			queue.push({
+				id: lastEntryId.value++,
+				type,
+				resource,
+				message: incomingEntry.messageBuffer,
+				html: incomingEntry.htmlBuffer,
+				count: 1,
 				time,
 			});
-			triggerRef(entries);
 			incomingEntry = null;
+		},
+	);
+
+	let lastRenderedEntryCount = 1;
+	const update = () => {
+		if (queue.length) {
+			const lastEntry = queue[queue.length - 1]!;
+			lastRenderedEntryCount = lastEntry.count;
+			entries.value.push(...queue);
+			queue.length = 0;
+
+			triggerRef(entries);
+			requestAnimationFrame(update);
 			return;
 		}
 
-		incomingEntry.htmlBuffer = convertLinksToHTML(incomingEntry.htmlBuffer);
-		if (incomingEntry.availableCharactersCount < 0) {
-			incomingEntry.htmlBuffer += `... ${Math.abs(
-				incomingEntry.availableCharactersCount,
-			)} chars more ...`;
+		const lastEntry = entries.value.get(entries.value.size - 1);
+		if (lastEntry && lastRenderedEntryCount !== lastEntry.count) {
+			lastRenderedEntryCount = lastEntry.count;
+			triggerRef(entries);
 		}
-
-		const entry: ConsoleEntry = {
-			id: lastEntryId.value++,
-			type,
-			resource,
-			message: incomingEntry.messageBuffer,
-			html: incomingEntry.htmlBuffer,
-			count: 1,
-			time,
-		};
-
-		entries.value.push(entry);
-		triggerRef(entries);
-		incomingEntry = null;
+		requestAnimationFrame(update);
 	};
+	requestAnimationFrame(update);
 
 	const execute = (command: string) => {
 		const trimmedCommand = command.trim();
@@ -256,11 +294,13 @@ export function createConsoleContext(
 	const clear = () => {
 		entries.value.clear();
 		triggerRef(entries);
+		queue.length = 0;
 	};
+	useAltListener("console:clear", clear);
 
-	const reset = () => {
+	useAltListener("console:reset", () => {
 		incomingEntry = null;
-	};
+	});
 
 	const transparent = ref(false);
 	watch(transparent, () => {
@@ -268,36 +308,18 @@ export function createConsoleContext(
 			open.value = false;
 		}
 	});
-	const enableTransparentMode = () => {
+	useAltListener("console:forceTransparent", () => {
 		transparent.value = true;
-	};
+	});
 
 	const open = ref(false);
 	watch(open, () => {
 		alt.emit("console:setState", open.value);
 	});
-	const setOpen = (state?: boolean) => {
+	useAltListener("console:open", (state?: boolean) => {
 		if (state !== undefined) {
 			open.value = state;
 		}
-	};
-
-	alt.on("console:open", setOpen);
-	alt.on("console:forceTransparent", enableTransparentMode);
-
-	alt.on("console:clear", clear);
-	alt.on("console:reset", reset);
-	alt.on("console:end", end);
-	alt.on("console:push", push);
-
-	onScopeDispose(() => {
-		alt.off("console:open", setOpen);
-		alt.off("console:forceTransparent", enableTransparentMode);
-
-		alt.off("console:clear", clear);
-		alt.off("console:reset", reset);
-		alt.off("console:end", end);
-		alt.off("console:push", push);
 	});
 
 	return {
