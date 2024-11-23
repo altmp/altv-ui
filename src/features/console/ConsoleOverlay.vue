@@ -81,7 +81,7 @@ const draggingY = ref(false);
 				:disabled="
 					consoleContext.transparent.value && !consoleContext.open.value
 				"
-				class="peer z-20 outline-none"
+				class="z-20 outline-none"
 				@dragging="(dragging) => (draggingX = dragging)"
 			/>
 			<SplitterPanel
@@ -106,9 +106,9 @@ const draggingY = ref(false);
 								measurementsContext.clearMeasurementsCache();
 							}
 						"
-						class="console-panel rounded-md overflow-hidden"
+						class="rounded-md overflow-hidden"
 						:class="{
-							'border border-stone-600 bg-stone-900 shadow-lg  peer-data-[state=hover]:border-b-stone-400':
+							'border border-stone-600 bg-stone-900 shadow-lg':
 								consoleContext.open.value,
 							'border border-white/10':
 								consoleContext.transparent.value && !consoleContext.open.value,
@@ -124,7 +124,7 @@ const draggingY = ref(false);
 							consoleContext.transparent.value && !consoleContext.open.value
 						"
 						@dragging="(dragging) => (draggingY = dragging)"
-						class="peer z-20 outline-none"
+						class="z-20 outline-none"
 					/>
 					<SplitterPanel :min-size="0" />
 				</SplitterGroup>
