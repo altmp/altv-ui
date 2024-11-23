@@ -208,6 +208,7 @@ function handleExecute(event: KeyboardEvent) {
 	consoleContext.execute(command.value);
 	consoleHistory.addEntry(command.value);
 	command.value = "";
+	nextTick(scrollToLastEntry);
 }
 
 const isGhostEntry = (index: number) => {
@@ -334,7 +335,7 @@ const openLogFile = () => {
 			/>
 			<div
 				ref="viewport"
-				class="console-viewport"
+				class="console-viewport overflow-y-auto overflow-x-hidden p-1 w-full h-full"
 				:style="{
 					paddingRight: scrollbarWidth > 0 ? '0' : undefined,
 				}"
@@ -390,14 +391,6 @@ const openLogFile = () => {
 </template>
 
 <style>
-.console-viewport {
-	overflow-y: auto;
-	overflow-x: hidden;
-	width: 100%;
-	height: 100%;
-	padding: 0.25rem;
-}
-
 .console-viewport::-webkit-scrollbar {
 	width: 0.75rem;
 }
