@@ -73,7 +73,7 @@ const draggingY = ref(false);
 <template>
 	<div
 		v-if="consoleContext.open.value || consoleContext.transparent.value"
-		class="fixed inset-0 z-50 h-dvh w-full p-2 tw"
+		class="fixed inset-0 z-40 h-dvh w-full p-2 tw"
 		:class="consoleContext.open.value ? 'bg-black/50' : 'pointer-events-none'"
 	>
 		<SplitterGroup direction="horizontal">
