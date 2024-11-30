@@ -80,9 +80,7 @@ const draggingY = ref(false);
 			<SplitterPanel :min-size="0" />
 			<SplitterResizeHandle
 				:hit-area-margins="hitAreaMargins"
-				:disabled="
-					consoleContext.transparent.value && !consoleContext.open.value
-				"
+				:disabled="!consoleContext.open.value"
 				class="outline-none"
 				@dragging="(dragging) => (draggingX = dragging)"
 			/>
@@ -122,9 +120,7 @@ const draggingY = ref(false);
 					</SplitterPanel>
 					<SplitterResizeHandle
 						:hit-area-margins="hitAreaMargins"
-						:disabled="
-							consoleContext.transparent.value && !consoleContext.open.value
-						"
+						:disabled="!consoleContext.open.value"
 						@dragging="(dragging) => (draggingY = dragging)"
 						class="outline-none"
 					/>

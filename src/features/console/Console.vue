@@ -31,10 +31,7 @@ import ResourcesPopover from "./ResourcesPopover.vue";
 import ConsoleSettings from "./ConsoleSettings.vue";
 import SettingsIcon from "@/icons/settings.svg?component";
 import AltVOutlineLogo from "@/icons/altv-outline-logo.svg?component";
-import {
-	ConsoleHistoryContextInjectionKey,
-	useConsoleHistoryIndex,
-} from "./history";
+import { ConsoleHistoryContextInjectionKey } from "./history";
 import { Id } from "@/components/ui/id";
 import { ConsoleMeasurementsContextInjectionKey } from "./measurements";
 import ConsoleTransparentIcon from "@/icons/console-transparent.svg?component";
@@ -186,28 +183,16 @@ watch(consoleContext.open, () => scrollToLastEntry(), {
 onMounted(() => nextTick(scrollToLastEntry));
 
 const consoleHistory = injectContext(ConsoleHistoryContextInjectionKey);
-const { historyIndex, moveHistoryIndex } = useConsoleHistoryIndex();
-
-const _command = ref("");
-const command = computed({
-	get: () =>
-		historyIndex.value === -1
-			? _command.value
-			: consoleHistory.entries.value[historyIndex.value]!,
-	set: (newValue) => {
-		historyIndex.value = -1;
-		_command.value = newValue;
-	},
-});
 
 function handleExecute(event: KeyboardEvent) {
 	// prevent executing command when enter is pressed with shift key
 	if (event.shiftKey) return;
-	if (command.value.length === 0) return;
+	const command = consoleHistory.current.value.trim();
+	if (command.length === 0) return;
 
-	consoleContext.execute(command.value);
-	consoleHistory.addEntry(command.value);
-	command.value = "";
+	consoleContext.execute(command);
+	consoleHistory.push(command);
+
 	nextTick(scrollToLastEntry);
 }
 
@@ -375,15 +360,21 @@ const openLogFile = () => {
 				<textarea
 					:id="id"
 					ref="textarea"
-					v-model="command"
+					:value="consoleHistory.current.value"
+					@input="
+						(event) => {
+							const newValue = (event.target as HTMLTextAreaElement).value;
+							consoleHistory.current.value = newValue;
+						}
+					"
 					style="field-sizing: content"
 					autocomplete="off"
 					autocorrect="off"
 					autocapitalize="off"
 					class="scrollbar-vertical w-full resize-none bg-transparent font-mono text-sm text-code-white outline-none"
 					@keydown.enter.exact.prevent="handleExecute"
-					@keydown.up.prevent="moveHistoryIndex(1)"
-					@keydown.down.prevent="moveHistoryIndex(-1)"
+					@keydown.up.prevent="consoleHistory.go(1)"
+					@keydown.down.prevent="consoleHistory.go(-1)"
 				/>
 			</Id>
 		</div>

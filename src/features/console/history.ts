@@ -1,5 +1,5 @@
-import { injectContext } from "@/utils/injectContext";
 import {
+	computed,
 	readonly,
 	ref,
 	type DeepReadonly,
@@ -9,7 +9,10 @@ import {
 
 export interface ConsoleHistoryContext {
 	entries: DeepReadonly<Ref<string[]>>;
-	addEntry: (entry: string) => void;
+	current: Ref<string>;
+	currentIndex: Readonly<Ref<number>>;
+	go: (delta: number) => void;
+	push: (command: string) => void;
 }
 
 export const ConsoleHistoryContextInjectionKey = Symbol(
@@ -17,39 +20,55 @@ export const ConsoleHistoryContextInjectionKey = Symbol(
 ) as InjectionKey<ConsoleHistoryContext>;
 
 export function createConsoleHistoryContext(options: {
-	/**
-	 * Maximum number of remembered entries
-	 */
 	maxLength: number;
 }): ConsoleHistoryContext {
-	const { maxLength } = options;
+	const entries = ref<string[]>([""]);
+	const currentIndex = ref(0);
 
-	const entries = ref<string[]>([]);
-
-	const addEntry = (entry: string) => {
-		if (entries.value[0] === entry) return;
-		entries.value.unshift(entry);
-		while (entries.value.length > maxLength) entries.value.pop();
+	const go = (delta: number) => {
+		currentIndex.value = Math.min(
+			Math.max(currentIndex.value + delta, 0),
+			entries.value.length - 1,
+		);
 	};
+
+	const push = (command: string) => {
+		// Avoid duplicating the most recent entry in history
+		if (entries.value.length > 1 && command === entries.value[1]) {
+			currentIndex.value = 0;
+			entries.value[0] = "";
+			return;
+		}
+
+		currentIndex.value = 0;
+		entries.value[0] = command;
+		entries.value.unshift("");
+		while (entries.value.length > options.maxLength) {
+			entries.value.pop();
+		}
+
+		console.log(entries.value);
+	};
+
+	const current = computed({
+		get: () => {
+			return entries.value[currentIndex.value]!;
+		},
+		set: (newValue) => {
+			if (currentIndex.value > 0) {
+				currentIndex.value = 0;
+				entries.value[0] = newValue;
+			} else {
+				entries.value[currentIndex.value] = newValue;
+			}
+		},
+	});
 
 	return {
+		current,
+		currentIndex: readonly(currentIndex),
 		entries: readonly(entries),
-		addEntry,
+		go,
+		push,
 	};
 }
-
-export const useConsoleHistoryIndex = () => {
-	const consoleHistory = injectContext(ConsoleHistoryContextInjectionKey);
-	const historyIndex = ref(-1);
-
-	const moveHistoryIndex = (mod: number) => {
-		const newIndex = Math.min(
-			Math.max(historyIndex.value + mod, -1),
-			consoleHistory.entries.value.length - 1,
-		);
-
-		historyIndex.value = newIndex;
-	};
-
-	return { historyIndex, moveHistoryIndex };
-};

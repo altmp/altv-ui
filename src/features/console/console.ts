@@ -286,9 +286,7 @@ export function createConsoleContext(
 	requestAnimationFrame(update);
 
 	const execute = (command: string) => {
-		const trimmedCommand = command.trim();
-		if (trimmedCommand === "") return;
-		alt.emit("console:execute", trimmedCommand);
+		alt.emit("console:execute", command);
 	};
 
 	const clear = () => {
