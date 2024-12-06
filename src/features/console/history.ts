@@ -46,8 +46,6 @@ export function createConsoleHistoryContext(options: {
 		while (entries.value.length > options.maxLength) {
 			entries.value.pop();
 		}
-
-		console.log(entries.value);
 	};
 
 	const current = computed({
