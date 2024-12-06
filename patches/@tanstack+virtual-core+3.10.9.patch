@@ -1,0 +1,63 @@
+diff --git a/node_modules/@tanstack/virtual-core/dist/esm/index.js b/node_modules/@tanstack/virtual-core/dist/esm/index.js
+index e8e7f0e..53b6549 100644
+--- a/node_modules/@tanstack/virtual-core/dist/esm/index.js
++++ b/node_modules/@tanstack/virtual-core/dist/esm/index.js
+@@ -3,11 +3,11 @@ const defaultKeyExtractor = (index) => index;
+ const defaultRangeExtractor = (range) => {
+   const start = Math.max(range.startIndex - range.overscan, 0);
+   const end = Math.min(range.endIndex + range.overscan, range.count - 1);
+-  const arr = [];
+-  for (let i = start; i <= end; i++) {
+-    arr.push(i);
+-  }
+-  return arr;
++  const arr = new Array(end - start + 1);
++	for (let i = 0; i < arr.length; i++) {
++		arr[i] = i + start;
++	}
++	return arr;
+ };
+ const observeElementRect = (instance, cb) => {
+   const element = instance.scrollElement;
+@@ -28,15 +28,17 @@ const observeElementRect = (instance, cb) => {
+     };
+   }
+   const observer = new targetWindow.ResizeObserver((entries) => {
+-    const entry = entries[0];
+-    if (entry == null ? void 0 : entry.borderBoxSize) {
+-      const box = entry.borderBoxSize[0];
+-      if (box) {
+-        handler({ width: box.inlineSize, height: box.blockSize });
+-        return;
++    requestAnimationFrame(() => {
++      const entry = entries[0];
++      if (entry == null ? void 0 : entry.borderBoxSize) {
++        const box = entry.borderBoxSize[0];
++        if (box) {
++          handler({ width: box.inlineSize, height: box.blockSize });
++          return;
++        }
+       }
+-    }
+-    handler(element.getBoundingClientRect());
++      handler(element.getBoundingClientRect());
++    })
+   });
+   observer.observe(element, { box: "border-box" });
+   return () => {
+@@ -187,9 +189,12 @@ class Virtualizer {
+           return null;
+         }
+         return _ro = new this.targetWindow.ResizeObserver((entries) => {
+-          entries.forEach((entry) => {
+-            this._measureElement(entry.target, entry);
+-          });
++          requestAnimationFrame(() => {
++            for (let i = 0; i < entries.length; i++) {
++              const entry = entries[i];
++              this._measureElement(entry.target, entry);
++            }
++          })
+         });
+       };
+       return {

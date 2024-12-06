@@ -5,6 +5,7 @@
 		"dev": "vite --port 3000",
 		"build": "vue-tsc && vite build",
 		"preview": "vite preview --port 5050",
+		"postinstall": "patch-package",
 		"test": "vitest",
 		"fmt": "prettier --write .",
 		"typecheck": "vue-tsc"
@@ -24,6 +25,7 @@
 	},
 	"devDependencies": {
 		"@altv/types-webview": "16.2.1",
+		"patch-package": "8.0.0",
 		"@types/node": "22.9.0",
 		"@types/sanitize-html": "2.13.0",
 		"@vitejs/plugin-vue": "5.2.0",
