@@ -9,7 +9,7 @@ import {
 	watch,
 	type ComponentPublicInstance,
 } from "vue";
-import { useVirtualizer, type Range } from "@tanstack/vue-virtual";
+import { useVirtualizer } from "@tanstack/vue-virtual";
 import ChevronUpIcon from "@/icons/chevron-up.svg?component";
 import ConsoleEntryItem from "./ConsoleEntry.vue";
 import BanIcon from "@/icons/ban.svg?component";
@@ -97,6 +97,15 @@ const virtualizer = useVirtualizer({
 		return Math.round(3 * pixelScale.value);
 	},
 	measureElement,
+	rangeExtractor: (range) => {
+		const start = Math.max(range.startIndex - range.overscan, 0);
+		const end = Math.min(range.endIndex + range.overscan, range.count - 1);
+		const arr = new Array(end - start + 1);
+		for (let i = 0; i < arr.length; i++) {
+			arr[i] = i + start;
+		}
+		return arr;
+	},
 	initialMeasurementsCache: getMeasurementsCache(),
 });
 
