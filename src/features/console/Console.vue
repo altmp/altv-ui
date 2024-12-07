@@ -9,7 +9,7 @@ import {
 	watch,
 	type ComponentPublicInstance,
 } from "vue";
-import { useVirtualizer, type Range } from "@tanstack/vue-virtual";
+import { useVirtualizer } from "@tanstack/vue-virtual";
 import ChevronUpIcon from "@/icons/chevron-up.svg?component";
 import ConsoleEntryItem from "./ConsoleEntry.vue";
 import BanIcon from "@/icons/ban.svg?component";
@@ -81,22 +81,6 @@ watch(
 
 const viewport = ref<HTMLElement | null>(null);
 
-/**
- * Improved version of the defaultRangeExtractor function from @tanstack/virtual-core which allocates the memory once, instead of resizing an empty array.
- *
- * @see https://github.com/TanStack/virtual/blob/47ecdc7522c6c2d0d480224dbfb97cf4edb1745b/packages/virtual-core/src/index.ts#L49-L60
- */
-const rangeExtractor = (range: Range): number[] => {
-	const start = Math.max(range.startIndex - range.overscan, 0);
-	const end = Math.min(range.endIndex + range.overscan, range.count - 1);
-
-	const arr = new Array<number>(end - start + 1);
-	for (let i = 0; i < arr.length; i++) {
-		arr[i] = i + start;
-	}
-	return arr;
-};
-
 const { measureElement, getMeasurementsCache, setMeasurementsCache } =
 	injectContext(ConsoleMeasurementsContextInjectionKey);
 
@@ -113,7 +97,15 @@ const virtualizer = useVirtualizer({
 		return Math.round(3 * pixelScale.value);
 	},
 	measureElement,
-	rangeExtractor,
+	rangeExtractor: (range) => {
+		const start = Math.max(range.startIndex - range.overscan, 0);
+		const end = Math.min(range.endIndex + range.overscan, range.count - 1);
+		const arr = new Array(end - start + 1);
+		for (let i = 0; i < arr.length; i++) {
+			arr[i] = i + start;
+		}
+		return arr;
+	},
 	initialMeasurementsCache: getMeasurementsCache(),
 });
 

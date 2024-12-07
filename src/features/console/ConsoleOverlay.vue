@@ -68,6 +68,19 @@ const hitAreaMargins = computed(() => ({
 
 const draggingX = ref(false);
 const draggingY = ref(false);
+
+/**
+ * @see https://github.com/TanStack/virtual/issues/531
+ */
+const knownErrors = [
+	"ResizeObserver loop limit exceeded",
+	"ResizeObserver loop completed with undelivered notifications.",
+];
+
+window.onerror = (message) => {
+	// by returning true, we prevent the error from being logged to the console
+	return knownErrors.some((error) => error === message);
+};
 </script>
 
 <template>
