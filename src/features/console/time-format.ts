@@ -35,17 +35,14 @@ export function createConsoleTimeFormatContext(
 			invisibleEntriesCount > lastClearedEntryId + entries.value.capacity &&
 			timeFormatCache.size > MAX_CACHE_SIZE
 		) {
+			lastClearedEntryId = invisibleEntriesCount;
 			const highestInvisibleEntryTimestamp =
 				entries.value.get(0)!.time.getTime() / 1000 - 1;
 
-			const iter = timeFormatCache.keys();
-			while (true) {
-				const result = iter.next();
-				if (result.done || result.value > highestInvisibleEntryTimestamp) break;
-				timeFormatCache.delete(result.value);
+			for (const timestamp of timeFormatCache.keys()) {
+				if (timestamp > highestInvisibleEntryTimestamp) break;
+				timeFormatCache.delete(timestamp);
 			}
-
-			lastClearedEntryId = invisibleEntriesCount;
 		}
 	});
 
