@@ -10,7 +10,7 @@ import { useLocalization } from "@/stores/localization";
 const app = createApp(App);
 const pinia = createPinia();
 
-const importLocales = import.meta.glob("@/locales/langs/*.json", {
+const importLocales = import.meta.glob("@/locales/i18n/altvui/*.json", {
 	eager: true,
 });
 
