@@ -2,7 +2,7 @@
 import { getModalProps, ModalType, useModalStore } from "@/stores/modal";
 import { ref } from "vue";
 import AltButton from "@/components/AltButton.vue";
-import AltCheckbox from "@/components/form/AltCheckbox.vue";
+import AltCheckboxWithHelpTooltip from "@/components/form/AltCheckboxWithHelpTooltip.vue";
 import { useLocalization } from "@/stores/localization";
 import { playSound } from "@/utils/playSound";
 
@@ -45,11 +45,12 @@ function getPermissionName(id: number) {
 			>
 				<div class="permissions__title">{{ t("REQUIRED_PERMISSIONS") }}</div>
 				<div class="permissions__list">
-					<alt-checkbox
-						:label="getPermissionName(perm)"
+					<AltCheckboxWithHelpTooltip
+						v-for="permission of modalProps.required"
+						:label="getPermissionName(permission)"
 						disabled
 						:model-value="true"
-						v-for="perm in modalProps.required"
+						:help="t(`PERMISSION_${permission}_DESCRIPTION`)"
 					/>
 				</div>
 			</div>
@@ -59,10 +60,11 @@ function getPermissionName(id: number) {
 			>
 				<div class="permissions__title">{{ t("OPTIONAL_PERMISSIONS") }}</div>
 				<div class="permissions__list">
-					<alt-checkbox
-						:label="getPermissionName(perm)"
-						v-model="values[perm]"
-						v-for="perm in modalProps.optional"
+					<AltCheckboxWithHelpTooltip
+						v-for="permission of modalProps.optional"
+						v-model="values[permission]"
+						:label="getPermissionName(permission)"
+						:help="t(`PERMISSION_${permission}_DESCRIPTION`)"
 					/>
 				</div>
 			</div>
@@ -147,11 +149,6 @@ function getPermissionName(id: number) {
 					width: u(24);
 					height: u(24);
 				}
-			}
-
-			&--required .permissions__list {
-				opacity: 0.5;
-				pointer-events: none;
 			}
 		}
 	}

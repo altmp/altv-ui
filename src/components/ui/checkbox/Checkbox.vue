@@ -15,7 +15,7 @@ const emit = defineEmits<CheckboxRootEmits>();
 
 const classes = computed(() => {
 	return twMerge(
-		"inline-flex size-4 shrink-0 items-center justify-center rounded-[0.1875rem] border border-white/25 outline-none ring-green-200/75 ring-offset-2 ring-offset-stone-900 transition-[border-color,filter,background-color] ease-out-quint hover:bg-white/5 hover:brightness-[1.2] focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-white/10 data-[state=checked]:bg-primary-500 disabled:data-[state=checked]:bg-white/10",
+		"inline-flex size-4 shrink-0 items-center justify-center rounded-[0.1875rem] border border-white/25 outline-none ring-green-200/75 ring-offset-2 ring-offset-stone-900 transition-[border-color,filter,background-color] ease-out-quint hover:brightness-[1.2] focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-white/10 data-[state=checked]:bg-green-500 bg-stone-800",
 		props.class,
 	);
 });

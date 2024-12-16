@@ -22,12 +22,12 @@ const props = defineProps({
 	.tooltip-value {
 		position: absolute;
 		left: 50%;
-		white-space: nowrap;
 		margin-top: u(8);
 		font-weight: 500;
 		font-size: u(12);
-		background: #202020;
-		padding: u(6);
+		line-height: u(18);
+		background: #3c3c3c;
+		padding: u(6) u(8);
 		border: solid u(1) rgba(white, 0.1);
 		border-radius: u(4);
 		pointer-events: none;
@@ -35,8 +35,9 @@ const props = defineProps({
 		transition-delay: 0s;
 		opacity: 0;
 		transform: translateX(-50%);
-		line-height: 1.2;
-		color: $text_light;
+		color: rgba(white, 0.9);
+		max-width: u(384);
+		width: max-content;
 
 		&.left {
 			transform: none;
@@ -59,6 +60,15 @@ const props = defineProps({
 			right: u(-16);
 			transform: translate(100%, -50%);
 			left: unset;
+			font-size: u(14);
+		}
+	}
+
+	&[data-position="top"] {
+		.tooltip-value {
+			margin: 0;
+			top: u(-8);
+			transform: translate(-50%, -100%);
 			font-size: u(14);
 		}
 	}

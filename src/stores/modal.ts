@@ -17,7 +17,10 @@ export enum ModalType {
 export type IModalProps = {
 	[ModalType.None]: {};
 	[ModalType.Connect]: { server: IServer };
-	[ModalType.Permissions]: { required: number[]; optional: number[] };
+	[ModalType.Permissions]: {
+		required: AltPermission[];
+		optional: AltPermission[];
+	};
 	[ModalType.DirectConnect]: { address?: string; password?: string };
 	[ModalType.DeleteServerData]: {
 		id: string;

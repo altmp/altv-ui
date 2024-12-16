@@ -32,7 +32,7 @@ const { open } = injectContext(TooltipRootContextInjectionKey);
 
 const classes = computed(() => {
 	return twMerge(
-		"z-50 rounded bg-[#3C3C3C] px-2 py-1 text-sm font-medium text-white/90 shadow-md shadow-stone-950/20 ease-out-circ will-change-[transform,opacity] animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
+		"z-50 rounded bg-[#3C3C3C] px-2 py-1 text-sm font-medium text-white/90 shadow-md shadow-stone-950/20 ease-out will-change-[transform,opacity] animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
 		props.class,
 	);
 });
