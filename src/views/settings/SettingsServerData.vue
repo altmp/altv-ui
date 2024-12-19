@@ -6,7 +6,7 @@ import { useLocalization } from "@/stores/localization";
 import { playSound } from "@/utils/playSound";
 import { computed } from "vue";
 import { useConnectionStateStore } from "@/stores/connectionState";
-import moment from "moment";
+import moment from "moment/min/moment-with-locales";
 
 const props = defineProps<{
 	id: string;
@@ -47,7 +47,12 @@ const { t } = useLocalization();
 					t("DATA_SIZE", prettyBytes(props.dataSize))
 				}}</span>
 				<span v-if="type === 'server'">
-					{{ t("LAST_VISIT", moment(props.lastVisit).fromNow()) }}
+					{{
+						t(
+							"LAST_VISIT",
+							moment(Math.floor(props.lastVisit * 1000)).fromNow(),
+						)
+					}}
 				</span>
 			</div>
 		</div>

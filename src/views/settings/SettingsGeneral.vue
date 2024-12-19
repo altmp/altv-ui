@@ -9,6 +9,7 @@ import AltButton from "@/components/AltButton.vue";
 import AltSlider from "@/components/form/AltSlider.vue";
 import { useUIStore } from "@/stores/ui";
 import { useConnectionStateStore } from "@/stores/connectionState";
+import moment from "moment/min/moment-with-locales";
 
 const settings = useSettingsStore();
 const locale = useLocalization();
@@ -105,7 +106,12 @@ const { t } = locale;
 					label: e.name,
 				}))
 			"
-			@change="settings.save('language')"
+			@change="
+				(value) => {
+					settings.save('language');
+					moment.locale(value);
+				}
+			"
 		></alt-dropdown>
 		<alt-checkbox
 			v-model="settings.data.disableRtl"

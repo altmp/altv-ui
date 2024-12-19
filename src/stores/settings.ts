@@ -4,6 +4,7 @@ import { useUIStore } from "@/stores/ui";
 import { ModalType, useModalStore } from "@/stores/modal";
 import { watch } from "vue";
 import { useServersStore } from "@/stores/servers";
+import moment from "moment/min/moment-with-locales";
 
 export const enum LogType {
 	Info,
@@ -79,6 +80,7 @@ export const useSettingsStore = useInitializableStore(
 					if ("netgraphEnabled" in data)
 						ui.toggleNetgraph(data.netgraphEnabled);
 					if ("region" in data) servers.reload();
+					if ("language" in data) moment.locale(data.language);
 				});
 
 				alt.on("settings:currentVolume:update", (value: number) => {
