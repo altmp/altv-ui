@@ -207,13 +207,7 @@ const openLogFile = () => {
 </script>
 
 <template>
-	<div
-		class="relative flex h-full w-full flex-col"
-		:class="{
-			'opacity-75':
-				consoleContext.transparent.value && !consoleContext.open.value,
-		}"
-	>
+	<div class="relative flex h-full w-full flex-col">
 		<div
 			v-if="consoleContext.open.value"
 			class="flex justify-between border-b border-stone-600 bg-stone-700 p-1"
@@ -300,7 +294,7 @@ const openLogFile = () => {
 			</CollapsibleContent>
 		</CollapsibleRoot>
 		<div
-			class="h-full w-full overflow-hidden"
+			class="h-full w-full overflow-hidden bg-stone-900"
 			:class="{
 				'bg-opacity-50':
 					consoleContext.transparent.value && !consoleContext.open.value,
