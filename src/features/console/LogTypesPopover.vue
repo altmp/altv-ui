@@ -23,15 +23,15 @@ import { computed } from "vue";
 const settings = useSettingsStore();
 
 const triggerText = computed(() => {
-	const hiddenLogTypes = settings.data.hiddenLogTypes;
-	if (hiddenLogTypes.length === 0) {
+	const visibleLogTypes = logTypes.filter(
+		(type) => !settings.data.hiddenLogTypes.includes(type),
+	);
+
+	if (visibleLogTypes.length === logTypes.length) {
 		return "All levels";
 	}
-	if (logTypes.length - hiddenLogTypes.length === 1) {
-		const onlyVisibleType = logTypes.find(
-			(type) => !hiddenLogTypes.includes(type),
-		);
-		return triggerLabelByType[onlyVisibleType!];
+	if (visibleLogTypes.length === 1) {
+		return triggerLabelByType[visibleLogTypes[0]!];
 	}
 	return "Custom levels";
 });
