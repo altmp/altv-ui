@@ -6,7 +6,7 @@ import { useUIStore } from "@/stores/ui";
 import { useConnectionStateStore } from "@/stores/connectionState";
 import Netgraph from "@/components/persist/Netgraph.vue";
 import { useLocalization } from "@/stores/localization";
-import { onMounted, onUnmounted, provide, ref, watch } from "vue";
+import { onMounted, provide, ref, watch } from "vue";
 import { useSettingsStore } from "@/stores/settings";
 import { useVersionStore } from "@/stores/version";
 import { ModalType, useModalStore } from "@/stores/modal";
@@ -16,6 +16,7 @@ import {
 	createPixelScaleContext,
 	PixelScaleContextInjectionKey,
 } from "./utils/pixelScale";
+import { useEventListener } from "@vueuse/core";
 
 const ui = useUIStore();
 const connection = useConnectionStateStore();
@@ -114,18 +115,30 @@ onMounted(() => {
 	}
 });
 
-function handler(event: KeyboardEvent) {
+useEventListener("keyup", (event: KeyboardEvent) => {
 	if (event.key != "Escape") return;
 	if (
 		connection.connected &&
 		ui.opened &&
 		(modal.type == ModalType.None || !modal.closeable)
-	)
+	) {
 		ui.toggleUi(false);
-}
+	}
+});
 
-onMounted(() => document.addEventListener("keyup", handler));
-onUnmounted(() => document.removeEventListener("keyup", handler));
+useEventListener("auxclick", (event) => {
+	// prevent the middle mouse button from opening a new tab
+	if (event.button === 1) {
+		event.preventDefault();
+	}
+});
+
+useEventListener("click", (event) => {
+	// prevent ctrl+click from opening a new tab
+	if ((event.ctrlKey || event.metaKey) && event.button === 0) {
+		event.preventDefault();
+	}
+});
 </script>
 
 <template>
