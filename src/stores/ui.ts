@@ -15,7 +15,7 @@ export const useUIStore = useInitializableStore(
 					rtt: 0,
 					tx: 0,
 					rx: 0,
-                	pps: 0,
+					pps: 0,
 				},
 			};
 		},
@@ -52,7 +52,7 @@ export const useUIStore = useInitializableStore(
 						this.netgraph.rtt = rtt;
 						this.netgraph.tx = tx;
 						this.netgraph.rx = rx;
-                		this.netgraph.pps = pps;
+						this.netgraph.pps = pps;
 					},
 				);
 				alt.on("ui:setEarlyAuthState", (state: boolean) => {
