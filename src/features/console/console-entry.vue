@@ -25,26 +25,27 @@ const MESSAGE_BACKGROUND = Object.freeze({
 import { type ConsoleEntry } from "./console";
 import WarningIcon from "@/icons/warning.svg?component";
 import ErrorCircleIcon from "@/icons/error-circle.svg?component";
-import { ref } from "vue";
-import ConsoleEntryCopyButton from "./ConsoleEntryCopyButton.vue";
-import ConsoleEntryTime from "./ConsoleEntryTime.vue";
+import { computed, ref } from "vue";
+import ConsoleEntryCopyButton from "./console-entry-copy-button.vue";
+import ConsoleEntryTime from "./console-entry-time.vue";
 import { LogType, useSettingsStore } from "@/stores/settings";
 
 const props = defineProps<{ entry: ConsoleEntry }>();
 
 const settings = useSettingsStore();
 const element = ref<HTMLElement | null>(null);
+
+const classes = computed(() => {
+	return [
+		"rounded py-1 !select-text",
+		props.entry.count > 1 ? "px-2" : "pl-7 pr-2",
+		MESSAGE_BACKGROUND[props.entry.type],
+	];
+});
 </script>
 
 <template>
-	<div
-		ref="element"
-		:class="[
-			'rounded py-1 !select-text',
-			props.entry.count > 1 ? 'px-2' : 'pl-7 pr-2',
-			MESSAGE_BACKGROUND[props.entry.type],
-		]"
-	>
+	<div ref="element" :class="classes">
 		<div class="float-right top-0 text-right whitespace-nowrap flex gap-1">
 			<ConsoleEntryCopyButton
 				v-if="settings.data.showLogCopyButton"

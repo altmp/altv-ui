@@ -3,8 +3,8 @@ export interface TooltipRootContext {
 	open: Ref<boolean>;
 }
 
-export const TooltipRootContextInjectionKey = Symbol(
-	"TooltipRootContextInjectionKey",
+export const TooltipRootContextKey = Symbol(
+	"TooltipRootContext",
 ) as InjectionKey<TooltipRootContext>;
 </script>
 
@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<Omit<TooltipRootProps, "open">>(), {
 });
 const open = defineModel<boolean>("open", { default: false });
 
-provide(TooltipRootContextInjectionKey, { open });
+provide(TooltipRootContextKey, { open });
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { PixelScaleContextInjectionKey } from "@/utils/pixelScale";
-import { injectContext } from "@/utils/injectContext";
+import { PixelScaleContextKey } from "@/utils/pixelScale";
+import { injectContext } from "@/utils/context";
 import {
 	DropdownMenuContent,
 	useEmitAsProps,
@@ -16,7 +16,7 @@ const props = withDefaults(
 	{ sideOffset: 4, avoidCollisions: true },
 );
 
-const { pixelScale } = injectContext(PixelScaleContextInjectionKey);
+const { pixelScale } = injectContext(PixelScaleContextKey);
 const sideOffset = computed(() => props.sideOffset * pixelScale.value);
 
 const classes = computed(() => {

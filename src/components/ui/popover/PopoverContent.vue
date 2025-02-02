@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { PixelScaleContextInjectionKey } from "@/utils/pixelScale";
-import { injectContext } from "@/utils/injectContext";
+import { PixelScaleContextKey } from "@/utils/pixelScale";
+import { injectContext } from "@/utils/context";
 import {
 	PopoverContent,
 	type PopoverContentEmits,
@@ -22,7 +22,7 @@ const props = withDefaults(
 const emit = defineEmits<PopoverContentEmits>();
 const emitsAsProps = useEmitAsProps(emit);
 
-const { pixelScale } = injectContext(PixelScaleContextInjectionKey);
+const { pixelScale } = injectContext(PixelScaleContextKey);
 const sideOffset = computed(() => props.sideOffset * pixelScale.value);
 
 const classes = computed(() => {

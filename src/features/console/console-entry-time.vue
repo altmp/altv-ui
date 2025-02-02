@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { injectContext } from "@/utils/injectContext";
-import { ConsoleTimeFormatContextInjectionKey } from "./time-format";
+import { injectContext } from "@/utils/context";
+import { ConsoleTimeFormatContextKey } from "./time-format";
 
 const props = defineProps<{ time: Date }>();
 
-const { useFormattedTime } = injectContext(
-	ConsoleTimeFormatContextInjectionKey,
-);
+const { useFormattedTime } = injectContext(ConsoleTimeFormatContextKey);
 const formattedTime = useFormattedTime(props.time);
 </script>
 

@@ -1,1 +1,1 @@
-export { default as ConsoleOverlay } from "./ConsoleOverlay.vue";
+export { default as ConsoleOverlay } from "./console-overlay.vue";

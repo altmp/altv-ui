@@ -13,7 +13,7 @@ export interface PixelScaleContext {
 	uiScale: Ref<number>;
 }
 
-export const PixelScaleContextInjectionKey = Symbol(
+export const PixelScaleContextKey = Symbol(
 	"PixelScaleContext",
 ) as InjectionKey<PixelScaleContext>;
 

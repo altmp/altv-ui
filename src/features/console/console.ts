@@ -1,97 +1,28 @@
 import { LogType } from "@/stores/settings";
 import {
+	computed,
 	onScopeDispose,
 	readonly,
 	ref,
 	shallowRef,
 	triggerRef,
 	watch,
+	type ComputedRef,
 	type InjectionKey,
 	type Ref,
 	type ShallowRef,
 } from "vue";
-import { RingBuffer } from "./ring-buffer";
+import { useIntervalFn } from "@vueuse/core";
+import { CircularBuffer } from "./circular-buffer";
+import {
+	IncomingConsoleEntry,
+	type IncomingConsoleEntrySettings,
+} from "./incoming-console-entry";
 
-const useAltListener = (event: string, listener: (...args: any[]) => void) => {
+function useAltListener(event: string, listener: (...args: any[]) => void) {
 	alt.on(event, listener);
-	onScopeDispose(() => {
-		alt.off(event, listener);
-	});
-};
-
-export const logTypeByName = Object.freeze({
-	info: LogType.Info,
-	warning: LogType.Warning,
-	error: LogType.Error,
-	debug: LogType.Debug,
-} satisfies Record<string, LogType>);
-export type LogTypeName = keyof typeof logTypeByName;
-
-export const logTypes = Object.freeze(Object.values(logTypeByName)) as Readonly<
-	LogType[]
->;
-export const logNameByType = Object.freeze(
-	Object.keys(logTypeByName),
-) as Readonly<LogTypeName[]>;
-
-export function nthIndexOf(str: string, substr: string, n: number): number {
-	let i = -1;
-
-	while (n-- && i++ < str.length) {
-		i = str.indexOf(substr, i);
-		if (i < 0) break;
-	}
-
-	return i;
+	onScopeDispose(() => alt.off(event, listener));
 }
-
-const htmlEntities = Object.freeze({
-	"&": "&amp;",
-	"<": "&lt;",
-	">": "&gt;",
-	'"': "&quot;",
-	"'": "&#39;",
-});
-
-export function stripHtml(string: string): string {
-	return string.replace(
-		/[&<>"']/g,
-		(match) => htmlEntities[match as keyof typeof htmlEntities],
-	);
-}
-
-export function convertLinksToHTML(string: string): string {
-	return string.replace(
-		/https?:\/\/[^\s/$.?#].[^\s]*/g,
-		'<a href="$&" target="_blank">$&</a>',
-	);
-}
-
-export function getNewlinesCount(str: string): number {
-	return (str.match(/\n/g) || []).length;
-}
-
-const COLORS = Object.freeze({
-	BLACK: "#1e1e1e",
-	LBLACK: "#666666",
-	RED: "#bd3f39",
-	LRED: "#df5853",
-	GREEN: "#55b87f",
-	LGREEN: "#63cd91",
-	BLUE: "#3972c2",
-	LBLUE: "#508ee3",
-	YELLOW: "#e6e34d",
-	LYELLOW: "#f6f366",
-	MAGENTA: "#ae4cb6",
-	LMAGENTA: "#c978d1",
-	CYAN: "#4ba6c9",
-	LCYAN: "#59b6d7",
-	WHITE: "#C0C0C0",
-	LWHITE: "#FFFFFF",
-});
-
-const colorByIndex = Object.freeze(Object.values(COLORS));
-const whiteColorIndex = colorByIndex.indexOf(COLORS.WHITE);
 
 export interface ConsoleEntry {
 	id: number;
@@ -116,97 +47,58 @@ export interface ConsoleEntry {
 	time: Date;
 }
 
-interface IncomingConsoleEntry {
-	/**
-	 * Original message buffer without any processing.
-	 */
-	messageBuffer: string;
-	/**
-	 * Formatted, truncated, and escaped version of the message buffer.
-	 */
-	htmlBuffer: string;
-	/**
-	 * Remaining number of newlines allowed before the message is truncated.
-	 */
-	availableNewlinesCount: number;
-	/**
-	 * Remaining character count allowed before the message is truncated.
-	 */
-	availableCharactersCount: number;
-}
-
-export interface ConsoleContextOptions {
-	maxMessageNewlines: number;
-	maxMessageLength: number;
+export interface ConsoleContextSettings extends IncomingConsoleEntrySettings {
 	maxEntries: number;
+	pullInterval: number;
 }
 
 export interface ConsoleContext {
 	open: Ref<boolean>;
-	transparent: Ref<boolean>;
-	entries: ShallowRef<RingBuffer<ConsoleEntry>>;
+	mode: Ref<"default" | "transparent">;
+	visible: ComputedRef<boolean>;
+	entries: ShallowRef<CircularBuffer<ConsoleEntry>>;
 	execute: (command: string) => void;
 	clear: () => void;
-	options: ConsoleContextOptions;
 	lastEntryId: Readonly<Ref<number>>;
 }
 
-export const ConsoleContextInjectionKey = Symbol(
+export const ConsoleContextKey = Symbol(
 	"ConsoleContext",
 ) as InjectionKey<ConsoleContext>;
 
 export function createConsoleContext(
-	options: ConsoleContextOptions,
+	settings: ConsoleContextSettings,
 ): ConsoleContext {
-	const { maxEntries, maxMessageLength, maxMessageNewlines } = options;
-
 	const lastEntryId = ref(0);
 	const queue: ConsoleEntry[] = [];
-	const entries = shallowRef(new RingBuffer(maxEntries)) as ShallowRef<
-		RingBuffer<ConsoleEntry>
-	>;
+	const entries = shallowRef(
+		CircularBuffer.create(settings.maxEntries),
+	) as ShallowRef<CircularBuffer<ConsoleEntry>>;
 
 	let incomingEntry: IncomingConsoleEntry | null = null;
 
-	useAltListener("console:push", (colorIndex: number, value: string) => {
-		if (incomingEntry === null) {
-			incomingEntry = {
-				messageBuffer: "",
-				htmlBuffer: "",
-				availableCharactersCount: maxMessageLength,
-				availableNewlinesCount: maxMessageNewlines,
-			};
+	const open = ref(false);
+	useAltListener("console:open", (state?: boolean) => {
+		if (typeof state === "boolean") {
+			open.value = state;
 		}
-
-		incomingEntry.messageBuffer += value;
-
-		if (incomingEntry.availableCharactersCount < 1) return;
-
-		let content = stripHtml(value);
-
-		if (incomingEntry.availableCharactersCount - content.length < 0) {
-			content = content.slice(0, incomingEntry.availableCharactersCount);
-		}
-		incomingEntry.availableCharactersCount -= content.length;
-
-		const newlinesCount = getNewlinesCount(content);
-		if (incomingEntry.availableNewlinesCount - newlinesCount < 0) {
-			const lastNewlineIndex = nthIndexOf(
-				content,
-				"\n",
-				incomingEntry.availableNewlinesCount,
-			);
-			content = content.slice(0, lastNewlineIndex + 1);
-		}
-		incomingEntry.availableNewlinesCount -= newlinesCount;
-
-		if (colorIndex === whiteColorIndex) {
-			incomingEntry.htmlBuffer += content;
-			return;
-		}
-		const color = colorByIndex[colorIndex] ?? COLORS.WHITE;
-		incomingEntry.htmlBuffer += `<span style="color:${color}">${content}</span>`;
 	});
+
+	const mode = ref<"default" | "transparent">("default");
+	useAltListener("console:forceTransparent", () => {
+		mode.value = "transparent";
+	});
+
+	useAltListener(
+		"console:push",
+		(colorIndex: number, messageFragment: string) => {
+			if (incomingEntry === null) {
+				incomingEntry = IncomingConsoleEntry.create(settings);
+			}
+
+			incomingEntry.push(messageFragment, colorIndex);
+		},
+	);
 
 	useAltListener(
 		"console:end",
@@ -216,12 +108,13 @@ export function createConsoleContext(
 			const time = new Date();
 			const lastEntry = queue.length
 				? queue[queue.length - 1]
-				: entries.value.get(entries.value.size - 1);
+				: entries.value.get(-1);
+
 			if (
 				lastEntry &&
 				lastEntry.type === type &&
 				lastEntry.resource === resource &&
-				lastEntry.message === incomingEntry.messageBuffer
+				lastEntry.message === incomingEntry.originalMessage
 			) {
 				if (queue.length) {
 					lastEntry.count++;
@@ -243,47 +136,52 @@ export function createConsoleContext(
 				return;
 			}
 
-			incomingEntry.htmlBuffer = convertLinksToHTML(incomingEntry.htmlBuffer);
-			if (incomingEntry.availableCharactersCount < 0) {
-				incomingEntry.htmlBuffer += `... ${Math.abs(
-					incomingEntry.availableCharactersCount,
-				)} chars more ...`;
-			}
+			const { originalMessage, formattedMessage } = incomingEntry.end();
+			incomingEntry = null;
 
 			queue.push({
 				id: lastEntryId.value++,
 				type,
 				resource,
-				message: incomingEntry.messageBuffer,
-				html: incomingEntry.htmlBuffer,
+				message: originalMessage,
+				html: formattedMessage,
 				count: 1,
 				time,
 			});
-			incomingEntry = null;
 		},
 	);
 
 	let lastRenderedEntryCount = 1;
-	const update = () => {
-		if (queue.length) {
-			const lastEntry = queue[queue.length - 1]!;
-			lastRenderedEntryCount = lastEntry.count;
-			entries.value.push(...queue);
-			queue.length = 0;
+	const interval = useIntervalFn(
+		() => {
+			if (queue.length) {
+				const lastEntry = queue[queue.length - 1]!;
+				lastRenderedEntryCount = lastEntry.count;
+				entries.value.push(...queue);
+				queue.length = 0;
 
-			triggerRef(entries);
-			requestAnimationFrame(update);
-			return;
-		}
+				triggerRef(entries);
+				return;
+			}
 
-		const lastEntry = entries.value.get(entries.value.size - 1);
-		if (lastEntry && lastRenderedEntryCount !== lastEntry.count) {
-			lastRenderedEntryCount = lastEntry.count;
-			triggerRef(entries);
+			const lastEntry = entries.value.get(-1);
+			if (lastEntry && lastRenderedEntryCount !== lastEntry.count) {
+				lastRenderedEntryCount = lastEntry.count;
+				triggerRef(entries);
+			}
+		},
+		settings.pullInterval,
+		{ immediate: false },
+	);
+
+	const visible = computed(() => open.value || mode.value === "transparent");
+	watch(visible, (visible) => {
+		if (visible) {
+			interval.resume();
+		} else {
+			interval.pause();
 		}
-		requestAnimationFrame(update);
-	};
-	requestAnimationFrame(update);
+	});
 
 	const execute = (command: string) => {
 		alt.emit("console:execute", command);
@@ -300,33 +198,19 @@ export function createConsoleContext(
 		incomingEntry = null;
 	});
 
-	const transparent = ref(false);
-	watch(transparent, () => {
-		if (transparent.value) {
-			open.value = false;
-		}
-	});
-	useAltListener("console:forceTransparent", () => {
-		transparent.value = true;
-	});
-
-	const open = ref(false);
-	watch(open, () => {
-		alt.emit("console:setState", open.value);
-	});
-	useAltListener("console:open", (state?: boolean) => {
-		if (state !== undefined) {
-			open.value = state;
-		}
-	});
-
 	return {
 		entries,
 		execute,
 		clear,
-		open,
-		transparent,
-		options,
+		open: computed({
+			get: () => open.value,
+			set: (state) => {
+				alt.emit("console:setState", state);
+				open.value = state;
+			},
+		}),
+		visible,
+		mode,
 		lastEntryId: readonly(lastEntryId),
 	};
 }

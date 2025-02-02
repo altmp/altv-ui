@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { PixelScaleContextInjectionKey } from "@/utils/pixelScale";
-import { injectContext } from "@/utils/injectContext";
+import { PixelScaleContextKey } from "@/utils/pixelScale";
+import { injectContext } from "@/utils/context";
 import { TooltipArrow } from "radix-vue";
 
-const { pixelScale } = injectContext(PixelScaleContextInjectionKey);
+const { pixelScale } = injectContext(PixelScaleContextKey);
 </script>
 
 <template>

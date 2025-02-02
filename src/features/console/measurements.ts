@@ -9,7 +9,7 @@ export interface ConsoleMeasurementsContext {
 	clearMeasurementsCache: () => void;
 }
 
-export const ConsoleMeasurementsContextInjectionKey = Symbol(
+export const ConsoleMeasurementsContextKey = Symbol(
 	"ConsoleMeasurementsContext",
 ) as InjectionKey<ConsoleMeasurementsContext>;
 
