@@ -15,7 +15,7 @@ export interface ConsoleHistoryContext {
 	push: (command: string) => void;
 }
 
-export const ConsoleHistoryContextInjectionKey = Symbol(
+export const ConsoleHistoryContextKey = Symbol(
 	"ConsoleHistoryContext",
 ) as InjectionKey<ConsoleHistoryContext>;
 

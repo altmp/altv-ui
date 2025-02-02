@@ -7,7 +7,7 @@ export interface ConsoleTimeFormatContext {
 	useFormattedTime: (time: Date) => ComputedRef<string>;
 }
 
-export const ConsoleTimeFormatContextInjectionKey = Symbol(
+export const ConsoleTimeFormatContextKey = Symbol(
 	"ConsoleTimeFormatContext",
 ) as InjectionKey<ConsoleTimeFormatContext>;
 

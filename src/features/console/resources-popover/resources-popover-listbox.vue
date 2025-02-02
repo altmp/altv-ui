@@ -3,11 +3,11 @@ import { ListboxContent, ListboxRoot, ListboxItem } from "radix-vue";
 import EyeIcon from "@/icons/eye.svg?component";
 import EyeOffIcon from "@/icons/eye-off.svg?component";
 import { computed } from "vue";
-import { ConsoleContextInjectionKey } from "./console";
-import { injectContext } from "@/utils/injectContext";
+import { injectContext } from "@/utils/context";
 import { useSettingsStore } from "@/stores/settings";
+import { ConsoleContextKey } from "../console";
 
-const consoleContext = injectContext(ConsoleContextInjectionKey);
+const consoleContext = injectContext(ConsoleContextKey);
 const settings = useSettingsStore();
 
 const resources = computed(() => {

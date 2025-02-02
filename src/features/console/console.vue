@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ConsoleContextInjectionKey, type ConsoleEntry } from "./console";
+import { ConsoleContextKey, type ConsoleEntry } from "./console";
 import {
 	computed,
 	nextTick,
@@ -11,7 +11,7 @@ import {
 } from "vue";
 import { useVirtualizer } from "@tanstack/vue-virtual";
 import ChevronUpIcon from "@/icons/chevron-up.svg?component";
-import ConsoleEntryItem from "./ConsoleEntry.vue";
+import ConsoleEntryItem from "./console-entry.vue";
 import BanIcon from "@/icons/ban.svg?component";
 import VerticalDotsIcon from "@/icons/vertical-dots.svg?component";
 import {
@@ -26,42 +26,45 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import LogTypesPopover from "./LogTypesPopover.vue";
-import ResourcesPopover from "./ResourcesPopover.vue";
-import ConsoleSettings from "./ConsoleSettings.vue";
+import LogTypesPopover from "./log-types-popover/log-types-popover.vue";
+import ResourcesPopover from "./resources-popover/resources-popover.vue";
+import ConsoleSettings from "./console-settings.vue";
 import SettingsIcon from "@/icons/settings.svg?component";
 import AltVOutlineLogo from "@/icons/altv-outline-logo.svg?component";
-import { ConsoleHistoryContextInjectionKey } from "./history";
+import { ConsoleHistoryContextKey } from "./history";
 import { Id } from "@/components/ui/id";
-import { ConsoleMeasurementsContextInjectionKey } from "./measurements";
+import { ConsoleMeasurementsContextKey } from "./measurements";
 import ConsoleTransparentIcon from "@/icons/console-transparent.svg?component";
 import ConsoleSolidIcon from "@/icons/console-solid.svg?component";
-import { injectContext } from "@/utils/injectContext";
+import { injectContext } from "@/utils/context";
 import { LogType, useSettingsStore } from "@/stores/settings";
-import { PixelScaleContextInjectionKey } from "@/utils/pixelScale";
+import { PixelScaleContextKey } from "@/utils/pixelScale";
 
-const consoleContext = injectContext(ConsoleContextInjectionKey);
+const consoleContext = injectContext(ConsoleContextKey);
 const settings = useSettingsStore();
 
+const hiddenLogTypes = computed(() => new Set(settings.data.hiddenLogTypes));
+const hiddenLogResources = computed(
+	() => new Set(settings.data.hiddenLogResources),
+);
 const entries = computed<readonly ConsoleEntry[]>(() => {
+	if (hiddenLogTypes.value.size === 0 && hiddenLogResources.value.size === 0) {
+		return Array.from(consoleContext.entries.value);
+	}
+
 	const result: ConsoleEntry[] = [];
 
-	for (let i = 0; i < consoleContext.entries.value.size; i++) {
+	for (let i = 0, l = consoleContext.entries.value.size; i < l; i++) {
 		const entry = consoleContext.entries.value.get(i)!;
 		if (
-			settings.data.hiddenLogTypes.length &&
-			settings.data.hiddenLogTypes.includes(entry.type)
-		) {
-			continue;
-		}
-		if (
-			settings.data.hiddenLogResources.length > 0 &&
-			settings.data.hiddenLogResources.includes(entry.resource || "")
+			hiddenLogTypes.value.has(entry.type) ||
+			hiddenLogResources.value.has(entry.resource || "")
 		) {
 			continue;
 		}
 		result.push(entry);
 	}
+
 	return result;
 });
 
@@ -82,9 +85,9 @@ watch(
 const viewport = ref<HTMLElement | null>(null);
 
 const { measureElement, getMeasurementsCache, setMeasurementsCache } =
-	injectContext(ConsoleMeasurementsContextInjectionKey);
+	injectContext(ConsoleMeasurementsContextKey);
 
-const { pixelScale } = injectContext(PixelScaleContextInjectionKey);
+const { pixelScale } = injectContext(PixelScaleContextKey);
 
 const virtualizer = useVirtualizer({
 	get count() {
@@ -174,7 +177,7 @@ watch(consoleContext.open, () => scrollToLastEntry(), {
 
 onMounted(() => nextTick(scrollToLastEntry));
 
-const consoleHistory = injectContext(ConsoleHistoryContextInjectionKey);
+const consoleHistory = injectContext(ConsoleHistoryContextKey);
 
 function handleExecute(event: KeyboardEvent) {
 	// prevent executing command when enter is pressed with shift key
@@ -195,8 +198,8 @@ const isGhostEntry = (index: number) => {
 };
 
 const isSettingsOpen = ref(false);
-watch(consoleContext.transparent, () => {
-	if (consoleContext.transparent.value) {
+watch(consoleContext.mode, () => {
+	if (consoleContext.mode.value === "transparent") {
 		isSettingsOpen.value = false;
 	}
 });
@@ -234,15 +237,20 @@ const openLogFile = () => {
 						class="group flex rounded p-1.5 hover:bg-white/10 active:bg-white/15"
 						@click="
 							() => {
-								consoleContext.transparent.value =
-									!consoleContext.transparent.value;
+								if (consoleContext.mode.value === 'default') {
+									consoleContext.mode.value = 'transparent';
+									consoleContext.open.value = false;
+								} else {
+									consoleContext.mode.value = 'default';
+								}
+
 								scrollToLastEntry();
 							}
 						"
 					>
 						<component
 							:is="
-								consoleContext.transparent.value
+								consoleContext.mode.value === 'transparent'
 									? ConsoleTransparentIcon
 									: ConsoleSolidIcon
 							"
@@ -251,7 +259,7 @@ const openLogFile = () => {
 					</TooltipTrigger>
 					<TooltipContent>
 						{{
-							consoleContext.transparent.value
+							consoleContext.mode.value === "transparent"
 								? "Transparent console"
 								: "Solid console"
 						}}
@@ -293,13 +301,7 @@ const openLogFile = () => {
 				<ConsoleSettings />
 			</CollapsibleContent>
 		</CollapsibleRoot>
-		<div
-			class="h-full w-full overflow-hidden bg-stone-900"
-			:class="{
-				'bg-opacity-50':
-					consoleContext.transparent.value && !consoleContext.open.value,
-			}"
-		>
+		<div class="h-full w-full overflow-hidden">
 			<AltVOutlineLogo
 				v-if="entries.length === 0"
 				class="mx-auto size-24 h-full text-white/10"
@@ -357,7 +359,7 @@ const openLogFile = () => {
 					autocomplete="off"
 					autocorrect="off"
 					autocapitalize="off"
-					class="scrollbar-vertical w-full resize-none bg-transparent font-mono text-sm text-code-white outline-none"
+					class="scrollbar-vertical w-full resize-none bg-transparent font-mono text-sm text-code-white outline-none max-h-24"
 					@keydown.enter.exact.prevent="handleExecute"
 					@keydown.up.prevent="consoleHistory.go(1)"
 					@keydown.down.prevent="consoleHistory.go(-1)"

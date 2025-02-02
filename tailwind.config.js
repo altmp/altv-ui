@@ -140,9 +140,6 @@ export default {
 				},
 				white: "#FFFFFF",
 				black: "#000000",
-				primary: {
-					500: "rgb(var(--primary-color))",
-				},
 				stone: {
 					50: "#EBEBEB",
 					100: "#D6D6D6",

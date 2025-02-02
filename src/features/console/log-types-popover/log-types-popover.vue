@@ -1,16 +1,3 @@
-<script lang="ts">
-import LogTypesPopoverListbox from "./LogTypesPopoverListbox.vue";
-import { logTypes } from "./console";
-import { LogType, useSettingsStore } from "@/stores/settings";
-
-const triggerLabelByType = {
-	[LogType.Info]: "Info only",
-	[LogType.Warning]: "Warnings only",
-	[LogType.Error]: "Errors only",
-	[LogType.Debug]: "Debug only",
-} satisfies Record<LogType, string>;
-</script>
-
 <script setup lang="ts">
 import {
 	Popover,
@@ -18,16 +5,26 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import ArrowDropDownUpIcon from "@/icons/arrow-drop-down-up.svg?component";
+import { LogType, useSettingsStore } from "@/stores/settings";
 import { computed } from "vue";
+import LogTypesPopoverListbox from "./log-types-popover-listbox.vue";
+import { LOG_TYPES } from "./constants";
 
 const settings = useSettingsStore();
 
+const triggerLabelByType = {
+	[LogType.Info]: "Info only",
+	[LogType.Warning]: "Warnings only",
+	[LogType.Error]: "Errors only",
+	[LogType.Debug]: "Debug only",
+} satisfies Record<LogType, string>;
+
 const triggerText = computed(() => {
-	const visibleLogTypes = logTypes.filter(
+	const visibleLogTypes = LOG_TYPES.filter(
 		(type) => !settings.data.hiddenLogTypes.includes(type),
 	);
 
-	if (visibleLogTypes.length === logTypes.length) {
+	if (visibleLogTypes.length === LOG_TYPES.length) {
 		return "All levels";
 	}
 	if (visibleLogTypes.length === 1) {

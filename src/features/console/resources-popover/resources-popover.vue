@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/popover";
 import ArrowDropDownUpIcon from "@/icons/arrow-drop-down-up.svg?component";
 import { computed } from "vue";
-import ResourcesPopoverListbox from "./ResourcesPopoverListbox.vue";
+import ResourcesPopoverListbox from "./resources-popover-listbox.vue";
 import { useSettingsStore } from "@/stores/settings";
 
 const settings = useSettingsStore();

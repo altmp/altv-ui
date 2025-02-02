@@ -1,9 +1,9 @@
 import { expect, describe, it } from "vitest";
-import { RingBuffer } from "./ring-buffer";
+import { CircularBuffer } from "./circular-buffer";
 
 describe("RingBuffer", () => {
 	it("should push items to the buffer", () => {
-		const buffer = new RingBuffer<number>(3);
+		const buffer = CircularBuffer.create<number>(3);
 		buffer.push(1, 2);
 		expect(Array.from(buffer)).toEqual([1, 2]);
 
@@ -12,7 +12,7 @@ describe("RingBuffer", () => {
 	});
 
 	it("should get items from the buffer", () => {
-		const buffer = new RingBuffer<number>(3);
+		const buffer = CircularBuffer.create<number>(3);
 
 		buffer.push(1, 2, 3);
 		expect(buffer.get(0)).toBe(1);
@@ -26,27 +26,27 @@ describe("RingBuffer", () => {
 	});
 
 	it("should return undefined for out of bounds index", () => {
-		const buffer = new RingBuffer<number>(3);
+		const buffer = CircularBuffer.create<number>(3);
 		buffer.push(1, 2, 3);
 		expect(buffer.get(3)).toBe(undefined);
 		expect(buffer.get(-4)).toBe(undefined);
 	});
 
 	it("should clear the buffer", () => {
-		const buffer = new RingBuffer<number>(3);
+		const buffer = CircularBuffer.create<number>(3);
 		buffer.push(1, 2, 3);
 		buffer.clear();
 		expect(Array.from(buffer)).toEqual([]);
 	});
 
 	it("should handle adding more items than its capacity", () => {
-		const buffer = new RingBuffer<number>(3);
+		const buffer = CircularBuffer.create<number>(3);
 		buffer.push(1, 2, 3, 4, 5);
 		expect(Array.from(buffer)).toEqual([3, 4, 5]);
 	});
 
 	it("should handle adding items after clearing the buffer", () => {
-		const buffer = new RingBuffer<number>(3);
+		const buffer = CircularBuffer.create<number>(3);
 		buffer.push(1, 2, 3);
 		buffer.clear();
 		buffer.push(4, 5);
@@ -57,7 +57,7 @@ describe("RingBuffer", () => {
 	});
 
 	it("should handle setting items by index", () => {
-		const buffer = new RingBuffer<number>(3);
+		const buffer = CircularBuffer.create<number>(3);
 		buffer.push(1, 2, 3);
 		buffer.set(0, 4);
 		expect(buffer.get(0)).toBe(4);
